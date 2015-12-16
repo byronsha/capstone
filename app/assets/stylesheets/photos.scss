@@ -1,0 +1,37 @@
+// Place all the styles related to the Photos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.photo-thumb {
+  position: relative;
+  display: inline-block;
+  margin: 1px;
+}
+
+.photo-thumb:hover {
+  z-index: 100;
+
+  -webkit-transform: scale(1.2);
+     -moz-transform: scale(1.2);
+       -o-transform: scale(1.2);
+      -ms-transform: scale(1.2);
+          transform: scale(1.2);
+
+  -webkit-transition: all .25s ease;
+     -moz-transition: all .25s ease;
+       -o-transition: all .25s ease;
+      -ms-transition: all .25s ease;
+          transition: all .25s ease;
+}
+
+.photo-show {
+  position: relative;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.feed-main {
+  text-align: center;
+  margin-left: 0px auto;
+  margin-right: 0px auto;
+}

@@ -1,12 +1,11 @@
-var React = require('react');
+var React = require('react'),
+    Sidebar = require('./sidebar/sidebar.jsx');
 
 var App = React.createClass({
   render: function () {
-    return(
+    return (
       <div>
-        <div>
-
-        </div>
+        <Sidebar />
         {this.props.children}
       </div>
     );

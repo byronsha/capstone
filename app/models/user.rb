@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   attr_reader :password
 
   has_many :photos
+  has_many :photo_comments
 
   after_initialize :ensure_session_token
 

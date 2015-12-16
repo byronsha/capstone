@@ -15,6 +15,7 @@
  */
 
  @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+
  /*!
   * bootswatch v3.3.6
   * Homepage: http://bootswatch.com
@@ -4188,8 +4189,8 @@
  }
  .navbar {
    position: relative;
-   min-height: 50px;
-   margin-bottom: 21px;
+   min-height: 40px;
+   margin-bottom: 0px;
    border: 1px solid transparent;
  }
  @media (min-width: 768px) {

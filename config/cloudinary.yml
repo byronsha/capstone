@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: dwx2ctajn
+  api_key: '382665758438969'
+  api_secret: suGE6FlpCcZnYM2Wj0C6nFWKoTM
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: dwx2ctajn
+  api_key: '382665758438969'
+  api_secret: suGE6FlpCcZnYM2Wj0C6nFWKoTM
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: dwx2ctajn
+  api_key: '382665758438969'
+  api_secret: suGE6FlpCcZnYM2Wj0C6nFWKoTM
+  enhance_image_tag: true
+  static_image_support: false
