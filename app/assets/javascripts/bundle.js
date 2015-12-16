@@ -50,8 +50,8 @@
 	    Route = __webpack_require__(159).Route,
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    App = __webpack_require__(208),
-	    FeedMain = __webpack_require__(211),
-	    PhotoDetail = __webpack_require__(238);
+	    FeedMain = __webpack_require__(210),
+	    PhotoDetail = __webpack_require__(237);
 
 	var routes = React.createElement(
 	  Route,
@@ -24301,7 +24301,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    Sidebar = __webpack_require__(210);
+	    Sidebar = __webpack_require__(209);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24319,8 +24319,7 @@
 	module.exports = App;
 
 /***/ },
-/* 209 */,
-/* 210 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -24336,37 +24335,33 @@
 	        "div",
 	        { className: "container-fluid" },
 	        React.createElement(
-	          "div",
-	          { className: "collapse navbar-collapse", id: "collapse-menu" },
+	          "ul",
+	          { className: "nav navbar-nav pull-left" },
 	          React.createElement(
-	            "ul",
-	            { className: "nav navbar-nav pull-left" },
+	            "li",
+	            null,
 	            React.createElement(
-	              "li",
-	              null,
-	              React.createElement(
-	                "a",
-	                { href: "/home" },
-	                "Home"
-	              )
-	            ),
+	              "a",
+	              { href: "/home" },
+	              "Home"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
 	            React.createElement(
-	              "li",
-	              null,
-	              React.createElement(
-	                "a",
-	                { href: "/about" },
-	                "Search"
-	              )
-	            ),
+	              "a",
+	              { href: "/about" },
+	              "Explore"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
 	            React.createElement(
-	              "li",
-	              null,
-	              React.createElement(
-	                "a",
-	                { href: "/contact" },
-	                "Galleries"
-	              )
+	              "a",
+	              { href: "/contact" },
+	              "Galleries"
 	            )
 	          )
 	        )
@@ -24378,13 +24373,13 @@
 	module.exports = Sidebar;
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoItem = __webpack_require__(212),
-	    PhotoStore = __webpack_require__(213),
-	    ApiUtil = __webpack_require__(236);
+	    PhotoItem = __webpack_require__(211),
+	    PhotoStore = __webpack_require__(212),
+	    ApiUtil = __webpack_require__(235);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
@@ -24423,7 +24418,7 @@
 	module.exports = FeedMain;
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -24451,12 +24446,12 @@
 	module.exports = PhotoItem;
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(214).Store,
-	    AppDispatcher = __webpack_require__(232),
-	    PhotoConstants = __webpack_require__(235),
+	var Store = __webpack_require__(213).Store,
+	    AppDispatcher = __webpack_require__(231),
+	    PhotoConstants = __webpack_require__(234),
 	    PhotoStore = new Store(AppDispatcher);
 
 	var _photos = [];
@@ -24488,7 +24483,7 @@
 	module.exports = PhotoStore;
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24500,15 +24495,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(215);
-	module.exports.MapStore = __webpack_require__(219);
-	module.exports.Mixin = __webpack_require__(231);
-	module.exports.ReduceStore = __webpack_require__(220);
-	module.exports.Store = __webpack_require__(221);
+	module.exports.Container = __webpack_require__(214);
+	module.exports.MapStore = __webpack_require__(218);
+	module.exports.Mixin = __webpack_require__(230);
+	module.exports.ReduceStore = __webpack_require__(219);
+	module.exports.Store = __webpack_require__(220);
 
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24530,10 +24525,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(216);
+	var FluxStoreGroup = __webpack_require__(215);
 
-	var invariant = __webpack_require__(217);
-	var shallowEqual = __webpack_require__(218);
+	var invariant = __webpack_require__(216);
+	var shallowEqual = __webpack_require__(217);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -24691,7 +24686,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24710,7 +24705,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(216);
 
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -24772,7 +24767,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 217 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24827,7 +24822,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 218 */
+/* 217 */
 /***/ function(module, exports) {
 
 	/**
@@ -24882,7 +24877,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 219 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24903,10 +24898,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(220);
-	var Immutable = __webpack_require__(230);
+	var FluxReduceStore = __webpack_require__(219);
+	var Immutable = __webpack_require__(229);
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(216);
 
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -25032,7 +25027,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 220 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25053,10 +25048,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(221);
+	var FluxStore = __webpack_require__(220);
 
-	var abstractMethod = __webpack_require__(229);
-	var invariant = __webpack_require__(217);
+	var abstractMethod = __webpack_require__(228);
+	var invariant = __webpack_require__(216);
 
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25139,7 +25134,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 221 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25158,11 +25153,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(222);
+	var _require = __webpack_require__(221);
 
 	var EventEmitter = _require.EventEmitter;
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(216);
 
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -25322,7 +25317,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 222 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25335,14 +25330,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(223)
+	  EventEmitter: __webpack_require__(222)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 223 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25361,11 +25356,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(224);
-	var EventSubscriptionVendor = __webpack_require__(226);
+	var EmitterSubscription = __webpack_require__(223);
+	var EventSubscriptionVendor = __webpack_require__(225);
 
-	var emptyFunction = __webpack_require__(228);
-	var invariant = __webpack_require__(227);
+	var emptyFunction = __webpack_require__(227);
+	var invariant = __webpack_require__(226);
 
 	/**
 	 * @class BaseEventEmitter
@@ -25539,7 +25534,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 224 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25560,7 +25555,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(225);
+	var EventSubscription = __webpack_require__(224);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -25592,7 +25587,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 225 */
+/* 224 */
 /***/ function(module, exports) {
 
 	/**
@@ -25643,7 +25638,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 226 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25662,7 +25657,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(227);
+	var invariant = __webpack_require__(226);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -25752,7 +25747,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 227 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25807,7 +25802,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 228 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/**
@@ -25850,7 +25845,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 229 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25867,7 +25862,7 @@
 
 	'use strict';
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(216);
 
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -25877,7 +25872,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30842,7 +30837,7 @@
 	}));
 
 /***/ },
-/* 231 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30859,9 +30854,9 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(216);
+	var FluxStoreGroup = __webpack_require__(215);
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(216);
 
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -30965,15 +30960,15 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(233).Dispatcher;
+	var Dispatcher = __webpack_require__(232).Dispatcher;
 
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 233 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30985,11 +30980,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(234);
+	module.exports.Dispatcher = __webpack_require__(233);
 
 
 /***/ },
-/* 234 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31011,7 +31006,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(216);
 
 	var _prefix = 'ID_';
 
@@ -31226,7 +31221,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 235 */
+/* 234 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -31234,10 +31229,10 @@
 	};
 
 /***/ },
-/* 236 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(237);
+	var ApiActions = __webpack_require__(236);
 
 	var ApiUtil = {
 	  fetchAllPhotos: function () {
@@ -31253,11 +31248,11 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 237 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(232);
-	var PhotoConstants = __webpack_require__(235);
+	var Dispatcher = __webpack_require__(231);
+	var PhotoConstants = __webpack_require__(234);
 
 	var ApiActions = {
 	  receiveAllPhotos: function (photos) {
@@ -31271,12 +31266,12 @@
 	module.exports = ApiActions;
 
 /***/ },
-/* 238 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(213),
-	    PhotoComment = __webpack_require__(239);
+	    PhotoStore = __webpack_require__(212),
+	    PhotoComment = __webpack_require__(238);
 
 	var PhotoDetail = React.createClass({
 	  displayName: 'PhotoDetail',
@@ -31346,6 +31341,16 @@
 	            })
 	          )
 	        )
+	      ),
+	      React.createElement('br', null),
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12' },
+	          '// comment form goes here'
+	        )
 	      )
 	    );
 	  }
@@ -31354,11 +31359,11 @@
 	module.exports = PhotoDetail;
 
 /***/ },
-/* 239 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(213);
+	    PhotoStore = __webpack_require__(212);
 
 	var PhotoComment = React.createClass({
 	  displayName: 'PhotoComment',

@@ -1,3 +1,72 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.splash-main {
+  position: relative;
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 1920px;
+  height: 80vh;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/v1450164622/DXHZF2FU5V_g1nbpg.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.splash-main-2 {
+  position: relative;
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 1920px;
+  height: 80vh;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164670/C0EDA1F5A7_ybktfe.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.splash-main-3 {
+  position: relative;
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 1920px;
+  height: 80vh;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164669/KDOIQSH4ZW_p0xj33.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.introduction {
+  text-align: center;
+  font-size: 3.5rem;
+  position: absolute;
+  color: #F0F0F0;
+  margin-top: 300px;
+  left: 10%;
+}
+
+.introduction-2 {
+  text-align: center;
+  font-size: 3.5rem;
+  position: absolute;
+  color: #505050;
+  top: 50%;
+  right: 10%;
+}
+
+.introduction-3 {
+  text-align: center;
+  font-size: 3.5rem;
+  position: absolute;
+  color: #F0F0F0;
+  top: 50%;
+  right: 10%;
+}

@@ -44,6 +44,14 @@ var PhotoDetail = React.createClass({
           </div>
         </div>
 
+        <br/>
+
+        <div className="row">
+          <div className="col-md-12">
+            // comment form goes here
+          </div>
+        </div>
+
       </div>
     );
   }
