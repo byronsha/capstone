@@ -5,12 +5,20 @@ var CollectionsDropdownItem = React.createClass({
     console.log("You clicked " + this.props.collection);
   },
   render: function () {
-    return (
-      <div>
-        <li onClick={this.onClick}>{this.props.collection}</li>
-        <li role="separator" className="divider"></li>
-      </div>
-    );
+    if (this.props.position === 0) {
+      return (
+        <div>
+          <li onClick={this.onClick}>{this.props.collection}</li>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <li role="separator" className="divider"></li>
+          <li onClick={this.onClick}>{this.props.collection}</li>
+        </div>
+      );
+    }
   }
 });
 

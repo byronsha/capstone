@@ -31543,6 +31543,7 @@
 	        { className: 'dropdown-menu' },
 	        collections.map(function (collection, idx) {
 	          return React.createElement(CollectionsDropdownItem, { key: idx,
+	            position: idx,
 	            collection: collection });
 	        })
 	      )
@@ -31682,16 +31683,28 @@
 	    console.log("You clicked " + this.props.collection);
 	  },
 	  render: function () {
-	    return React.createElement(
-	      "div",
-	      null,
-	      React.createElement(
-	        "li",
-	        { onClick: this.onClick },
-	        this.props.collection
-	      ),
-	      React.createElement("li", { role: "separator", className: "divider" })
-	    );
+	    if (this.props.position === 0) {
+	      return React.createElement(
+	        "div",
+	        null,
+	        React.createElement(
+	          "li",
+	          { onClick: this.onClick },
+	          this.props.collection
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        "div",
+	        null,
+	        React.createElement("li", { role: "separator", className: "divider" }),
+	        React.createElement(
+	          "li",
+	          { onClick: this.onClick },
+	          this.props.collection
+	        )
+	      );
+	    }
 	  }
 	});
 

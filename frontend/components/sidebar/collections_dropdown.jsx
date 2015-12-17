@@ -15,6 +15,7 @@ var CollectionsDropdown = React.createClass({
           {
             collections.map(function (collection, idx) {
               return <CollectionsDropdownItem key={idx}
+                                              position={idx}
                                               collection={collection} />
             })
           }
