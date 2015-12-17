@@ -24331,10 +24331,10 @@
 
 	var ApiUtil = {
 	  fetchAllPhotos: function () {
-	    var collections = CollectionStore.all();
+	    var collection = CollectionStore.currentCollection();
 	    $.ajax({
 	      url: "api/photos",
-	      data: { collections: collections },
+	      data: { collection: collection },
 	      success: function (photos) {
 	        ApiActions.receiveAllPhotos(photos);
 	      }
@@ -24694,16 +24694,10 @@
 	var CollectionConstants = __webpack_require__(217);
 
 	var CollectionActions = {
-	  updateCollections: function (collections) {
+	  updateCollection: function (collection) {
 	    Dispatcher.dispatch({
-	      actionType: CollectionConstants.UPDATE_COLLECTIONS,
-	      collections: collections
-	    });
-	  },
-	  receiveAllCollections: function (collections) {
-	    Dispatcher.dispatch({
-	      actionType: CollectionConstants.RECEIVE_ALL_COLLECTIONS,
-	      collections: collections
+	      actionType: CollectionConstants.UPDATE_COLLECTION,
+	      collection: collection
 	    });
 	  }
 	};
@@ -24715,7 +24709,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  UPDATE_COLLECTIONS: "UPDATE_COLLECTIONS"
+	  UPDATE_COLLECTION: "UPDATE_COLLECTION"
 	};
 
 /***/ },
@@ -24727,20 +24721,21 @@
 	    CollectionConstants = __webpack_require__(217),
 	    CollectionStore = new Store(AppDispatcher);
 
-	var _collections = [];
+	var _collection = "All";
 
-	var updateCollections = function (collections) {
-	  _collections = collections;
+	var updateCollection = function (collection) {
+	  _collection = collection;
 	};
 
-	CollectionStore.all = function () {
-	  return _collections.slice();
+	CollectionStore.currentCollection = function () {
+	  return _collection;
 	};
 
 	CollectionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
-	    case CollectionConstants.UPDATE_COLLECTIONS:
-	      updateCollections(payload.collections);
+	    case CollectionConstants.UPDATE_COLLECTION:
+	      updateCollection(payload.collection);
+	      CollectionStore.__emitChange();
 	      break;
 	  }
 
@@ -31301,7 +31296,14 @@
 	var CollectionsDropdown = React.createClass({
 	  displayName: 'CollectionsDropdown',
 
+	  getInitialState: function () {
+	    return { collection: "All" };
+	  },
+	  selectCollection: function (collection) {
+	    this.setState({ collection: collection });
+	  },
 	  render: function () {
+	    var that = this;
 	    var collections = ["All", "People", "Technology", "Nature", "Places", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black"];
 
 	    return React.createElement(
@@ -31310,7 +31312,8 @@
 	      React.createElement(
 	        'a',
 	        { className: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
-	        'COLLECTIONS ',
+	        'COLLECTION: ',
+	        this.state.collection,
 	        React.createElement('span', { className: 'caret' })
 	      ),
 	      React.createElement(
@@ -31319,7 +31322,8 @@
 	        collections.map(function (collection, idx) {
 	          return React.createElement(CollectionsDropdownItem, { key: idx,
 	            position: idx,
-	            collection: collection });
+	            collection: collection,
+	            selectCollection: that.selectCollection });
 	        })
 	      )
 	    );
@@ -31332,33 +31336,39 @@
 /* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    CollectionActions = __webpack_require__(216),
+	    CollectionStore = __webpack_require__(218),
+	    History = __webpack_require__(159).History;
 
 	var CollectionsDropdownItem = React.createClass({
-	  displayName: "CollectionsDropdownItem",
+	  displayName: 'CollectionsDropdownItem',
 
-	  onClick: function () {
-	    console.log("You chose " + this.props.collection);
+	  mixins: [History],
+	  onClick: function (e) {
+	    CollectionActions.updateCollection(this.props.collection);
+	    this.props.selectCollection(e.target.innerHTML);
+	    this.history.pushState(null, "/photos", {});
 	  },
 	  render: function () {
 	    if (this.props.position === 0) {
 	      return React.createElement(
-	        "div",
+	        'div',
 	        null,
 	        React.createElement(
-	          "li",
-	          { className: "collection-dropdown-item", onClick: this.onClick },
+	          'li',
+	          { className: 'collection-dropdown-item', onClick: this.onClick },
 	          this.props.collection
 	        )
 	      );
 	    } else {
 	      return React.createElement(
-	        "div",
+	        'div',
 	        null,
-	        React.createElement("li", { role: "separator", className: "divider" }),
+	        React.createElement('li', { role: 'separator', className: 'divider' }),
 	        React.createElement(
-	          "li",
-	          { className: "collection-dropdown-item", onClick: this.onClick },
+	          'li',
+	          { className: 'collection-dropdown-item', onClick: this.onClick },
 	          this.props.collection
 	        )
 	      );
@@ -31436,32 +31446,50 @@
 	  displayName: 'FeedMain',
 
 	  getInitialState: function () {
-	    return { photos: [], collection: "" };
+	    return { photos: [], collection: "All" };
 	  },
 	  componentDidMount: function () {
-	    this.photoListener = PhotoStore.addListener(this._onPhotoChange);
-	    // this.collectionListener = CollectionStore.addListener(this._onCollectonChange);
+	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
+	    this.collectionListener = CollectionStore.addListener(this._onCollectionChange);
 	    ApiUtil.fetchAllPhotos();
 	  },
 	  componentWillUnmount: function () {
 	    this.photoListener.remove();
-	    // this.collectionListener.remove();
+	    this.collectionListener.remove();
 	  },
-	  _onPhotoChange: function () {
+	  _onPhotosChange: function () {
 	    this.setState({ photos: PhotoStore.all() });
 	  },
-	  // _onCollectionChange: function () {
-	  //   this.setState({ collection: CollectionStore.all() });
-	  // },
+	  _onCollectionChange: function () {
+	    this.setState({ collection: CollectionStore.currentCollection() });
+	  },
 	  render: function () {
-	    if (this.state.photos.length > 0) {
+	    var currentCollectionPhotos = [];
+
+	    if (this.state.collection === "All") {
+	      for (var i = 0; i < this.state.photos.length; i++) {
+	        currentCollectionPhotos.push(this.state.photos[i]);
+	      }
+	    } else {
+	      for (var i = 0; i < this.state.photos.length; i++) {
+	        for (var j = 0; j < this.state.photos[i].collections.length; j++) {
+	          if (this.state.photos[i].collections[j].title === this.state.collection) {
+	            currentCollectionPhotos.push(this.state.photos[i]);
+	          }
+	        }
+	      }
+	    }
+
+	    console.log(currentCollectionPhotos.length);
+
+	    if (currentCollectionPhotos.length > 0) {
 	      return React.createElement(
 	        'div',
 	        { className: 'feed-main' },
 	        React.createElement(
 	          'div',
 	          null,
-	          this.state.photos.map(function (photo) {
+	          currentCollectionPhotos.map(function (photo) {
 	            return React.createElement(PhotoItem, { key: photo.id,
 	              photo: photo });
 	          })
@@ -31532,6 +31560,7 @@
 	  switch (payload.actionType) {
 	    case PhotoConstants.ALL_PHOTOS_RECEIVED:
 	      resetPhotos(payload.photos);
+	      PhotoStore.__emitChange();
 	      break;
 	  }
 

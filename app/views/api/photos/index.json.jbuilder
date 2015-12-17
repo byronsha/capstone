@@ -18,4 +18,8 @@ json.array! @photos do |photo|
     json.body comment.body
     json.created_at comment.created_at.strftime('%a %d %b %Y')
   end
+
+  json.collections photo.collections do |collection|
+    json.title collection.title
+  end
 end

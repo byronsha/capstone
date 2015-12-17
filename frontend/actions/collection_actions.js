@@ -2,16 +2,10 @@ var Dispatcher = require('../dispatcher/dispatcher.js');
 var CollectionConstants = require('../constants/collection_constants.js');
 
 var CollectionActions = {
-  updateCollections: function (collections) {
+  updateCollection: function (collection) {
     Dispatcher.dispatch({
-      actionType: CollectionConstants.UPDATE_COLLECTIONS,
-      collections: collections
-    });
-  },
-  receiveAllCollections: function (collections) {
-    Dispatcher.dispatch({
-      actionType: CollectionConstants.RECEIVE_ALL_COLLECTIONS,
-      collections: collections
+      actionType: CollectionConstants.UPDATE_COLLECTION,
+      collection: collection
     });
   }
 }

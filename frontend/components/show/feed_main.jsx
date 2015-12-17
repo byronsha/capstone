@@ -6,29 +6,47 @@ var React = require('react'),
 
 var FeedMain = React.createClass({
   getInitialState: function () {
-    return { photos: [], collection: "" }
+    return { photos: [], collection: "All" }
   },
   componentDidMount: function () {
-    this.photoListener = PhotoStore.addListener(this._onPhotoChange);
-    // this.collectionListener = CollectionStore.addListener(this._onCollectonChange);
+    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
+    this.collectionListener = CollectionStore.addListener(this._onCollectionChange);
     ApiUtil.fetchAllPhotos();
   },
   componentWillUnmount: function () {
     this.photoListener.remove();
-    // this.collectionListener.remove();
+    this.collectionListener.remove();
   },
-  _onPhotoChange: function () {
+  _onPhotosChange: function () {
     this.setState({ photos: PhotoStore.all() });
   },
-  // _onCollectionChange: function () {
-  //   this.setState({ collection: CollectionStore.all() });
-  // },
+  _onCollectionChange: function () {
+    this.setState({ collection: CollectionStore.currentCollection() });
+  },
   render: function () {
-    if (this.state.photos.length > 0) {
+    var currentCollectionPhotos = [];
+
+    if (this.state.collection === "All") {
+      for (var i = 0; i < this.state.photos.length; i++) {
+        currentCollectionPhotos.push(this.state.photos[i]);
+      }
+    } else {
+      for (var i = 0; i < this.state.photos.length; i++) {
+        for (var j = 0; j < this.state.photos[i].collections.length; j++) {
+          if (this.state.photos[i].collections[j].title === this.state.collection) {
+            currentCollectionPhotos.push(this.state.photos[i]);
+          }
+        }
+      }
+    }
+
+    console.log(currentCollectionPhotos.length);
+
+    if (currentCollectionPhotos.length > 0) {
       return (
         <div className="feed-main">
           <div>
-            {this.state.photos.map(function (photo) {
+            {currentCollectionPhotos.map(function (photo) {
               return <PhotoItem key={photo.id}
                                 photo={photo} />
             })}

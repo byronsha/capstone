@@ -3,20 +3,21 @@ var Store = require('flux/utils').Store,
     CollectionConstants = require('../constants/collection_constants.js'),
     CollectionStore = new Store(AppDispatcher);
 
-var _collections = [];
+var _collection = "All";
 
-var updateCollections = function (collections) {
-  _collections = collections;
+var updateCollection = function (collection) {
+  _collection = collection;
 };
 
-CollectionStore.all = function () {
-  return _collections.slice();
+CollectionStore.currentCollection = function () {
+  return _collection;
 };
 
 CollectionStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
-    case CollectionConstants.UPDATE_COLLECTIONS:
-      updateCollections(payload.collections);
+    case CollectionConstants.UPDATE_COLLECTION:
+      updateCollection(payload.collection);
+      CollectionStore.__emitChange();
       break;
   }
 

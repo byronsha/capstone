@@ -4,10 +4,10 @@ var ApiActions = require('../actions/api_actions.js'),
 
 var ApiUtil = {
   fetchAllPhotos: function () {
-    var collections = CollectionStore.all();
+    var collection = CollectionStore.currentCollection();
     $.ajax({
       url: "api/photos",
-      data: { collections: collections },
+      data: { collection: collection },
       success: function (photos) {
         ApiActions.receiveAllPhotos(photos);
       }

@@ -1,8 +1,14 @@
-var React = require('react');
+var React = require('react'),
+    CollectionActions = require('../../actions/collection_actions.js'),
+    CollectionStore = require('../../stores/collection_store.js'),
+    History = require('react-router').History;
 
 var CollectionsDropdownItem = React.createClass({
-  onClick: function () {
-    console.log("You chose " + this.props.collection);
+  mixins: [History],
+  onClick: function (e) {
+    CollectionActions.updateCollection(this.props.collection);
+    this.props.selectCollection(e.target.innerHTML)
+    this.history.pushState(null, "/photos", {});
   },
   render: function () {
     if (this.props.position === 0) {
