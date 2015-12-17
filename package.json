@@ -11,7 +11,7 @@
     "babel-loader": "^6.2.0",
     "babel-preset-react": "^6.3.13",
     "flux": "^2.1.1",
-    "history": "^1.13.0",
+    "history": "1.13.x",
     "react": "^0.14.3",
     "react-addons-css-transition-group": "^0.14.3",
     "react-dom": "^0.14.3",
