@@ -6,7 +6,7 @@ var React = require('react'),
 
 var FeedMain = React.createClass({
   getInitialState: function () {
-    return { photos: [], collection: [] }
+    return { photos: [], collection: "" }
   },
   componentDidMount: function () {
     this.photoListener = PhotoStore.addListener(this._onPhotoChange);

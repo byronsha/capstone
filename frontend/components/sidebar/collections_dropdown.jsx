@@ -4,9 +4,9 @@ var React = require('react'),
 
 var CollectionsDropdown = React.createClass({
   render: function () {
-    var collections = ["People", "Technology", "Nature", "Architecture",
-                       "Red", "Orange", "Yellow", "Green", "Blue",
-                       "Purple","White", "Black"];
+    var collections = ["All", "People", "Technology", "Nature",
+                       "Places", "Red", "Orange", "Yellow", "Green",
+                       "Blue", "Purple","White", "Black"];
 
     return (
       <li className="dropdown">

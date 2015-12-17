@@ -46,7 +46,7 @@ photo_ids = Photo.pluck(:id)
   PhotoComment.create(photo_id: photo_ids.sample, user_id: user_ids.sample, body: Faker::Hipster.paragraph(2, false, 4))
 end
 
-collection_titles = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black", "People", "Technology", "Nature", "Architecture"]
+collection_titles = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black", "People", "Technology", "Nature", "Places"]
 
 collection_titles.each do |title|
   Collection.create(title: title)
