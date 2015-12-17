@@ -9,7 +9,7 @@
   margin-right: 0;
   max-width: 1920px;
   height: 80vh;
-  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/v1450164622/DXHZF2FU5V_g1nbpg.jpg") no-repeat center center;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/v1450164622/47.jpg") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -23,7 +23,7 @@
   margin-right: 0;
   max-width: 1920px;
   height: 80vh;
-  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164670/C0EDA1F5A7_ybktfe.jpg") no-repeat center center;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164670/29.jpg") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -37,7 +37,7 @@
   margin-right: 0;
   max-width: 1920px;
   height: 80vh;
-  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164669/KDOIQSH4ZW_p0xj33.jpg") no-repeat center center;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164669/30.jpg") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -69,4 +69,18 @@
   color: #F0F0F0;
   top: 50%;
   right: 10%;
+}
+
+.sidebar-button {
+  font-weight: bold;
+  color: #F0F0F0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.sidebar-button:hover {
+  background: #F0F0F0;
+  color: #505050;
 }

@@ -5,11 +5,13 @@ var React = require('react'),
     IndexRoute = require('react-router').IndexRoute,
     App = require('./components/app.jsx'),
     FeedMain = require('./components/show/feed_main.jsx'),
+    Splash = require('./components/show/splash.jsx'),
     PhotoDetail = require('./components/show/photo_detail.jsx');
 
 var routes = (
   <Route path="/" component={App}>
-    <IndexRoute component={FeedMain} />
+    <IndexRoute component={Splash} />
+    <Route path="photos" component={FeedMain} />
     <Route path="photos/:photoId" component={PhotoDetail} />
 
   </Route>

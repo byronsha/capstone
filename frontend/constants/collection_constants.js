@@ -1,0 +1,3 @@
+module.exports = {
+  UPDATE_COLLECTIONS: "UPDATE_COLLECTIONS"
+};

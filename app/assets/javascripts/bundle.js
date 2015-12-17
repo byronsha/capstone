@@ -51,12 +51,14 @@
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    App = __webpack_require__(208),
 	    FeedMain = __webpack_require__(210),
-	    PhotoDetail = __webpack_require__(237);
+	    Splash = __webpack_require__(237),
+	    PhotoDetail = __webpack_require__(238);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: FeedMain }),
+	  React.createElement(IndexRoute, { component: Splash }),
+	  React.createElement(Route, { path: 'photos', component: FeedMain }),
 	  React.createElement(Route, { path: 'photos/:photoId', component: PhotoDetail })
 	);
 
@@ -24301,6 +24303,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(235),
 	    Sidebar = __webpack_require__(209);
 
 	var App = React.createClass({
@@ -24322,47 +24325,54 @@
 /* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    HomeButton = __webpack_require__(240),
+	    ExploreButton = __webpack_require__(241),
+	    CollectionsDropdown = __webpack_require__(243),
+	    LoginButton = __webpack_require__(244),
+	    JoinButton = __webpack_require__(245);
 
 	var Sidebar = React.createClass({
-	  displayName: "Sidebar",
+	  displayName: 'Sidebar',
 
 	  render: function () {
 	    return React.createElement(
-	      "nav",
-	      { className: "navbar navbar-default" },
+	      'nav',
+	      { className: 'navbar navbar-default' },
 	      React.createElement(
-	        "div",
-	        { className: "container-fluid" },
+	        'div',
+	        { className: 'container-fluid' },
 	        React.createElement(
-	          "ul",
-	          { className: "nav navbar-nav pull-left" },
+	          'div',
+	          { className: 'navbar-header' },
 	          React.createElement(
-	            "li",
-	            null,
+	            'button',
+	            { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#bs-example-navbar-collapse-1', 'aria-expanded': 'false' },
 	            React.createElement(
-	              "a",
-	              { href: "/home" },
-	              "Home"
-	            )
+	              'span',
+	              { className: 'sr-only' },
+	              'Toggle navigation'
+	            ),
+	            React.createElement('span', { className: 'icon-bar' }),
+	            React.createElement('span', { className: 'icon-bar' }),
+	            React.createElement('span', { className: 'icon-bar' })
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'collapse navbar-collapse', id: 'bs-example-navbar-collapse-1' },
+	          React.createElement(
+	            'ul',
+	            { className: 'nav navbar-nav' },
+	            React.createElement(HomeButton, null),
+	            React.createElement(ExploreButton, null),
+	            React.createElement(CollectionsDropdown, null)
 	          ),
 	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/about" },
-	              "Explore"
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/contact" },
-	              "Galleries"
-	            )
+	            'ul',
+	            { className: 'nav navbar-nav navbar-right' },
+	            React.createElement(LoginButton, null),
+	            React.createElement(JoinButton, null)
 	          )
 	        )
 	      )
@@ -24379,35 +24389,43 @@
 	var React = __webpack_require__(1),
 	    PhotoItem = __webpack_require__(211),
 	    PhotoStore = __webpack_require__(212),
+	    CollectionStore = __webpack_require__(246),
 	    ApiUtil = __webpack_require__(235);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
 
 	  getInitialState: function () {
-	    return {
-	      photos: []
-	    };
+	    return { photos: [], collection: [] };
 	  },
 	  componentDidMount: function () {
-	    this.photoListener = PhotoStore.addListener(this._onChange);
+	    this.photoListener = PhotoStore.addListener(this._onPhotoChange);
+	    // this.collectionListener = CollectionStore.addListener(this._onCollectonChange);
 	    ApiUtil.fetchAllPhotos();
 	  },
 	  componentWillUnmount: function () {
 	    this.photoListener.remove();
+	    // this.collectionListener.remove();
 	  },
-	  _onChange: function () {
+	  _onPhotoChange: function () {
 	    this.setState({ photos: PhotoStore.all() });
 	  },
+	  // _onCollectionChange: function () {
+	  //   this.setState({ collection: CollectionStore.all() });
+	  // },
 	  render: function () {
 	    if (this.state.photos.length > 0) {
 	      return React.createElement(
 	        'div',
 	        { className: 'feed-main' },
-	        this.state.photos.map(function (photo) {
-	          return React.createElement(PhotoItem, { key: photo.id,
-	            photo: photo });
-	        })
+	        React.createElement(
+	          'div',
+	          null,
+	          this.state.photos.map(function (photo) {
+	            return React.createElement(PhotoItem, { key: photo.id,
+	              photo: photo });
+	          })
+	        )
 	      );
 	    } else {
 	      return React.createElement('div', null);
@@ -31232,12 +31250,16 @@
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(236);
+	var ApiActions = __webpack_require__(236),
+	    CollectionActions = __webpack_require__(248),
+	    CollectionStore = __webpack_require__(246);
 
 	var ApiUtil = {
 	  fetchAllPhotos: function () {
+	    var collections = CollectionStore.all();
 	    $.ajax({
 	      url: "api/photos",
+	      data: { collections: collections },
 	      success: function (photos) {
 	        ApiActions.receiveAllPhotos(photos);
 	      }
@@ -31269,9 +31291,55 @@
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(1);
+
+	var Splash = React.createClass({
+	  displayName: "Splash",
+
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "div",
+	        { className: "splash-main" },
+	        React.createElement(
+	          "span",
+	          { className: "introduction" },
+	          "The home for all your photos."
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "splash-main-2" },
+	        React.createElement(
+	          "span",
+	          { className: "introduction-2" },
+	          "Inspire others with your creativity..."
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "splash-main-3" },
+	        React.createElement(
+	          "span",
+	          { className: "introduction-3" },
+	          "...and discover breath-taking sights from around the world."
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Splash;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1),
 	    PhotoStore = __webpack_require__(212),
-	    PhotoComment = __webpack_require__(238);
+	    PhotoComment = __webpack_require__(239);
 
 	var PhotoDetail = React.createClass({
 	  displayName: 'PhotoDetail',
@@ -31359,7 +31427,7 @@
 	module.exports = PhotoDetail;
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -31387,6 +31455,247 @@
 	});
 
 	module.exports = PhotoComment;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    History = __webpack_require__(159).History;
+
+	var HomeButton = React.createClass({
+	  displayName: 'HomeButton',
+
+	  mixins: [History],
+	  onClick: function () {
+	    this.history.pushState(null, "/", {});
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'a',
+	        { onClick: this.onClick },
+	        'HOME'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = HomeButton;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    History = __webpack_require__(159).History;
+
+	var ExploreButton = React.createClass({
+	  displayName: 'ExploreButton',
+
+	  mixins: [History],
+	  onClick: function () {
+	    this.history.pushState(null, "/photos", {});
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'a',
+	        { onClick: this.onClick },
+	        'EXPLORE'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ExploreButton;
+
+/***/ },
+/* 242 */,
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    CollectionsDropdownItem = __webpack_require__(249),
+	    ApiUtil = __webpack_require__(235);
+
+	var CollectionsDropdown = React.createClass({
+	  displayName: 'CollectionsDropdown',
+
+	  render: function () {
+	    var collections = ["People", "Technology", "Nature", "Architecture", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black"];
+
+	    return React.createElement(
+	      'li',
+	      { className: 'dropdown' },
+	      React.createElement(
+	        'a',
+	        { className: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
+	        'COLLECTIONS ',
+	        React.createElement('span', { className: 'caret' })
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'dropdown-menu' },
+	        collections.map(function (collection, idx) {
+	          return React.createElement(CollectionsDropdownItem, { key: idx,
+	            collection: collection });
+	        })
+	      )
+	    );
+	  }
+	});
+
+	module.exports = CollectionsDropdown;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var LoginButton = React.createClass({
+	  displayName: "LoginButton",
+
+	  onClick: function () {
+	    console.log("You clicked the LOGIN button!");
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      null,
+	      React.createElement(
+	        "a",
+	        { onClick: this.onClick },
+	        "LOGIN"
+	      )
+	    );
+	  }
+	});
+
+	module.exports = LoginButton;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var JoinButton = React.createClass({
+	  displayName: "JoinButton",
+
+	  onClick: function () {
+	    console.log("You clicked the JOIN button!");
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      null,
+	      React.createElement(
+	        "a",
+	        { onClick: this.onClick },
+	        "JOIN"
+	      )
+	    );
+	  }
+	});
+
+	module.exports = JoinButton;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(213).Store,
+	    AppDispatcher = __webpack_require__(231),
+	    CollectionConstants = __webpack_require__(247),
+	    CollectionStore = new Store(AppDispatcher);
+
+	var _collections = [];
+
+	var updateCollections = function (collections) {
+	  _collections = collections;
+	};
+
+	CollectionStore.all = function () {
+	  return _collections.slice();
+	};
+
+	CollectionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case CollectionConstants.UPDATE_COLLECTIONS:
+	      updateCollections(payload.collections);
+	      break;
+	  }
+
+	  CollectionStore.__emitChange();
+	};
+
+	module.exports = CollectionStore;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  UPDATE_COLLECTIONS: "UPDATE_COLLECTIONS"
+	};
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(231);
+	var CollectionConstants = __webpack_require__(247);
+
+	var CollectionActions = {
+	  updateCollections: function (collections) {
+	    Dispatcher.dispatch({
+	      actionType: CollectionConstants.UPDATE_COLLECTIONS,
+	      collections: collections
+	    });
+	  },
+	  receiveAllCollections: function (collections) {
+	    Dispatcher.dispatch({
+	      actionType: CollectionConstants.RECEIVE_ALL_COLLECTIONS,
+	      collections: collections
+	    });
+	  }
+	};
+
+	module.exports = CollectionActions;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var CollectionsDropdownItem = React.createClass({
+	  displayName: "CollectionsDropdownItem",
+
+	  onClick: function () {
+	    console.log("You clicked " + this.props.collection);
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "li",
+	        { onClick: this.onClick },
+	        this.props.collection
+	      ),
+	      React.createElement("li", { role: "separator", className: "divider" })
+	    );
+	  }
+	});
+
+	module.exports = CollectionsDropdownItem;
 
 /***/ }
 /******/ ]);

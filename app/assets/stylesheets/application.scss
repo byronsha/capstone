@@ -14,7 +14,11 @@
  *= require_self
  */
 
+
  @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
 
  /*!
   * bootswatch v3.3.6
@@ -3569,7 +3573,7 @@
  }
  .dropdown-menu .divider {
    height: 1px;
-   margin: 9.5px 0;
+   margin: 5px 0;
    overflow: hidden;
    background-color: #e5e5e5;
  }
@@ -3586,7 +3590,7 @@
  .dropdown-menu > li > a:focus {
    text-decoration: none;
    color: #ffffff;
-   background-color: #2780e3;
+   background-color: #505050;
  }
  .dropdown-menu > .active > a,
  .dropdown-menu > .active > a:hover,
@@ -4275,6 +4279,7 @@
  }
  .navbar-fixed-top,
  .navbar-fixed-bottom {
+   background: black;
    position: fixed;
    right: 0;
    left: 0;
@@ -4298,7 +4303,7 @@
  .navbar-brand {
    float: left;
    padding: 14.5px 15px;
-   font-size: 19px;
+   font-size: 16px;
    line-height: 21px;
    height: 50px;
  }
@@ -4536,8 +4541,8 @@
  }
  .navbar-default .navbar-nav > li > a:hover,
  .navbar-default .navbar-nav > li > a:focus {
-   color: #ffffff;
-   background-color: #090909;
+   background: #F0F0F0;
+   color: #505050;
  }
  .navbar-default .navbar-nav > .active > a,
  .navbar-default .navbar-nav > .active > a:hover,
