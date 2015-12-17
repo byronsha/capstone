@@ -32,6 +32,8 @@ gem 'faker', '~> 1.6.1'
 gem 'cloudinary'
 
 gem 'bootstrap-sass'
+
+gem 'newrelic_rpm'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
