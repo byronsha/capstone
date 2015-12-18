@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   get "home", to: "static_pages#home"
 
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show]
   resource :session, only: [:new, :create, :destroy]
 
   namespace :api, defaults: {format: :json} do

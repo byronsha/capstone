@@ -2,10 +2,6 @@ class Api::PhotosController < ApplicationController
 
   def index
     @photos = Photo.all
-
-    # if params[:collection]
-    #   @photos = Photo.in_collection(params[:collection])
-    # end
   end
 
   private

@@ -1,6 +1,9 @@
-var React = require('react');
+var React = require('react'),
+    SessionsUtil = require('../../util/sessions_util.js'),
+    History = require('react-router').History;
 
 var LoginButton = React.createClass({
+  mixins: [History],
   getInitialState: function () {
     return ({
       username: "",
@@ -10,16 +13,15 @@ var LoginButton = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
 
-    var registrationParams = {
+    var loginParams = {
       user: {
         username: this.state.username,
         password: this.state.password
       }
     };
 
-    console.log("login button");
-    console.log(registrationParams);
-    // RegistrationApiUtil.signUp(registrationParams);
+    SessionsUtil.login(loginParams);
+    this.history.pushState(null, "/photos", {});
   },
   usernameChange: function (e) {
     this.setState({ username: e.target.value });

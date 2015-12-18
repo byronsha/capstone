@@ -31170,16 +31170,51 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
+	    SessionStore = __webpack_require__(257),
 	    HomeButton = __webpack_require__(237),
 	    ExploreButton = __webpack_require__(238),
 	    CollectionsDropdown = __webpack_require__(239),
 	    LoginButton = __webpack_require__(249),
-	    SignupButton = __webpack_require__(253);
+	    LogoutButton = __webpack_require__(258),
+	    SignupButton = __webpack_require__(253),
+	    ProfileButton = __webpack_require__(259);
 
 	var Sidebar = React.createClass({
 	  displayName: 'Sidebar',
 
+	  getInitialState: function () {
+	    return { currentUser: {} };
+	  },
+	  componentDidMount: function () {
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	  },
+	  componentWillUnmount: function () {
+	    this.sessionListener.remove();
+	  },
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+	  },
 	  render: function () {
+	    console.log(SessionStore.currentUser());
+
+	    var sessionButtons;
+
+	    if (Object.keys(this.state.currentUser).length === 0) {
+	      sessionButtons = React.createElement(
+	        'ul',
+	        { className: 'nav navbar-nav navbar-right' },
+	        React.createElement(LoginButton, null),
+	        React.createElement(SignupButton, null)
+	      );
+	    } else {
+	      sessionButtons = React.createElement(
+	        'ul',
+	        { className: 'nav navbar-nav navbar-right' },
+	        React.createElement(ProfileButton, { currentUser: this.state.currentUser }),
+	        React.createElement(LogoutButton, null)
+	      );
+	    };
+
 	    return React.createElement(
 	      'nav',
 	      { className: 'navbar navbar-default' },
@@ -31212,12 +31247,7 @@
 	            React.createElement(ExploreButton, null),
 	            React.createElement(CollectionsDropdown, null)
 	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'nav navbar-nav navbar-right' },
-	            React.createElement(LoginButton, null),
-	            React.createElement(SignupButton, null)
-	          )
+	          sessionButtons
 	        )
 	      )
 	    );
@@ -31689,11 +31719,14 @@
 /* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    SessionsUtil = __webpack_require__(254),
+	    History = __webpack_require__(159).History;
 
 	var LoginButton = React.createClass({
-	  displayName: "LoginButton",
+	  displayName: 'LoginButton',
 
+	  mixins: [History],
 	  getInitialState: function () {
 	    return {
 	      username: "",
@@ -31703,16 +31736,15 @@
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 
-	    var registrationParams = {
+	    var loginParams = {
 	      user: {
 	        username: this.state.username,
 	        password: this.state.password
 	      }
 	    };
 
-	    console.log("login button");
-	    console.log(registrationParams);
-	    // RegistrationApiUtil.signUp(registrationParams);
+	    SessionsUtil.login(loginParams);
+	    this.history.pushState(null, "/photos", {});
 	  },
 	  usernameChange: function (e) {
 	    this.setState({ username: e.target.value });
@@ -31722,58 +31754,58 @@
 	  },
 	  render: function () {
 	    return React.createElement(
-	      "li",
-	      { className: "dropdown" },
+	      'li',
+	      { className: 'dropdown' },
 	      React.createElement(
-	        "a",
-	        { className: "dropdown-toggle",
-	          "data-toggle": "dropdown",
-	          role: "button",
-	          "aria-haspopup": "true",
-	          "aria-expanded": "false" },
-	        "LOG IN ",
-	        React.createElement("span", { className: "caret" })
+	        'a',
+	        { className: 'dropdown-toggle',
+	          'data-toggle': 'dropdown',
+	          role: 'button',
+	          'aria-haspopup': 'true',
+	          'aria-expanded': 'false' },
+	        'LOG IN ',
+	        React.createElement('span', { className: 'caret' })
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "dropdown-menu" },
+	        'div',
+	        { className: 'dropdown-menu' },
 	        React.createElement(
-	          "div",
-	          { className: "col-sm-12" },
+	          'div',
+	          { className: 'col-sm-12' },
 	          React.createElement(
-	            "div",
-	            { className: "login-username-input" },
-	            React.createElement("input", { type: "text",
-	              placeholder: "Username",
-	              className: "form-control input-sm",
+	            'div',
+	            { className: 'login-username-input' },
+	            React.createElement('input', { type: 'text',
+	              placeholder: 'Username',
+	              className: 'form-control input-sm',
 	              onChange: this.usernameChange })
 	          )
 	        ),
-	        React.createElement("br", null),
+	        React.createElement('br', null),
 	        React.createElement(
-	          "div",
-	          { className: "col-sm-12" },
+	          'div',
+	          { className: 'col-sm-12' },
 	          React.createElement(
-	            "div",
-	            { className: "login-password-input" },
-	            React.createElement("input", { type: "password",
-	              placeholder: "Password",
-	              className: "form-control input-sm",
+	            'div',
+	            { className: 'login-password-input' },
+	            React.createElement('input', { type: 'password',
+	              placeholder: 'Password',
+	              className: 'form-control input-sm',
 	              onChange: this.passwordChange })
 	          )
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "col-sm-12" },
+	          'div',
+	          { className: 'col-sm-12' },
 	          React.createElement(
-	            "div",
-	            { className: "login-submit-button" },
+	            'div',
+	            { className: 'login-submit-button' },
 	            React.createElement(
-	              "button",
-	              { type: "submit",
-	                className: "btn btn-success btn-sm",
+	              'button',
+	              { type: 'submit',
+	                className: 'btn btn-success btn-sm',
 	                onClick: this.handleSubmit },
-	              "Log in"
+	              'Log in'
 	            )
 	          )
 	        )
@@ -31791,11 +31823,14 @@
 /* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    SessionsUtil = __webpack_require__(254),
+	    History = __webpack_require__(159).History;
 
 	var Signup = React.createClass({
-	  displayName: "Signup",
+	  displayName: 'Signup',
 
+	  mixins: [History],
 	  getInitialState: function () {
 	    return {
 	      username: "",
@@ -31805,16 +31840,15 @@
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 
-	    var registrationParams = {
+	    var signupParams = {
 	      user: {
 	        username: this.state.username,
 	        password: this.state.password
 	      }
 	    };
 
-	    console.log("signup button");
-	    console.log(registrationParams);
-	    // RegistrationApiUtil.signUp(registrationParams);
+	    SessionsUtil.signup(signupParams);
+	    this.history.pushState(null, "/photos", {});
 	  },
 	  usernameChange: function (e) {
 	    this.setState({ username: e.target.value });
@@ -31824,58 +31858,58 @@
 	  },
 	  render: function () {
 	    return React.createElement(
-	      "li",
-	      { className: "dropdown" },
+	      'li',
+	      { className: 'dropdown' },
 	      React.createElement(
-	        "a",
-	        { className: "dropdown-toggle",
-	          "data-toggle": "dropdown",
-	          role: "button",
-	          "aria-haspopup": "true",
-	          "aria-expanded": "false" },
-	        "SIGN UP ",
-	        React.createElement("span", { className: "caret" })
+	        'a',
+	        { className: 'dropdown-toggle',
+	          'data-toggle': 'dropdown',
+	          role: 'button',
+	          'aria-haspopup': 'true',
+	          'aria-expanded': 'false' },
+	        'SIGN UP ',
+	        React.createElement('span', { className: 'caret' })
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "dropdown-menu" },
+	        'div',
+	        { className: 'dropdown-menu' },
 	        React.createElement(
-	          "div",
-	          { className: "col-sm-12" },
+	          'div',
+	          { className: 'col-sm-12' },
 	          React.createElement(
-	            "div",
-	            { className: "login-username-input" },
-	            React.createElement("input", { type: "text",
-	              placeholder: "Username",
-	              className: "form-control input-sm",
+	            'div',
+	            { className: 'login-username-input' },
+	            React.createElement('input', { type: 'text',
+	              placeholder: 'Username',
+	              className: 'form-control input-sm',
 	              onChange: this.usernameChange })
 	          )
 	        ),
-	        React.createElement("br", null),
+	        React.createElement('br', null),
 	        React.createElement(
-	          "div",
-	          { className: "col-sm-12" },
+	          'div',
+	          { className: 'col-sm-12' },
 	          React.createElement(
-	            "div",
-	            { className: "login-password-input" },
-	            React.createElement("input", { type: "password",
-	              placeholder: "Password",
-	              className: "form-control input-sm",
+	            'div',
+	            { className: 'login-password-input' },
+	            React.createElement('input', { type: 'password',
+	              placeholder: 'Password',
+	              className: 'form-control input-sm',
 	              onChange: this.passwordChange })
 	          )
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "col-sm-12" },
+	          'div',
+	          { className: 'col-sm-12' },
 	          React.createElement(
-	            "div",
-	            { className: "login-submit-button" },
+	            'div',
+	            { className: 'login-submit-button' },
 	            React.createElement(
-	              "button",
-	              { type: "submit",
-	                className: "btn btn-success btn-sm",
+	              'button',
+	              { type: 'submit',
+	                className: 'btn btn-success btn-sm',
 	                onClick: this.handleSubmit },
-	              "Sign up"
+	              'Sign up'
 	            )
 	          )
 	        )
@@ -31885,6 +31919,184 @@
 	});
 
 	module.exports = Signup;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var SessionActions = __webpack_require__(255);
+
+	var SessionsUtil = {
+	  signup: function (signupParams) {
+	    $.ajax({
+	      url: '/users',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: signupParams,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      error: function (data) {
+	        console.log(data);
+	        // console.log($.parseJSON(data.responseText).errors);
+	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
+	      }
+	    });
+	  },
+	  login: function (loginParams) {
+	    $.ajax({
+	      url: '/session',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: loginParams,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      error: function (data) {
+	        console.log(data);
+	        // console.log($.parseJSON(data.responseText).errors);
+	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
+	      }
+	    });
+	  },
+	  logout: function () {
+	    $.ajax({
+	      url: "/session",
+	      type: "DELETE",
+	      success: function (currentUser) {
+	        SessionActions.logoutCurrentUser(currentUser);
+	      }
+	    });
+	  }
+	};
+
+	module.exports = SessionsUtil;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(211);
+	var SessionConstants = __webpack_require__(256);
+
+	var SessionActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	    console.log(currentUser);
+	  },
+	  logoutCurrentUser: function () {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
+	      currentUser: {}
+	    });
+	    console.log("logged out");
+	  }
+	};
+
+	module.exports = SessionActions;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	};
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(219).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    SessionConstants = __webpack_require__(256),
+	    SessionStore = new Store(AppDispatcher);
+
+	var _currentUser = {};
+
+	var setCurrentUser = function (user) {
+	  _currentUser = user;
+	};
+
+	SessionStore.currentUser = function () {
+	  return _currentUser;
+	};
+
+	SessionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SessionConstants.RECEIVE_CURRENT_USER:
+	      setCurrentUser(payload.currentUser);
+	      SessionStore.__emitChange();
+	      break;
+	  }
+
+	  SessionStore.__emitChange();
+	};
+
+	module.exports = SessionStore;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    SessionsUtil = __webpack_require__(254),
+	    History = __webpack_require__(159).History;
+
+	var LogoutButton = React.createClass({
+	  displayName: 'LogoutButton',
+
+	  mixins: [History],
+	  onClick: function () {
+	    SessionsUtil.logout();
+	    this.history.pushState(null, "/", {});
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'a',
+	        { onClick: this.onClick },
+	        'LOGOUT'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = LogoutButton;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var ProfileButton = React.createClass({
+	  displayName: "ProfileButton",
+
+	  onClick: function () {
+	    console.log("hello " + this.props.currentUser.username);
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      null,
+	      React.createElement(
+	        "a",
+	        { onClick: this.onClick },
+	        this.props.currentUser.username,
+	        " ",
+	        React.createElement("span", { className: "caret" })
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ProfileButton;
 
 /***/ }
 /******/ ]);
