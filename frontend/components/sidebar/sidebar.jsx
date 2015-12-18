@@ -2,8 +2,8 @@ var React = require('react'),
     HomeButton = require('./home_button.jsx'),
     ExploreButton = require('./explore_button.jsx'),
     CollectionsDropdown = require('./collections_dropdown.jsx'),
-    LoginButton = require('../login/login_button.jsx'),
-    JoinButton = require('../login/join_button.jsx');
+    LoginButton = require('../sessions/login_button.jsx'),
+    SignupButton = require('../sessions/signup_button.jsx');
 
 var Sidebar = React.createClass({
   render: function () {
@@ -22,7 +22,7 @@ var Sidebar = React.createClass({
           </div>
 
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul className="nav navbar-nav">
+            <ul className="nav navbar-nav navbar-left">
               <HomeButton />
               <ExploreButton />
               <CollectionsDropdown />
@@ -30,7 +30,7 @@ var Sidebar = React.createClass({
 
             <ul className="nav navbar-nav navbar-right">
               <LoginButton />
-              <JoinButton />
+              <SignupButton />
             </ul>
           </div>
 

@@ -24326,7 +24326,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(210),
-	    CollectionActions = __webpack_require__(216),
 	    CollectionStore = __webpack_require__(218);
 
 	var ApiUtil = {
@@ -31174,8 +31173,8 @@
 	    HomeButton = __webpack_require__(237),
 	    ExploreButton = __webpack_require__(238),
 	    CollectionsDropdown = __webpack_require__(239),
-	    LoginButton = __webpack_require__(241),
-	    JoinButton = __webpack_require__(242);
+	    LoginButton = __webpack_require__(249),
+	    SignupButton = __webpack_require__(253);
 
 	var Sidebar = React.createClass({
 	  displayName: 'Sidebar',
@@ -31208,7 +31207,7 @@
 	          { className: 'collapse navbar-collapse', id: 'bs-example-navbar-collapse-1' },
 	          React.createElement(
 	            'ul',
-	            { className: 'nav navbar-nav' },
+	            { className: 'nav navbar-nav navbar-left' },
 	            React.createElement(HomeButton, null),
 	            React.createElement(ExploreButton, null),
 	            React.createElement(CollectionsDropdown, null)
@@ -31217,7 +31216,7 @@
 	            'ul',
 	            { className: 'nav navbar-nav navbar-right' },
 	            React.createElement(LoginButton, null),
-	            React.createElement(JoinButton, null)
+	            React.createElement(SignupButton, null)
 	          )
 	        )
 	      )
@@ -31379,60 +31378,8 @@
 	module.exports = CollectionsDropdownItem;
 
 /***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var LoginButton = React.createClass({
-	  displayName: "LoginButton",
-
-	  onClick: function () {
-	    console.log("You clicked the LOGIN button!");
-	  },
-	  render: function () {
-	    return React.createElement(
-	      "li",
-	      null,
-	      React.createElement(
-	        "a",
-	        { onClick: this.onClick },
-	        "LOGIN"
-	      )
-	    );
-	  }
-	});
-
-	module.exports = LoginButton;
-
-/***/ },
-/* 242 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var JoinButton = React.createClass({
-	  displayName: "JoinButton",
-
-	  onClick: function () {
-	    console.log("You clicked the JOIN button!");
-	  },
-	  render: function () {
-	    return React.createElement(
-	      "li",
-	      null,
-	      React.createElement(
-	        "a",
-	        { onClick: this.onClick },
-	        "JOIN"
-	      )
-	    );
-	  }
-	});
-
-	module.exports = JoinButton;
-
-/***/ },
+/* 241 */,
+/* 242 */,
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31737,6 +31684,207 @@
 	});
 
 	module.exports = PhotoComment;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var LoginButton = React.createClass({
+	  displayName: "LoginButton",
+
+	  getInitialState: function () {
+	    return {
+	      username: "",
+	      password: ""
+	    };
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+
+	    var registrationParams = {
+	      user: {
+	        username: this.state.username,
+	        password: this.state.password
+	      }
+	    };
+
+	    console.log("login button");
+	    console.log(registrationParams);
+	    // RegistrationApiUtil.signUp(registrationParams);
+	  },
+	  usernameChange: function (e) {
+	    this.setState({ username: e.target.value });
+	  },
+	  passwordChange: function (e) {
+	    this.setState({ password: e.target.value });
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      { className: "dropdown" },
+	      React.createElement(
+	        "a",
+	        { className: "dropdown-toggle",
+	          "data-toggle": "dropdown",
+	          role: "button",
+	          "aria-haspopup": "true",
+	          "aria-expanded": "false" },
+	        "LOG IN ",
+	        React.createElement("span", { className: "caret" })
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "dropdown-menu" },
+	        React.createElement(
+	          "div",
+	          { className: "col-sm-12" },
+	          React.createElement(
+	            "div",
+	            { className: "login-username-input" },
+	            React.createElement("input", { type: "text",
+	              placeholder: "Username",
+	              className: "form-control input-sm",
+	              onChange: this.usernameChange })
+	          )
+	        ),
+	        React.createElement("br", null),
+	        React.createElement(
+	          "div",
+	          { className: "col-sm-12" },
+	          React.createElement(
+	            "div",
+	            { className: "login-password-input" },
+	            React.createElement("input", { type: "password",
+	              placeholder: "Password",
+	              className: "form-control input-sm",
+	              onChange: this.passwordChange })
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "col-sm-12" },
+	          React.createElement(
+	            "div",
+	            { className: "login-submit-button" },
+	            React.createElement(
+	              "button",
+	              { type: "submit",
+	                className: "btn btn-success btn-sm",
+	                onClick: this.handleSubmit },
+	              "Log in"
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = LoginButton;
+
+/***/ },
+/* 250 */,
+/* 251 */,
+/* 252 */,
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Signup = React.createClass({
+	  displayName: "Signup",
+
+	  getInitialState: function () {
+	    return {
+	      username: "",
+	      password: ""
+	    };
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+
+	    var registrationParams = {
+	      user: {
+	        username: this.state.username,
+	        password: this.state.password
+	      }
+	    };
+
+	    console.log("signup button");
+	    console.log(registrationParams);
+	    // RegistrationApiUtil.signUp(registrationParams);
+	  },
+	  usernameChange: function (e) {
+	    this.setState({ username: e.target.value });
+	  },
+	  passwordChange: function (e) {
+	    this.setState({ password: e.target.value });
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      { className: "dropdown" },
+	      React.createElement(
+	        "a",
+	        { className: "dropdown-toggle",
+	          "data-toggle": "dropdown",
+	          role: "button",
+	          "aria-haspopup": "true",
+	          "aria-expanded": "false" },
+	        "SIGN UP ",
+	        React.createElement("span", { className: "caret" })
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "dropdown-menu" },
+	        React.createElement(
+	          "div",
+	          { className: "col-sm-12" },
+	          React.createElement(
+	            "div",
+	            { className: "login-username-input" },
+	            React.createElement("input", { type: "text",
+	              placeholder: "Username",
+	              className: "form-control input-sm",
+	              onChange: this.usernameChange })
+	          )
+	        ),
+	        React.createElement("br", null),
+	        React.createElement(
+	          "div",
+	          { className: "col-sm-12" },
+	          React.createElement(
+	            "div",
+	            { className: "login-password-input" },
+	            React.createElement("input", { type: "password",
+	              placeholder: "Password",
+	              className: "form-control input-sm",
+	              onChange: this.passwordChange })
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "col-sm-12" },
+	          React.createElement(
+	            "div",
+	            { className: "login-submit-button" },
+	            React.createElement(
+	              "button",
+	              { type: "submit",
+	                className: "btn btn-success btn-sm",
+	                onClick: this.handleSubmit },
+	              "Sign up"
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Signup;
 
 /***/ }
 /******/ ]);

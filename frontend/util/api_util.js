@@ -1,5 +1,4 @@
 var ApiActions = require('../actions/api_actions.js'),
-    CollectionActions = require('../actions/collection_actions.js'),
     CollectionStore = require('../stores/collection_store.js');
 
 var ApiUtil = {

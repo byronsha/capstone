@@ -18,7 +18,7 @@ class Photo < ActiveRecord::Base
 
   belongs_to :user
   has_many :photo_comments
-  has_many :photo_collections
+  has_many :photo_collections 
   has_many :collections, through: :photo_collections
 
 end
