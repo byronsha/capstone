@@ -6,7 +6,8 @@ var React = require('react'),
     LoginButton = require('../sessions/login_button.jsx'),
     LogoutButton = require('../sessions/logout_button.jsx'),
     SignupButton = require('../sessions/signup_button.jsx'),
-    ProfileButton = require('../sessions/profile_button.jsx');
+    ProfileButton = require('../sessions/profile_button.jsx'),
+    CreateButton = require('./create_button.jsx');
 
 var Sidebar = React.createClass({
   getInitialState: function () {
@@ -22,8 +23,6 @@ var Sidebar = React.createClass({
     this.setState({ currentUser: SessionStore.currentUser() });
   },
   render: function () {
-    console.log(SessionStore.currentUser());
-
     var sessionButtons;
 
     if (Object.keys(this.state.currentUser).length === 0) {
@@ -36,7 +35,8 @@ var Sidebar = React.createClass({
     } else {
       sessionButtons = (
         <ul className="nav navbar-nav navbar-right">
-          <ProfileButton currentUser={this.state.currentUser}/>
+          <CreateButton currentUser={this.state.currentUser} />
+          <ProfileButton currentUser={this.state.currentUser} />
           <LogoutButton />
         </ul>
       )

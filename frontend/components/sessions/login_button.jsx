@@ -1,14 +1,26 @@
 var React = require('react'),
+    LinkedStateMixin = require('react-addons-linked-state-mixin'),
     SessionsUtil = require('../../util/sessions_util.js'),
+    UiStore = require("../../stores/ui_store.js"),
     History = require('react-router').History;
 
 var LoginButton = React.createClass({
-  mixins: [History],
+  mixins: [History, LinkedStateMixin],
   getInitialState: function () {
     return ({
       username: "",
-      password: ""
+      password: "",
+      flash: ""
     });
+  },
+  componentDidMount: function () {
+    this.uiListener = UiStore.addListener(this._onUiChange);
+  },
+  _onUiChange: function () {
+    var newFlash = UiStore.flash();
+    if (newFlash !== this.state.flash) {
+      this.setState({ flash: newFlash });
+    }
   },
   handleSubmit: function (e) {
     e.preventDefault();
@@ -20,14 +32,9 @@ var LoginButton = React.createClass({
       }
     };
 
+    this.setState({ username: "", password: "" });
     SessionsUtil.login(loginParams);
-    this.history.pushState(null, "/photos", {});
-  },
-  usernameChange: function (e) {
-    this.setState({ username: e.target.value });
-  },
-  passwordChange: function (e) {
-    this.setState({ password: e.target.value });
+    // this.history.pushState(null, "/photos", {});
   },
   render: function () {
     return (
@@ -41,33 +48,37 @@ var LoginButton = React.createClass({
 
         <div className="dropdown-menu">
 
-          <div className="col-sm-12">
-            <div className="login-username-input">
-              <input type="text"
-                     placeholder="Username"
-                     className="form-control input-sm"
-                     onChange={this.usernameChange} />
+          <form>
+            <div className="col-md-12">
+              <div className="login-username-input">
+                <input type="text"
+                       valueLink={this.linkState("username")}
+                       placeholder="Username"
+                       className="form-control input-sm" />
+              </div>
             </div>
-          </div>
 
-          <br/>
+            <br/>
 
-          <div className="col-sm-12">
-            <div className="login-password-input">
-              <input type="password"
-                     placeholder="Password"
-                     className="form-control input-sm"
-                     onChange={this.passwordChange} />
+            <div className="col-md-12">
+              <div className="login-password-input">
+                <input type="password"
+                       valueLink={this.linkState("password")}
+                       placeholder="Password"
+                       className="form-control input-sm" />
+              </div>
             </div>
-          </div>
 
-          <div className="col-sm-12">
-            <div className="login-submit-button">
-              <button type="submit"
-                      className="btn btn-success btn-sm"
-                      onClick={this.handleSubmit}>Log in</button>
+            <div className="col-md-12">
+              <div className="login-submit-button">
+                <button type="submit"
+                        className="btn btn-success btn-sm"
+                        onClick={this.handleSubmit}>Log in</button>
+
+                <span className="flash-error">{this.state.flash}</span>
+              </div>
             </div>
-          </div>
+          </form>
 
         </div>
       </li>

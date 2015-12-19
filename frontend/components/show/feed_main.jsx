@@ -40,8 +40,6 @@ var FeedMain = React.createClass({
       }
     }
 
-    console.log(currentCollectionPhotos.length);
-
     if (currentCollectionPhotos.length > 0) {
       return (
         <div className="feed-main">

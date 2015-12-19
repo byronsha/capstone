@@ -1,4 +1,5 @@
-var SessionActions = require('../actions/session_actions.js');
+var SessionActions = require('../actions/session_actions.js'),
+    UiActions = require('../actions/ui_actions.js');
 
 var SessionsUtil = {
   signup: function (signupParams) {
@@ -9,11 +10,10 @@ var SessionsUtil = {
       data: signupParams,
       success: function (currentUser) {
         SessionActions.receiveCurrentUser(currentUser);
+        UiActions.removeFlash();
       },
       error: function (data) {
-        console.log(data);
-        // console.log($.parseJSON(data.responseText).errors);
-        // UiActions.setFlash($.parseJSON(data.responseText).errors);
+        UiActions.setFlash($.parseJSON(data.responseText).errors);
       }
     });
   },
@@ -25,11 +25,10 @@ var SessionsUtil = {
       data: loginParams,
       success: function (currentUser) {
         SessionActions.receiveCurrentUser(currentUser);
+        UiActions.removeFlash();
       },
       error: function (data) {
-        console.log(data);
-        // console.log($.parseJSON(data.responseText).errors);
-        // UiActions.setFlash($.parseJSON(data.responseText).errors);
+        UiActions.setFlash($.parseJSON(data.responseText).errors);
       }
     });
   },

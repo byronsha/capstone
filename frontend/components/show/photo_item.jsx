@@ -4,7 +4,7 @@ var React = require('react'),
 var PhotoItem = React.createClass({
   mixins: [History],
   onClick: function () {
-    this.history.pushState(null, "/photos/" + this.props.photo.id, {});
+    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
   },
   render: function () {
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",

@@ -41,7 +41,7 @@ var Signup = React.createClass({
 
         <div className="dropdown-menu">
 
-          <div className="col-sm-12">
+          <div className="col-md-12">
             <div className="login-username-input">
               <input type="text"
                      placeholder="Username"
@@ -52,7 +52,7 @@ var Signup = React.createClass({
 
           <br/>
 
-          <div className="col-sm-12">
+          <div className="col-md-12">
             <div className="login-password-input">
               <input type="password"
                      placeholder="Password"
@@ -61,7 +61,7 @@ var Signup = React.createClass({
             </div>
           </div>
 
-          <div className="col-sm-12">
+          <div className="col-md-12">
             <div className="login-submit-button">
               <button type="submit"
                       className="btn btn-success btn-sm"

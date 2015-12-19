@@ -7,7 +7,13 @@ var ApiActions = {
       actionType: PhotoConstants.ALL_PHOTOS_RECEIVED,
       photos: photos
     });
+  },
+  createPhoto: function (photo) {
+    Dispatcher.dispatch({
+      actionType: PhotoConstants.CREATE_PHOTO,
+      photo: photo
+    });
   }
-}
+};
 
 module.exports = ApiActions;

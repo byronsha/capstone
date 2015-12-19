@@ -9,8 +9,17 @@
 
 .login-password-input {
   padding: 5px;
+  width: 250px;
 }
 
 .login-submit-button {
   padding-left: 5px;
+}
+
+.flash-error {
+  position: relative;
+  font-size: 14px;
+  color: red;
+  padding-left: 10px;
+  top: 1px;
 }

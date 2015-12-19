@@ -50,16 +50,18 @@
 	    Route = __webpack_require__(159).Route,
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    App = __webpack_require__(208),
-	    FeedMain = __webpack_require__(243),
-	    Splash = __webpack_require__(246),
-	    PhotoDetail = __webpack_require__(247);
+	    FeedMain = __webpack_require__(256),
+	    Splash = __webpack_require__(259),
+	    PhotoDetail = __webpack_require__(260),
+	    UploadPhotoForm = __webpack_require__(262);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: Splash }),
-	  React.createElement(Route, { path: 'photos', component: FeedMain }),
-	  React.createElement(Route, { path: 'photos/:photoId', component: PhotoDetail })
+	  React.createElement(Route, { path: '/photos', component: FeedMain }),
+	  React.createElement(Route, { path: '/users/:userId/photos/new', component: UploadPhotoForm }),
+	  React.createElement(Route, { path: '/users/:userId/photos/:photoId', component: PhotoDetail })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -24304,7 +24306,7 @@
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    Sidebar = __webpack_require__(236);
+	    Sidebar = __webpack_require__(235);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24326,16 +24328,33 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(210),
-	    CollectionStore = __webpack_require__(218);
+	    UiActions = __webpack_require__(250),
+	    CollectionStore = __webpack_require__(216);
 
 	var ApiUtil = {
 	  fetchAllPhotos: function () {
 	    var collection = CollectionStore.currentCollection();
 	    $.ajax({
-	      url: "api/photos",
+	      url: 'api/photos',
 	      data: { collection: collection },
 	      success: function (photos) {
 	        ApiActions.receiveAllPhotos(photos);
+	      }
+	    });
+	  },
+	  createPhoto: function (photoParams) {
+	    $.ajax({
+	      url: 'api/photos',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: photoParams,
+	      success: function (photo) {
+	        ApiActions.createPhoto(photo);
+	        // UiActions.removeFlash();
+	      },
+	      error: function (data) {
+	        console.log("create photo error");
+	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
 	      }
 	    });
 	  }
@@ -24355,6 +24374,12 @@
 	    Dispatcher.dispatch({
 	      actionType: PhotoConstants.ALL_PHOTOS_RECEIVED,
 	      photos: photos
+	    });
+	  },
+	  createPhoto: function (photo) {
+	    Dispatcher.dispatch({
+	      actionType: PhotoConstants.CREATE_PHOTO,
+	      photo: photo
 	    });
 	  }
 	};
@@ -24682,42 +24707,17 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  ALL_PHOTOS_RECEIVED: "ALL_PHOTOS_RECEIVED"
+	  ALL_PHOTOS_RECEIVED: "ALL_PHOTOS_RECEIVED",
+	  CREATE_PHOTO: "CREATE_PHOTO"
 	};
 
 /***/ },
 /* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(211);
-	var CollectionConstants = __webpack_require__(217);
-
-	var CollectionActions = {
-	  updateCollection: function (collection) {
-	    Dispatcher.dispatch({
-	      actionType: CollectionConstants.UPDATE_COLLECTION,
-	      collection: collection
-	    });
-	  }
-	};
-
-	module.exports = CollectionActions;
-
-/***/ },
-/* 217 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  UPDATE_COLLECTION: "UPDATE_COLLECTION"
-	};
-
-/***/ },
-/* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(219).Store,
+	var Store = __webpack_require__(217).Store,
 	    AppDispatcher = __webpack_require__(211),
-	    CollectionConstants = __webpack_require__(217),
+	    CollectionConstants = __webpack_require__(234),
 	    CollectionStore = new Store(AppDispatcher);
 
 	var _collection = "All";
@@ -24744,7 +24744,7 @@
 	module.exports = CollectionStore;
 
 /***/ },
-/* 219 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24756,15 +24756,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(220);
-	module.exports.MapStore = __webpack_require__(223);
-	module.exports.Mixin = __webpack_require__(235);
-	module.exports.ReduceStore = __webpack_require__(224);
-	module.exports.Store = __webpack_require__(225);
+	module.exports.Container = __webpack_require__(218);
+	module.exports.MapStore = __webpack_require__(221);
+	module.exports.Mixin = __webpack_require__(233);
+	module.exports.ReduceStore = __webpack_require__(222);
+	module.exports.Store = __webpack_require__(223);
 
 
 /***/ },
-/* 220 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24786,10 +24786,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(221);
+	var FluxStoreGroup = __webpack_require__(219);
 
 	var invariant = __webpack_require__(214);
-	var shallowEqual = __webpack_require__(222);
+	var shallowEqual = __webpack_require__(220);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -24947,7 +24947,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 221 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25028,7 +25028,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 222 */
+/* 220 */
 /***/ function(module, exports) {
 
 	/**
@@ -25083,7 +25083,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 223 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25104,8 +25104,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(224);
-	var Immutable = __webpack_require__(234);
+	var FluxReduceStore = __webpack_require__(222);
+	var Immutable = __webpack_require__(232);
 
 	var invariant = __webpack_require__(214);
 
@@ -25233,7 +25233,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 224 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25254,9 +25254,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(225);
+	var FluxStore = __webpack_require__(223);
 
-	var abstractMethod = __webpack_require__(233);
+	var abstractMethod = __webpack_require__(231);
 	var invariant = __webpack_require__(214);
 
 	var FluxReduceStore = (function (_FluxStore) {
@@ -25340,7 +25340,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 225 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25359,7 +25359,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(226);
+	var _require = __webpack_require__(224);
 
 	var EventEmitter = _require.EventEmitter;
 
@@ -25523,7 +25523,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 226 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25536,14 +25536,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(227)
+	  EventEmitter: __webpack_require__(225)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 227 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25562,11 +25562,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(228);
-	var EventSubscriptionVendor = __webpack_require__(230);
+	var EmitterSubscription = __webpack_require__(226);
+	var EventSubscriptionVendor = __webpack_require__(228);
 
-	var emptyFunction = __webpack_require__(232);
-	var invariant = __webpack_require__(231);
+	var emptyFunction = __webpack_require__(230);
+	var invariant = __webpack_require__(229);
 
 	/**
 	 * @class BaseEventEmitter
@@ -25740,7 +25740,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 228 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25761,7 +25761,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(229);
+	var EventSubscription = __webpack_require__(227);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -25793,7 +25793,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 229 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/**
@@ -25844,7 +25844,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 230 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25863,7 +25863,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(229);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -25953,7 +25953,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 231 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26008,7 +26008,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 230 */
 /***/ function(module, exports) {
 
 	/**
@@ -26051,7 +26051,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 233 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26078,7 +26078,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31043,7 +31043,7 @@
 	}));
 
 /***/ },
-/* 235 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31060,7 +31060,7 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(221);
+	var FluxStoreGroup = __webpack_require__(219);
 
 	var invariant = __webpack_require__(214);
 
@@ -31166,18 +31166,27 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 234 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  UPDATE_COLLECTION: "UPDATE_COLLECTION"
+	};
+
+/***/ },
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionStore = __webpack_require__(257),
-	    HomeButton = __webpack_require__(237),
-	    ExploreButton = __webpack_require__(238),
-	    CollectionsDropdown = __webpack_require__(239),
-	    LoginButton = __webpack_require__(249),
-	    LogoutButton = __webpack_require__(258),
-	    SignupButton = __webpack_require__(253),
-	    ProfileButton = __webpack_require__(259);
+	    SessionStore = __webpack_require__(236),
+	    HomeButton = __webpack_require__(238),
+	    ExploreButton = __webpack_require__(239),
+	    CollectionsDropdown = __webpack_require__(240),
+	    LoginButton = __webpack_require__(243),
+	    LogoutButton = __webpack_require__(253),
+	    SignupButton = __webpack_require__(254),
+	    ProfileButton = __webpack_require__(255),
+	    CreateButton = __webpack_require__(263);
 
 	var Sidebar = React.createClass({
 	  displayName: 'Sidebar',
@@ -31195,8 +31204,6 @@
 	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
 	  render: function () {
-	    console.log(SessionStore.currentUser());
-
 	    var sessionButtons;
 
 	    if (Object.keys(this.state.currentUser).length === 0) {
@@ -31210,6 +31217,7 @@
 	      sessionButtons = React.createElement(
 	        'ul',
 	        { className: 'nav navbar-nav navbar-right' },
+	        React.createElement(CreateButton, { currentUser: this.state.currentUser }),
 	        React.createElement(ProfileButton, { currentUser: this.state.currentUser }),
 	        React.createElement(LogoutButton, null)
 	      );
@@ -31257,7 +31265,47 @@
 	module.exports = Sidebar;
 
 /***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(217).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    SessionConstants = __webpack_require__(237),
+	    SessionStore = new Store(AppDispatcher);
+
+	var _currentUser = {};
+
+	var setCurrentUser = function (user) {
+	  _currentUser = user;
+	};
+
+	SessionStore.currentUser = function () {
+	  return _currentUser;
+	};
+
+	SessionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SessionConstants.RECEIVE_CURRENT_USER:
+	      setCurrentUser(payload.currentUser);
+	      SessionStore.__emitChange();
+	      break;
+	  }
+
+	  SessionStore.__emitChange();
+	};
+
+	module.exports = SessionStore;
+
+/***/ },
 /* 237 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	};
+
+/***/ },
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -31286,7 +31334,7 @@
 	module.exports = HomeButton;
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -31315,11 +31363,11 @@
 	module.exports = ExploreButton;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CollectionsDropdownItem = __webpack_require__(240),
+	    CollectionsDropdownItem = __webpack_require__(241),
 	    ApiUtil = __webpack_require__(209);
 
 	var CollectionsDropdown = React.createClass({
@@ -31362,12 +31410,12 @@
 	module.exports = CollectionsDropdown;
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CollectionActions = __webpack_require__(216),
-	    CollectionStore = __webpack_require__(218),
+	    CollectionActions = __webpack_require__(242),
+	    CollectionStore = __webpack_require__(216),
 	    History = __webpack_require__(159).History;
 
 	var CollectionsDropdownItem = React.createClass({
@@ -31408,15 +31456,715 @@
 	module.exports = CollectionsDropdownItem;
 
 /***/ },
-/* 241 */,
-/* 242 */,
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(211);
+	var CollectionConstants = __webpack_require__(234);
+
+	var CollectionActions = {
+	  updateCollection: function (collection) {
+	    Dispatcher.dispatch({
+	      actionType: CollectionConstants.UPDATE_COLLECTION,
+	      collection: collection
+	    });
+	  }
+	};
+
+	module.exports = CollectionActions;
+
+/***/ },
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoItem = __webpack_require__(244),
-	    PhotoStore = __webpack_require__(245),
-	    CollectionStore = __webpack_require__(218),
+	    LinkedStateMixin = __webpack_require__(244),
+	    SessionsUtil = __webpack_require__(248),
+	    UiStore = __webpack_require__(252),
+	    History = __webpack_require__(159).History;
+
+	var LoginButton = React.createClass({
+	  displayName: 'LoginButton',
+
+	  mixins: [History, LinkedStateMixin],
+	  getInitialState: function () {
+	    return {
+	      username: "",
+	      password: "",
+	      flash: ""
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.uiListener = UiStore.addListener(this._onUiChange);
+	  },
+	  _onUiChange: function () {
+	    var newFlash = UiStore.flash();
+	    if (newFlash !== this.state.flash) {
+	      this.setState({ flash: newFlash });
+	    }
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+
+	    var loginParams = {
+	      user: {
+	        username: this.state.username,
+	        password: this.state.password
+	      }
+	    };
+
+	    this.setState({ username: "", password: "" });
+	    SessionsUtil.login(loginParams);
+	    // this.history.pushState(null, "/photos", {});
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'dropdown' },
+	      React.createElement(
+	        'a',
+	        { className: 'dropdown-toggle',
+	          'data-toggle': 'dropdown',
+	          role: 'button',
+	          'aria-haspopup': 'true',
+	          'aria-expanded': 'false' },
+	        'LOG IN ',
+	        React.createElement('span', { className: 'caret' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'dropdown-menu' },
+	        React.createElement(
+	          'form',
+	          null,
+	          React.createElement(
+	            'div',
+	            { className: 'col-md-12' },
+	            React.createElement(
+	              'div',
+	              { className: 'login-username-input' },
+	              React.createElement('input', { type: 'text',
+	                valueLink: this.linkState("username"),
+	                placeholder: 'Username',
+	                className: 'form-control input-sm' })
+	            )
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'div',
+	            { className: 'col-md-12' },
+	            React.createElement(
+	              'div',
+	              { className: 'login-password-input' },
+	              React.createElement('input', { type: 'password',
+	                valueLink: this.linkState("password"),
+	                placeholder: 'Password',
+	                className: 'form-control input-sm' })
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-md-12' },
+	            React.createElement(
+	              'div',
+	              { className: 'login-submit-button' },
+	              React.createElement(
+	                'button',
+	                { type: 'submit',
+	                  className: 'btn btn-success btn-sm',
+	                  onClick: this.handleSubmit },
+	                'Log in'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'flash-error' },
+	                this.state.flash
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = LoginButton;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(245);
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var ReactLink = __webpack_require__(246);
+	var ReactStateSetters = __webpack_require__(247);
+
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+
+	var React = __webpack_require__(2);
+
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+
+	module.exports = ReactLink;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+
+	'use strict';
+
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+
+	module.exports = ReactStateSetters;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var SessionActions = __webpack_require__(249),
+	    UiActions = __webpack_require__(250);
+
+	var SessionsUtil = {
+	  signup: function (signupParams) {
+	    $.ajax({
+	      url: '/users',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: signupParams,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	        UiActions.removeFlash();
+	      },
+	      error: function (data) {
+	        UiActions.setFlash($.parseJSON(data.responseText).errors);
+	      }
+	    });
+	  },
+	  login: function (loginParams) {
+	    $.ajax({
+	      url: '/session',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: loginParams,
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	        UiActions.removeFlash();
+	      },
+	      error: function (data) {
+	        UiActions.setFlash($.parseJSON(data.responseText).errors);
+	      }
+	    });
+	  },
+	  logout: function () {
+	    $.ajax({
+	      url: "/session",
+	      type: "DELETE",
+	      success: function (currentUser) {
+	        SessionActions.logoutCurrentUser(currentUser);
+	      }
+	    });
+	  }
+	};
+
+	module.exports = SessionsUtil;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(211),
+	    SessionConstants = __webpack_require__(237);
+
+	var SessionActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	    console.log(currentUser);
+	  },
+	  logoutCurrentUser: function () {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
+	      currentUser: {}
+	    });
+	    console.log("logged out");
+	  }
+	};
+
+	module.exports = SessionActions;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(211),
+	    UiConstants = __webpack_require__(251);
+
+	var UiActions = {
+	  setFlash: function (messages) {
+	    Dispatcher.dispatch({
+	      actionType: UiConstants.SET_FLASH,
+	      messages: messages
+	    });
+	  },
+	  removeFlash: function () {
+	    Dispatcher.dispatch({
+	      actionType: UiConstants.REMOVE_FLASH
+	    });
+	  }
+	};
+
+	module.exports = UiActions;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  SET_FLASH: "SET_FLASH",
+	  REMOVE_FLASH: "REMOVE_FLASH"
+	};
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(217).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    UiConstants = __webpack_require__(251),
+	    UiStore = new Store(AppDispatcher);
+
+	var _flash = "";
+
+	var setFlash = function (messages) {
+	  _flash = messages;
+	};
+
+	var removeFlash = function () {
+	  _flash = "";
+	};
+
+	UiStore.flash = function () {
+	  return _flash;
+	};
+
+	UiStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case UiConstants.SET_FLASH:
+	      setFlash(payload.messages);
+	      UiStore.__emitChange();
+	      break;
+	    case UiConstants.REMOVE_FLASH:
+	      removeFlash();
+	      UiStore.__emitChange();
+	      break;
+	  }
+
+	  UiStore.__emitChange();
+	};
+
+	module.exports = UiStore;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    SessionsUtil = __webpack_require__(248),
+	    History = __webpack_require__(159).History;
+
+	var LogoutButton = React.createClass({
+	  displayName: 'LogoutButton',
+
+	  mixins: [History],
+	  onClick: function () {
+	    SessionsUtil.logout();
+	    this.history.pushState(null, "/", {});
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'a',
+	        { onClick: this.onClick },
+	        'LOGOUT'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = LogoutButton;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    SessionsUtil = __webpack_require__(248),
+	    History = __webpack_require__(159).History;
+
+	var Signup = React.createClass({
+	  displayName: 'Signup',
+
+	  mixins: [History],
+	  getInitialState: function () {
+	    return {
+	      username: "",
+	      password: ""
+	    };
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+
+	    var signupParams = {
+	      user: {
+	        username: this.state.username,
+	        password: this.state.password
+	      }
+	    };
+
+	    SessionsUtil.signup(signupParams);
+	    this.history.pushState(null, "/photos", {});
+	  },
+	  usernameChange: function (e) {
+	    this.setState({ username: e.target.value });
+	  },
+	  passwordChange: function (e) {
+	    this.setState({ password: e.target.value });
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'dropdown' },
+	      React.createElement(
+	        'a',
+	        { className: 'dropdown-toggle',
+	          'data-toggle': 'dropdown',
+	          role: 'button',
+	          'aria-haspopup': 'true',
+	          'aria-expanded': 'false' },
+	        'SIGN UP ',
+	        React.createElement('span', { className: 'caret' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'dropdown-menu' },
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12' },
+	          React.createElement(
+	            'div',
+	            { className: 'login-username-input' },
+	            React.createElement('input', { type: 'text',
+	              placeholder: 'Username',
+	              className: 'form-control input-sm',
+	              onChange: this.usernameChange })
+	          )
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12' },
+	          React.createElement(
+	            'div',
+	            { className: 'login-password-input' },
+	            React.createElement('input', { type: 'password',
+	              placeholder: 'Password',
+	              className: 'form-control input-sm',
+	              onChange: this.passwordChange })
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-12' },
+	          React.createElement(
+	            'div',
+	            { className: 'login-submit-button' },
+	            React.createElement(
+	              'button',
+	              { type: 'submit',
+	                className: 'btn btn-success btn-sm',
+	                onClick: this.handleSubmit },
+	              'Sign up'
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Signup;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var ProfileButton = React.createClass({
+	  displayName: "ProfileButton",
+
+	  onClick: function () {
+	    console.log("hello " + this.props.currentUser.username);
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      { className: "dropdown" },
+	      React.createElement(
+	        "a",
+	        { className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-haspopup": "true", "aria-expanded": "false" },
+	        this.props.currentUser.username,
+	        " ",
+	        React.createElement("span", { className: "caret" })
+	      ),
+	      React.createElement(
+	        "ul",
+	        { className: "dropdown-menu" },
+	        React.createElement(
+	          "li",
+	          null,
+	          "a"
+	        ),
+	        React.createElement("li", { role: "separator", className: "divider" }),
+	        React.createElement(
+	          "li",
+	          null,
+	          "b"
+	        ),
+	        React.createElement("li", { role: "separator", className: "divider" }),
+	        React.createElement(
+	          "li",
+	          null,
+	          "c"
+	        ),
+	        React.createElement("li", { role: "separator", className: "divider" }),
+	        React.createElement(
+	          "li",
+	          null,
+	          "d"
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ProfileButton;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    PhotoItem = __webpack_require__(257),
+	    PhotoStore = __webpack_require__(258),
+	    CollectionStore = __webpack_require__(216),
 	    ApiUtil = __webpack_require__(209);
 
 	var FeedMain = React.createClass({
@@ -31457,8 +32205,6 @@
 	      }
 	    }
 
-	    console.log(currentCollectionPhotos.length);
-
 	    if (currentCollectionPhotos.length > 0) {
 	      return React.createElement(
 	        'div',
@@ -31481,7 +32227,7 @@
 	module.exports = FeedMain;
 
 /***/ },
-/* 244 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -31492,7 +32238,7 @@
 
 	  mixins: [History],
 	  onClick: function () {
-	    this.history.pushState(null, "/photos/" + this.props.photo.id, {});
+	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
 	  },
 	  render: function () {
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
@@ -31509,10 +32255,10 @@
 	module.exports = PhotoItem;
 
 /***/ },
-/* 245 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(219).Store,
+	var Store = __webpack_require__(217).Store,
 	    AppDispatcher = __webpack_require__(211),
 	    PhotoConstants = __webpack_require__(215),
 	    PhotoStore = new Store(AppDispatcher);
@@ -31521,6 +32267,10 @@
 
 	var resetPhotos = function (photos) {
 	  _photos = photos;
+	};
+
+	var createPhoto = function (photo) {
+	  _photos.unshift(photo);
 	};
 
 	PhotoStore.all = function () {
@@ -31539,6 +32289,10 @@
 	      resetPhotos(payload.photos);
 	      PhotoStore.__emitChange();
 	      break;
+	    case PhotoConstants.CREATE_PHOTO:
+	      createPhoto(payload.photo);
+	      PhotoStore.__emitChange();
+	      break;
 	  }
 
 	  PhotoStore.__emitChange();
@@ -31547,7 +32301,7 @@
 	module.exports = PhotoStore;
 
 /***/ },
-/* 246 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31593,12 +32347,12 @@
 	module.exports = Splash;
 
 /***/ },
-/* 247 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(245),
-	    PhotoComment = __webpack_require__(248);
+	    PhotoStore = __webpack_require__(258),
+	    PhotoComment = __webpack_require__(261);
 
 	var PhotoDetail = React.createClass({
 	  displayName: 'PhotoDetail',
@@ -31686,11 +32440,11 @@
 	module.exports = PhotoDetail;
 
 /***/ },
-/* 248 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(245);
+	    PhotoStore = __webpack_require__(258);
 
 	var PhotoComment = React.createClass({
 	  displayName: 'PhotoComment',
@@ -31716,343 +32470,175 @@
 	module.exports = PhotoComment;
 
 /***/ },
-/* 249 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(254),
-	    History = __webpack_require__(159).History;
+	    LinkedStateMixin = __webpack_require__(244),
+	    SessionStore = __webpack_require__(236),
+	    ApiUtil = __webpack_require__(209),
+	    UploadPhotoButton = __webpack_require__(264);
 
-	var LoginButton = React.createClass({
-	  displayName: 'LoginButton',
+	var UploadPhotoForm = React.createClass({
+	  displayName: 'UploadPhotoForm',
 
-	  mixins: [History],
+	  mixins: [LinkedStateMixin],
 	  getInitialState: function () {
 	    return {
-	      username: "",
-	      password: ""
+	      title: "",
+	      description: "",
+	      photoUrl: "",
+	      flash: ""
 	    };
+	  },
+	  savePhotoUrl: function (photo) {
+	    this.setState({ photoUrl: photo[0].url.slice(61) });
+
+	    console.log(this.state.photoUrl);
 	  },
 	  handleSubmit: function (e) {
 	    e.preventDefault();
+	    var currentUser = SessionStore.currentUser();
 
-	    var loginParams = {
-	      user: {
-	        username: this.state.username,
-	        password: this.state.password
+	    var photoParams = {
+	      photo: {
+	        user_id: currentUser.id,
+	        title: this.state.title,
+	        description: this.state.description,
+	        photoUrl: this.state.photoUrl
 	      }
 	    };
 
-	    SessionsUtil.login(loginParams);
-	    this.history.pushState(null, "/photos", {});
-	  },
-	  usernameChange: function (e) {
-	    this.setState({ username: e.target.value });
-	  },
-	  passwordChange: function (e) {
-	    this.setState({ password: e.target.value });
+	    ApiUtil.createPhoto(photoParams);
 	  },
 	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'dropdown' },
+	    // console.log(this.state.title);
+	    // console.log(this.state.description);
+	    // console.log(this.state.photo_url);
+	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
+	        photoOptions = "w_500,h_282,c_fit/";
+
+	    var uploadForm = React.createElement(
+	      'div',
+	      { className: 'container' },
 	      React.createElement(
-	        'a',
-	        { className: 'dropdown-toggle',
-	          'data-toggle': 'dropdown',
-	          role: 'button',
-	          'aria-haspopup': 'true',
-	          'aria-expanded': 'false' },
-	        'LOG IN ',
-	        React.createElement('span', { className: 'caret' })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'dropdown-menu' },
-	        React.createElement(
-	          'div',
-	          { className: 'col-sm-12' },
-	          React.createElement(
-	            'div',
-	            { className: 'login-username-input' },
-	            React.createElement('input', { type: 'text',
-	              placeholder: 'Username',
-	              className: 'form-control input-sm',
-	              onChange: this.usernameChange })
-	          )
-	        ),
+	        'form',
+	        { onSubmit: this.handleSubmit, id: 'photo-form' },
+	        React.createElement('br', null),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'col-sm-12' },
+	          { className: 'row' },
 	          React.createElement(
 	            'div',
-	            { className: 'login-password-input' },
-	            React.createElement('input', { type: 'password',
-	              placeholder: 'Password',
-	              className: 'form-control input-sm',
-	              onChange: this.passwordChange })
+	            { className: 'col-md-3' },
+	            React.createElement(
+	              'div',
+	              null,
+	              React.createElement('input', { type: 'text',
+	                valueLink: this.linkState("title"),
+	                placeholder: 'Title',
+	                className: 'form-control input-sm' })
+	            )
 	          )
 	        ),
+	        React.createElement('br', null),
+	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'col-sm-12' },
+	          { className: 'row' },
 	          React.createElement(
 	            'div',
-	            { className: 'login-submit-button' },
+	            { className: 'col-md-5' },
 	            React.createElement(
-	              'button',
-	              { type: 'submit',
-	                className: 'btn btn-success btn-sm',
-	                onClick: this.handleSubmit },
-	              'Log in'
+	              'div',
+	              null,
+	              React.createElement('textarea', { form: 'photo-form',
+	                rows: '5',
+	                placeholder: 'Description',
+	                className: 'form-control input-sm' })
+	            )
+	          )
+	        ),
+	        React.createElement('br', null),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'div',
+	          { className: 'row' },
+	          React.createElement(UploadPhotoButton, { savePhotoUrl: this.savePhotoUrl,
+	            showUploadedThumbnail: this.showUploadedThumbnail })
+	        ),
+	        React.createElement('br', null),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'div',
+	          { className: 'row' },
+	          React.createElement(
+	            'div',
+	            { className: 'col-md-12' },
+	            React.createElement(
+	              'div',
+	              null,
+	              React.createElement(
+	                'button',
+	                { type: 'submit',
+	                  className: 'btn btn-success btn-sm' },
+	                'Submit'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'flash-error' },
+	                this.state.flash
+	              )
 	            )
 	          )
 	        )
 	      )
 	    );
-	  }
-	});
 
-	module.exports = LoginButton;
-
-/***/ },
-/* 250 */,
-/* 251 */,
-/* 252 */,
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(254),
-	    History = __webpack_require__(159).History;
-
-	var Signup = React.createClass({
-	  displayName: 'Signup',
-
-	  mixins: [History],
-	  getInitialState: function () {
-	    return {
-	      username: "",
-	      password: ""
-	    };
-	  },
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-
-	    var signupParams = {
-	      user: {
-	        username: this.state.username,
-	        password: this.state.password
-	      }
-	    };
-
-	    SessionsUtil.signup(signupParams);
-	    this.history.pushState(null, "/photos", {});
-	  },
-	  usernameChange: function (e) {
-	    this.setState({ username: e.target.value });
-	  },
-	  passwordChange: function (e) {
-	    this.setState({ password: e.target.value });
-	  },
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'dropdown' },
-	      React.createElement(
-	        'a',
-	        { className: 'dropdown-toggle',
-	          'data-toggle': 'dropdown',
-	          role: 'button',
-	          'aria-haspopup': 'true',
-	          'aria-expanded': 'false' },
-	        'SIGN UP ',
-	        React.createElement('span', { className: 'caret' })
-	      ),
-	      React.createElement(
+	    if (this.state.photoUrl.length > 1) {
+	      return React.createElement(
 	        'div',
-	        { className: 'dropdown-menu' },
-	        React.createElement(
-	          'div',
-	          { className: 'col-sm-12' },
-	          React.createElement(
-	            'div',
-	            { className: 'login-username-input' },
-	            React.createElement('input', { type: 'text',
-	              placeholder: 'Username',
-	              className: 'form-control input-sm',
-	              onChange: this.usernameChange })
-	          )
-	        ),
+	        null,
+	        uploadForm,
+	        React.createElement('br', null),
+	        React.createElement('br', null),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'col-sm-12' },
+	          { className: 'container' },
 	          React.createElement(
 	            'div',
-	            { className: 'login-password-input' },
-	            React.createElement('input', { type: 'password',
-	              placeholder: 'Password',
-	              className: 'form-control input-sm',
-	              onChange: this.passwordChange })
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-sm-12' },
-	          React.createElement(
-	            'div',
-	            { className: 'login-submit-button' },
-	            React.createElement(
-	              'button',
-	              { type: 'submit',
-	                className: 'btn btn-success btn-sm',
-	                onClick: this.handleSubmit },
-	              'Sign up'
-	            )
+	            { className: 'row' },
+	            React.createElement('img', { src: url + photoOptions + this.state.photoUrl })
 	          )
 	        )
-	      )
-	    );
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        null,
+	        uploadForm
+	      );
+	    };
 	  }
 	});
 
-	module.exports = Signup;
+	module.exports = UploadPhotoForm;
 
 /***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var SessionActions = __webpack_require__(255);
-
-	var SessionsUtil = {
-	  signup: function (signupParams) {
-	    $.ajax({
-	      url: '/users',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: signupParams,
-	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
-	      },
-	      error: function (data) {
-	        console.log(data);
-	        // console.log($.parseJSON(data.responseText).errors);
-	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
-	      }
-	    });
-	  },
-	  login: function (loginParams) {
-	    $.ajax({
-	      url: '/session',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: loginParams,
-	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
-	      },
-	      error: function (data) {
-	        console.log(data);
-	        // console.log($.parseJSON(data.responseText).errors);
-	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
-	      }
-	    });
-	  },
-	  logout: function () {
-	    $.ajax({
-	      url: "/session",
-	      type: "DELETE",
-	      success: function (currentUser) {
-	        SessionActions.logoutCurrentUser(currentUser);
-	      }
-	    });
-	  }
-	};
-
-	module.exports = SessionsUtil;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(211);
-	var SessionConstants = __webpack_require__(256);
-
-	var SessionActions = {
-	  receiveCurrentUser: function (currentUser) {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	    console.log(currentUser);
-	  },
-	  logoutCurrentUser: function () {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
-	      currentUser: {}
-	    });
-	    console.log("logged out");
-	  }
-	};
-
-	module.exports = SessionActions;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
-	};
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(219).Store,
-	    AppDispatcher = __webpack_require__(211),
-	    SessionConstants = __webpack_require__(256),
-	    SessionStore = new Store(AppDispatcher);
-
-	var _currentUser = {};
-
-	var setCurrentUser = function (user) {
-	  _currentUser = user;
-	};
-
-	SessionStore.currentUser = function () {
-	  return _currentUser;
-	};
-
-	SessionStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case SessionConstants.RECEIVE_CURRENT_USER:
-	      setCurrentUser(payload.currentUser);
-	      SessionStore.__emitChange();
-	      break;
-	  }
-
-	  SessionStore.__emitChange();
-	};
-
-	module.exports = SessionStore;
-
-/***/ },
-/* 258 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(254),
 	    History = __webpack_require__(159).History;
 
-	var LogoutButton = React.createClass({
-	  displayName: 'LogoutButton',
+	var CreateButton = React.createClass({
+	  displayName: 'CreateButton',
 
 	  mixins: [History],
 	  onClick: function () {
-	    SessionsUtil.logout();
-	    this.history.pushState(null, "/", {});
+	    this.history.pushState(null, "/users/" + this.props.currentUser.id + "/photos/new", {});
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -32061,42 +32647,49 @@
 	      React.createElement(
 	        'a',
 	        { onClick: this.onClick },
-	        'LOGOUT'
+	        'CREATE'
 	      )
 	    );
 	  }
 	});
 
-	module.exports = LogoutButton;
+	module.exports = CreateButton;
 
 /***/ },
-/* 259 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 
-	var ProfileButton = React.createClass({
-	  displayName: "ProfileButton",
+	var UploadPhotoButton = React.createClass({
+	  displayName: "UploadPhotoButton",
 
-	  onClick: function () {
-	    console.log("hello " + this.props.currentUser.username);
+	  uploadImage: function (e) {
+	    e.preventDefault();
+	    cloudinary.openUploadWidget(CLOUDINARY, (function (error, result) {
+	      if (result.length > 1) {
+	        console.log("too many photos");
+	        // ui actions flash "upload 1 photo at a time"
+	      } else {
+	          this.props.savePhotoUrl(result);
+	        }
+	    }).bind(this));
 	  },
 	  render: function () {
 	    return React.createElement(
-	      "li",
+	      "div",
 	      null,
 	      React.createElement(
-	        "a",
-	        { onClick: this.onClick },
-	        this.props.currentUser.username,
-	        " ",
-	        React.createElement("span", { className: "caret" })
+	        "button",
+	        { className: "btn btn-sm",
+	          onClick: this.uploadImage },
+	        "Upload Image"
 	      )
 	    );
 	  }
 	});
 
-	module.exports = ProfileButton;
+	module.exports = UploadPhotoButton;
 
 /***/ }
 /******/ ]);

@@ -31,6 +31,8 @@ gem 'faker', '~> 1.6.1'
 
 gem 'cloudinary'
 
+gem 'figaro'
+
 gem 'bootstrap-sass'
 
 gem 'newrelic_rpm'
