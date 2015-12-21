@@ -4016,7 +4016,7 @@
  .nav > li > a:hover,
  .nav > li > a:focus {
    text-decoration: none;
-   background-color: #e6e6e6;
+   background-color: #F0F0F0;
  }
  .nav > li.disabled > a {
    color: #999999;
@@ -4031,8 +4031,9 @@
  .nav .open > a,
  .nav .open > a:hover,
  .nav .open > a:focus {
-   background-color: #e6e6e6;
-   border-color: #2780e3;
+   background-color: #F0F0F0;
+  //  border-color: #2780e3;
+   color: #505050;
  }
  .nav .nav-divider {
    height: 1px;
@@ -4279,7 +4280,7 @@
  }
  .navbar-fixed-top,
  .navbar-fixed-bottom {
-   background: black;
+   background: #202020;
    position: fixed;
    right: 0;
    left: 0;
@@ -4293,7 +4294,7 @@
  }
  .navbar-fixed-top {
    top: 0;
-   border-width: 0 0 1px;
+   border-width: 0 0 0 0px;
  }
  .navbar-fixed-bottom {
    bottom: 0;
@@ -4340,6 +4341,7 @@
    width: 22px;
    height: 2px;
    border-radius: 1px;
+   background: #F0F0F0;
  }
  .navbar-toggle .icon-bar + .icon-bar {
    margin-top: 4px;
@@ -4356,6 +4358,11 @@
    padding-top: 10px;
    padding-bottom: 10px;
    line-height: 21px;
+   color: #F0F0F0;
+ }
+ .navbar-nav > li > a:hover {
+   background: #F0F0F0;
+   color: #505050;
  }
  @media (max-width: 767px) {
    .navbar-nav .open .dropdown-menu {
@@ -4515,7 +4522,6 @@
    }
    .navbar-right {
      float: right !important;
-     margin-right: -15px;
    }
    .navbar-right ~ .navbar-right {
      margin-right: 0;

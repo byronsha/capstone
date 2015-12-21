@@ -16,9 +16,6 @@ var UploadPhotoForm = React.createClass({
   },
   savePhotoUrl: function (photo) {
     this.setState({ photoUrl: photo[0].url.slice(61) });
-
-    console.log(this.state.photoUrl);
-
   },
   handleSubmit: function (e) {
     e.preventDefault();
@@ -29,7 +26,7 @@ var UploadPhotoForm = React.createClass({
         user_id: currentUser.id,
         title: this.state.title,
         description: this.state.description,
-        photoUrl: this.state.photoUrl
+        photo_url: this.state.photoUrl
       }
     };
 
@@ -67,6 +64,7 @@ var UploadPhotoForm = React.createClass({
               <div>
                 <textarea form="photo-form"
                           rows="5"
+                          valueLink={this.linkState("description")}
                           placeholder="Description"
                           className="form-control input-sm" />
               </div>

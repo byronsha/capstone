@@ -1,13 +1,50 @@
 var React = require('react'),
+    ApiUtil = require('../../util/api_util.js'),
     PhotoStore = require('../../stores/photo_store.js'),
-    PhotoComment = require('./photo_comment.jsx');
+    CommentStore = require('../../stores/comment_store.js'),
+    PhotoComment = require('./photo_comment.jsx'),
+    PhotoCommentForm = require('./photo_comment_form.jsx'),
+    SessionStore = require('../../stores/session_store.js');
 
 var PhotoDetail = React.createClass({
+  getInitialState: function () {
+    return { comments: [] };
+  },
+  componentDidMount: function () {
+    this.commentListener = CommentStore.addListener(this._onCommentsChange);
+    ApiUtil.fetchPhotoComments(this.props.params.photoId);
+  },
+  componentWillUnmount: function () {
+    this.commentListener.remove();
+  },
+  _onCommentsChange: function () {
+    this.setState({ comments: CommentStore.all() });
+  },
   render: function () {
     var currentPhoto = PhotoStore.find(this.props.params.photoId);
-    var currentPhotoUrl = currentPhoto.photo_url,
-        url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
-        photo_options = "w_750,h_400,c_fill/";
+    var currentPhotoUrl = currentPhoto.photo_url;
+    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
+    var photo_options = "w_1100,h_550,c_fill/";
+    var currentUser = SessionStore.currentUser();
+    var commentForm;
+
+    if (Object.keys(currentUser).length === 0) {
+      commentForm = (
+        <div className="row">
+          <div className="col-md-6">
+            Log in to add comments.
+          </div>
+        </div>
+      )
+    } else {
+      commentForm = (
+        <div className="row">
+          <div className="col-md-6">
+            <PhotoCommentForm photoId={this.props.params.photoId} />
+          </div>
+        </div>
+      )
+    };
 
     return (
       <div className="container">
@@ -31,10 +68,10 @@ var PhotoDetail = React.createClass({
         <br/>
 
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-md-6">
             <h3>Comments</h3>
-            <ul>
-              {currentPhoto.comments.map(function (comment) {
+            <ul className="photo-comment-list">
+              {this.state.comments.map(function (comment) {
                 return <PhotoComment key={comment.id}
                                      author={comment.username}
                                      body={comment.body}
@@ -45,13 +82,7 @@ var PhotoDetail = React.createClass({
         </div>
 
         <br/>
-
-        <div className="row">
-          <div className="col-md-12">
-            // comment form goes here
-          </div>
-        </div>
-
+        { commentForm }
       </div>
     );
   }

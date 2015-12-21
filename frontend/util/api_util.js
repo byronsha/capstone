@@ -13,6 +13,14 @@ var ApiUtil = {
       }
     })
   },
+  fetchPhotoComments: function (photoId) {
+    $.ajax({
+      url: 'api/photo_comments/' + photoId,
+      success: function (comments) {
+        ApiActions.receivePhotoComments(comments);
+      }
+    })
+  },
   createPhoto: function (photoParams) {
     $.ajax({
       url: 'api/photos',
@@ -20,11 +28,30 @@ var ApiUtil = {
       dataType: 'json',
       data: photoParams,
       success: function (photo) {
-        ApiActions.createPhoto(photo);
+        ApiActions.receiveAllPhotos([photo]);
+        // ApiActions.createPhoto(photo);
         // UiActions.removeFlash();
       },
       error: function (data) {
-        console.log("create photo error")
+        console.log(data);
+        console.log("create photo error");
+        // UiActions.setFlash($.parseJSON(data.responseText).errors);
+      }
+    })
+  },
+  createComment: function (commentParams) {
+    $.ajax({
+      url: 'api/photo_comments',
+      type: 'POST',
+      dataType: 'json',
+      data: commentParams,
+      success: function (comment) {
+        ApiActions.createComment(comment);
+        // UiActions.removeFlash();
+      },
+      error: function (data) {
+        console.log(data);
+        console.log("create photo error");
         // UiActions.setFlash($.parseJSON(data.responseText).errors);
       }
     })

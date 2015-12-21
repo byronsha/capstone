@@ -9,9 +9,9 @@ var resetPhotos = function (photos) {
   _photos = photos;
 };
 
-var createPhoto = function (photo) {
-  _photos.unshift(photo);
-}
+// var createPhoto = function (photo) {
+//   _photos.push(photo);
+// }
 
 PhotoStore.all = function () {
   return _photos.slice();
@@ -29,10 +29,10 @@ PhotoStore.__onDispatch = function (payload) {
       resetPhotos(payload.photos);
       PhotoStore.__emitChange();
       break;
-    case PhotoConstants.CREATE_PHOTO:
-      createPhoto(payload.photo);
-      PhotoStore.__emitChange();
-      break;
+    // case PhotoConstants.CREATE_PHOTO:
+    //   createPhoto(payload.photo);
+    //   PhotoStore.__emitChange();
+    //   break;
   }
 
   PhotoStore.__emitChange();

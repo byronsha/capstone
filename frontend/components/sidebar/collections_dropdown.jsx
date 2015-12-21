@@ -13,11 +13,16 @@ var CollectionsDropdown = React.createClass({
     var that = this;
     var collections = ["All", "People", "Technology", "Nature",
                        "Places", "Red", "Orange", "Yellow", "Green",
-                       "Blue", "Purple","White", "Black"];
+                       "Blue", "Purple", "Brown", "White", "Black"];
 
     return (
       <li className="dropdown">
-        <a className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">COLLECTION: {this.state.collection}<span className="caret"></span></a>
+        <a className="dropdown-toggle"
+           data-toggle="dropdown"
+           role="button"
+           aria-haspopup="true"
+           aria-expanded="false">COLLECTION: {this.state.collection}<span className="caret"></span>
+        </a>
         <ul className="dropdown-menu">
           {
             collections.map(function (collection, idx) {

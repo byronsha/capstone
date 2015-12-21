@@ -1,5 +1,6 @@
-var Dispatcher = require('../dispatcher/dispatcher.js');
-var PhotoConstants = require('../constants/photo_constants.js');
+var Dispatcher = require('../dispatcher/dispatcher.js'),
+    PhotoConstants = require('../constants/photo_constants.js'),
+    CommentConstants = require('../constants/comment_constants.js');
 
 var ApiActions = {
   receiveAllPhotos: function (photos) {
@@ -8,12 +9,25 @@ var ApiActions = {
       photos: photos
     });
   },
-  createPhoto: function (photo) {
+  receivePhotoComments: function (comments) {
     Dispatcher.dispatch({
-      actionType: PhotoConstants.CREATE_PHOTO,
-      photo: photo
+      actionType: CommentConstants.PHOTO_COMMENTS_RECEIVED,
+      comments: comments
     });
+  },
+  createComment: function (comment) {
+    Dispatcher.dispatch({
+      actionType: CommentConstants.CREATE_COMMENT,
+      comment: comment
+    })
   }
+  // createPhoto: function (photo) {
+  //   Dispatcher.dispatch({
+  //     actionType: PhotoConstants.CREATE_PHOTO,
+  //     photo: photo
+  //   });
+  // },
+
 };
 
 module.exports = ApiActions;

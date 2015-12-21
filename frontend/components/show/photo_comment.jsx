@@ -4,8 +4,10 @@ var React = require('react'),
 var PhotoComment = React.createClass({
   render: function () {
     return (
-      <li>
-        <span>{this.props.createdAt} - {this.props.author}:</span><br/>
+      <li className="photo-comment-item">
+        <span className="comment-author">{this.props.author}</span>
+        <span> </span>
+        <span className="comment-date">{this.props.createdAt}</span><br/>
         {this.props.body}
       </li>
     )

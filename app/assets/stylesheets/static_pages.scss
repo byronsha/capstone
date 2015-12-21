@@ -2,6 +2,51 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.navbar-top-space {
+  margin-top: 52px;
+}
+
+.sidebar-button {
+  font-weight: bold;
+  color: #F0F0F0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.sidebar-button:hover {
+  background: #F0F0F0;
+  color: #505050;
+}
+
+.introduction {
+  text-align: center;
+  font-size: 3.5rem;
+  position: absolute;
+  color: #F0F0F0;
+  top: 45%;
+  left: 10%;
+}
+
+.introduction-2 {
+  text-align: center;
+  font-size: 3.5rem;
+  position: absolute;
+  color: #505050;
+  top: 50%;
+  right: 10%;
+}
+
+.introduction-3 {
+  text-align: center;
+  font-size: 3.5rem;
+  position: absolute;
+  color: #F0F0F0;
+  top: 50%;
+  right: 10%;
+}
+
 .splash-main {
   position: relative;
   display: block;
@@ -42,45 +87,4 @@
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-}
-
-.introduction {
-  text-align: center;
-  font-size: 3.5rem;
-  position: absolute;
-  color: #F0F0F0;
-  top: 45%;
-  left: 10%;
-}
-
-.introduction-2 {
-  text-align: center;
-  font-size: 3.5rem;
-  position: absolute;
-  color: #505050;
-  top: 50%;
-  right: 10%;
-}
-
-.introduction-3 {
-  text-align: center;
-  font-size: 3.5rem;
-  position: absolute;
-  color: #F0F0F0;
-  top: 50%;
-  right: 10%;
-}
-
-.sidebar-button {
-  font-weight: bold;
-  color: #F0F0F0;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.sidebar-button:hover {
-  background: #F0F0F0;
-  color: #505050;
 }

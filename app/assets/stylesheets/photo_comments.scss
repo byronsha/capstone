@@ -1,3 +1,20 @@
 // Place all the styles related to the PhotoComments controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.photo-comment-list {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+.photo-comment-item {
+  margin-bottom: 5px;
+}
+
+.comment-author {
+  color: navy;
+}
+
+.comment-date {
+  color: #909090;
+}

@@ -26,6 +26,7 @@ User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, pa
 
 cloudinary_images = Cloudinary::Api.resources(max_results: 1000)
 image_urls = []
+uploaded_image_urls = []
 
 cloudinary_images["resources"].each do |image|
   image_name_index = image["url"].rindex(/\//)
@@ -37,8 +38,17 @@ image_urls.delete("sample.jpg")
 user_ids = User.pluck(:id)
 
 image_urls.each do |image_url|
-  Photo.create(id: image_url[0..-5].to_i, user_id: user_ids.sample, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: image_url)
+  if image_url[0..-5] =~ /^\d+$/
+    Photo.create(id: image_url[0..-5].to_i, user_id: user_ids.sample, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: image_url)
+  else
+    uploaded_image_urls << image_url[0..-5]
+  end
 end
+
+p uploaded_image_urls
+Cloudinary::Api.delete_resources(uploaded_image_urls)
+
+ActiveRecord::Base.connection.reset_pk_sequence!('photos')
 
 photo_ids = Photo.pluck(:id)
 
@@ -46,7 +56,7 @@ photo_ids = Photo.pluck(:id)
   PhotoComment.create(photo_id: photo_ids.sample, user_id: user_ids.sample, body: Faker::Hipster.paragraph(2, false, 4))
 end
 
-collection_titles = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black", "People", "Technology", "Nature", "Places"]
+collection_titles = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black", "People", "Technology", "Nature", "Places", "Brown"]
 
 collection_titles.each do |title|
   Collection.create(title: title)
@@ -283,5 +293,26 @@ PhotoCollection.create(photo_id: 58, collection_id: 5)
 PhotoCollection.create(photo_id: 58, collection_id: 7)
 PhotoCollection.create(photo_id: 58, collection_id: 9)
 
+(65..80).each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 11)
+end
+
+(60..62).each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 10)
+end
+
+[71,73,74,78,79,67,66,70,61,60].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 13)
+end
+
+[76,77].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 5)
+end
+
+[75,69,65].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 2)
+end
+
+
 # 1 "Red", 2 "Orange", 3 "Yellow", 4 "Green", 5 "Blue", 6 "Purple", 7 "White", 8 "Black",
-# 9 "People", 10 "Technology", 11 "Nature", 12 "Architecture"
+# 9 "People", 10 "Technology", 11 "Nature", 12 "Places", 13 "Brown"
