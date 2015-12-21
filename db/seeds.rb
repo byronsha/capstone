@@ -45,8 +45,9 @@ image_urls.each do |image_url|
   end
 end
 
-p uploaded_image_urls
-Cloudinary::Api.delete_resources(uploaded_image_urls)
+if uploaded_image_urls.length > 0
+  Cloudinary::Api.delete_resources(uploaded_image_urls)
+end
 
 ActiveRecord::Base.connection.reset_pk_sequence!('photos')
 
