@@ -1,3 +1,17 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.user-banner {
+  height: 25vh;
+  width: 100%;
+  background: lightgrey;
+}
+
+.user-info {
+  padding-top: 110px;
+}
+
+#user-info-bullet {
+  margin: 5px;
+}

@@ -6,6 +6,19 @@ class User < ActiveRecord::Base
 
   has_many :photos
   has_many :photo_comments
+  has_many :favorites
+  has_many :favorited_photos, through: :favorites, source: :photo
+
+  has_many :followers,
+    foreign_key: :followed_id,
+    class_name: "Following"
+
+  has_many :followings,
+    foreign_key: :follower_id,
+    class_name: "Following"
+
+  has_many :follower_users, through: :followers, source: :follower
+  has_many :followed_users, through: :followings, source: :followed
 
   after_initialize :ensure_session_token
 

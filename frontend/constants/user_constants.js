@@ -1,0 +1,3 @@
+module.exports = {
+  RECEIVE_SINGLE_USER: "RECEIVE_SINGLE_USER"
+};

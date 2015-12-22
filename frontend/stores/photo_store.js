@@ -9,10 +9,6 @@ var resetPhotos = function (photos) {
   _photos = photos;
 };
 
-// var createPhoto = function (photo) {
-//   _photos.push(photo);
-// }
-
 PhotoStore.all = function () {
   return _photos.slice();
 };

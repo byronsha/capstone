@@ -14,6 +14,12 @@ class Api::PhotoCommentsController < ApplicationController
     @photo_comments = PhotoComment.where(photo_id: params[:id])
   end
 
+  def destroy
+    @photo_comment = PhotoComment.find(params[:id])
+    @photo_comment.destroy
+    render 'create'
+  end
+
   private
 
   def photo_comment_params

@@ -46,7 +46,8 @@ var FeedMain = React.createClass({
           <div>
             {currentCollectionPhotos.map(function (photo) {
               return <PhotoItem key={photo.id}
-                                photo={photo} />
+                                photo={photo}
+                                size={250} />
             })}
           </div>
         </div>

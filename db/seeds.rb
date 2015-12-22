@@ -314,6 +314,13 @@ end
   PhotoCollection.create(photo_id: i, collection_id: 2)
 end
 
+50.times do
+  Favorite.create(photo_id: photo_ids.sample, user_id: user_ids.sample)
+end
+
+8.times do
+  Following.create(follower_id: user_ids.sample, followed_id: user_ids.sample)
+end
 
 # 1 "Red", 2 "Orange", 3 "Yellow", 4 "Green", 5 "Blue", 6 "Purple", 7 "White", 8 "Black",
 # 9 "People", 10 "Technology", 11 "Nature", 12 "Places", 13 "Brown"

@@ -55,6 +55,25 @@ var ApiUtil = {
         // UiActions.setFlash($.parseJSON(data.responseText).errors);
       }
     })
+  },
+  deleteComment: function (commentId) {
+    $.ajax({
+      url: 'api/photo_comments/' + commentId,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (comment) {
+        ApiActions.deleteComment(comment);
+      }
+    })
+  },
+  fetchSingleUser: function (userId) {
+    $.ajax({
+      url: 'api/users/' + userId,
+      dataType: 'json',
+      success: function (user) {
+        ApiActions.receiveSingleUser(user);
+      }
+    })
   }
 };
 

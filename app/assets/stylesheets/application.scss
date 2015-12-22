@@ -3202,6 +3202,11 @@
    color: #ffffff;
    background-color: #3fb618;
    border-color: #3fb618;
+   -webkit-transition: all .3s ease-out;
+   -moz-transition: all .3s ease-out;
+   -o-transition: all .3s ease-out;
+   -ms-transition: all .3s ease-out;
+   transition: all .3s ease-out;
  }
  .btn-success:focus,
  .btn-success.focus {
@@ -3213,6 +3218,11 @@
    color: #ffffff;
    background-color: #2f8912;
    border-color: #2c8011;
+   -webkit-transition: all .3s ease;
+   -moz-transition: all .3s ease;
+   -o-transition: all .3s ease;
+   -ms-transition: all .3s ease;
+   transition: all .3s ease;
  }
  .btn-success:active,
  .btn-success.active,
@@ -4196,7 +4206,7 @@
    position: relative;
    min-height: 40px;
    margin-bottom: 0px;
-   border: 1px solid transparent;
+   border: 0px solid transparent;
  }
  @media (min-width: 768px) {
    .navbar {
@@ -4359,10 +4369,21 @@
    padding-bottom: 10px;
    line-height: 21px;
    color: #F0F0F0;
+   -webkit-transition: all .3s ease-out;
+   -moz-transition: all .3s ease-out;
+   -o-transition: all .3s ease-out;
+   -ms-transition: all .3s ease-out;
+   transition: all .3s ease-out;
  }
  .navbar-nav > li > a:hover {
    background: #F0F0F0;
    color: #505050;
+   cursor: pointer;
+   -webkit-transition: all .3s ease;
+   -moz-transition: all .3s ease;
+   -o-transition: all .3s ease;
+   -ms-transition: all .3s ease;
+   transition: all .3s ease;
  }
  @media (max-width: 767px) {
    .navbar-nav .open .dropdown-menu {
@@ -4527,9 +4548,12 @@
      margin-right: 0;
    }
  }
+// navbar-default-bookmark
  .navbar-default {
-   background-color: #222222;
-   border-color: #121212;
+   background: #ffffff;
+   color: #808080;
+   padding-left: 100px;
+   border-bottom: 1px solid #808080;
  }
  .navbar-default .navbar-brand {
    color: #ffffff;
@@ -4540,15 +4564,15 @@
    background-color: none;
  }
  .navbar-default .navbar-text {
-   color: #ffffff;
+   color: #808080;
  }
  .navbar-default .navbar-nav > li > a {
-   color: #ffffff;
+   color: #808080;
  }
  .navbar-default .navbar-nav > li > a:hover,
  .navbar-default .navbar-nav > li > a:focus {
-   background: #F0F0F0;
-   color: #505050;
+   background: #808080;
+   color: #ffffff;
  }
  .navbar-default .navbar-nav > .active > a,
  .navbar-default .navbar-nav > .active > a:hover,

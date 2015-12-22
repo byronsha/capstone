@@ -8,7 +8,7 @@ var PhotoItem = React.createClass({
   },
   render: function () {
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
-        photoOptions = "w_250,h_250,c_fill/";
+        photoOptions = "w_" + this.props.size + ",h_" + this.props.size + ",c_fill/";
 
     return (
       <div className="photo-thumb" onClick={this.onClick}>

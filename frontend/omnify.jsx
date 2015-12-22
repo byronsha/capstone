@@ -7,7 +7,8 @@ var React = require('react'),
     FeedMain = require('./components/show/feed_main.jsx'),
     Splash = require('./components/show/splash.jsx'),
     PhotoDetail = require('./components/show/photo_detail.jsx'),
-    UploadPhotoForm = require('./components/sidebar/upload_photo_form.jsx');
+    UploadPhotoForm = require('./components/sidebar/upload_photo_form.jsx'),
+    UserProfile = require('./components/users/user_profile.jsx');
 
 var routes = (
   <Route path="/" component={App}>
@@ -15,6 +16,7 @@ var routes = (
     <Route path="/photos" component={FeedMain} />
     <Route path="/users/:userId/photos/new" component={UploadPhotoForm} />
     <Route path="/users/:userId/photos/:photoId" component={PhotoDetail} />
+    <Route path="/users/:userId" component={UserProfile} />
 
   </Route>
 );

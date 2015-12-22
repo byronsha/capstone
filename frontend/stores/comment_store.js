@@ -11,7 +11,15 @@ var resetComments = function (comments) {
 
 var createComment = function (comment) {
   _comments.push(comment);
-}
+};
+
+var deleteComment = function (comment) {
+  for (var i = 0; i < _comments.length; i++) {
+    if (_comments[i].id === comment.id) {
+      _comments.splice(i, 1);
+    }
+  }
+};
 
 CommentStore.all = function () {
   return _comments.slice();
@@ -25,6 +33,10 @@ CommentStore.__onDispatch = function (payload) {
       break;
     case CommentConstants.CREATE_COMMENT:
       createComment(payload.comment);
+      CommentStore.__emitChange();
+      break;
+    case CommentConstants.DELETE_COMMENT:
+      deleteComment(payload.comment);
       CommentStore.__emitChange();
       break;
   }

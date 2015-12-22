@@ -5,8 +5,19 @@
 .collection-dropdown-item {
   // position: absolute;
   padding-left: 10px;
+  color: #505050;
+  -webkit-transition: all .3s ease-out;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  -ms-transition: all .3s ease-out;
+  transition: all .3s ease-out;
 }
 
 .collection-dropdown-item:hover {
   background: #D0D0D0;
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  transition: all .3s ease;
 }

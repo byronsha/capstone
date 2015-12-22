@@ -15,6 +15,12 @@
   color: navy;
 }
 
+.comment-author:hover {
+  color: blue;
+  cursor: pointer;
+  transition: all .5s ease;
+}
+
 .comment-date {
   color: #909090;
 }
