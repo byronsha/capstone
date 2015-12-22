@@ -8,7 +8,7 @@ var DeleteCommentButton = React.createClass({
   },
   render: function () {
     return (
-      <span onClick={this.handleClick}> <i className="fa fa-trash faa-pulse animated-hover" id="comment-delete-button"></i></span>
+      <span onClick={this.handleClick}> <i className="fa fa-trash-o faa-pulse animated-hover" id="comment-delete-button"></i></span>
     );
   }
 });

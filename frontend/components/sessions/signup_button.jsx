@@ -1,9 +1,7 @@
 var React = require('react'),
-    SessionsUtil = require('../../util/sessions_util.js'),
-    History = require('react-router').History;
+    SessionsUtil = require('../../util/sessions_util.js');
 
 var Signup = React.createClass({
-  mixins: [History],
   getInitialState: function () {
     return ({
       username: "",
@@ -21,7 +19,6 @@ var Signup = React.createClass({
     };
 
     SessionsUtil.signup(signupParams);
-    this.history.pushState(null, "/photos", {});
   },
   usernameChange: function (e) {
     this.setState({ username: e.target.value });

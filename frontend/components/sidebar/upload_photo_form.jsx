@@ -2,10 +2,11 @@ var React = require('react'),
     LinkedStateMixin = require('react-addons-linked-state-mixin'),
     SessionStore = require('../../stores/session_store.js'),
     ApiUtil = require('../../util/api_util.js'),
-    UploadPhotoButton = require('./upload_photo_button.jsx');
+    UploadPhotoButton = require('./upload_photo_button.jsx'),
+    History = require('react-router').History;
 
 var UploadPhotoForm = React.createClass({
-  mixins: [LinkedStateMixin],
+  mixins: [History, LinkedStateMixin],
   getInitialState: function () {
     return {
       title: "",
@@ -31,11 +32,9 @@ var UploadPhotoForm = React.createClass({
     };
 
     ApiUtil.createPhoto(photoParams);
+    this.history.pushState(null, "/users/" + currentUser.id, {});
   },
   render: function () {
-    // console.log(this.state.title);
-    // console.log(this.state.description);
-    // console.log(this.state.photo_url);
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
         photoOptions = "w_500,h_282,c_fit/";
 

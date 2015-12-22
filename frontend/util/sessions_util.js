@@ -1,5 +1,6 @@
 var SessionActions = require('../actions/session_actions.js'),
-    UiActions = require('../actions/ui_actions.js');
+    UiActions = require('../actions/ui_actions.js'),
+    ApiUtil = require('./api_util.js');
 
 var SessionsUtil = {
   signup: function (signupParams) {
@@ -26,6 +27,7 @@ var SessionsUtil = {
       success: function (currentUser) {
         SessionActions.receiveCurrentUser(currentUser);
         UiActions.removeFlash();
+        ApiUtil.fetchUserFavorites(currentUser.id);
       },
       error: function (data) {
         UiActions.setFlash($.parseJSON(data.responseText).errors);
@@ -38,6 +40,7 @@ var SessionsUtil = {
       type: "DELETE",
       success: function (currentUser) {
         SessionActions.logoutCurrentUser(currentUser);
+        ApiUtil.clearFavorites();
       }
     });
   }

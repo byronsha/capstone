@@ -3,6 +3,11 @@ var React = require('react'),
     Sidebar = require('./sidebar/sidebar.jsx');
 
 var App = React.createClass({
+  componentWillMount: function () {
+    if (window.currentUserId !== null) {
+      ApiUtil.fetchCurrentUser(window.currentUserId)
+    }
+  },
   render: function () {
     return (
       <div>

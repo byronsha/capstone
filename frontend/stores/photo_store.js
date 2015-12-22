@@ -9,6 +9,14 @@ var resetPhotos = function (photos) {
   _photos = photos;
 };
 
+var deletePhoto = function (photo) {
+  for (var i = 0; i < _photos.length; i++) {
+    if (_photos[i].id === photo.id) {
+      _photos.splice(i, 1);
+    }
+  }
+};
+
 PhotoStore.all = function () {
   return _photos.slice();
 };
@@ -25,10 +33,10 @@ PhotoStore.__onDispatch = function (payload) {
       resetPhotos(payload.photos);
       PhotoStore.__emitChange();
       break;
-    // case PhotoConstants.CREATE_PHOTO:
-    //   createPhoto(payload.photo);
-    //   PhotoStore.__emitChange();
-    //   break;
+    case PhotoConstants.DELETE_PHOTO:
+      deletePhoto(payload.photo);
+      PhotoStore.__emitChange();
+      break;
   }
 
   PhotoStore.__emitChange();

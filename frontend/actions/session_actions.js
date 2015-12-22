@@ -1,20 +1,19 @@
 var Dispatcher = require('../dispatcher/dispatcher.js'),
-    SessionConstants = require('../constants/session_constants.js');
+    SessionConstants = require('../constants/session_constants.js'),
+    ApiUtil = require('../util/api_util.js');
 
 var SessionActions = {
   receiveCurrentUser: function (currentUser) {
     Dispatcher.dispatch({
       actionType: SessionConstants.RECEIVE_CURRENT_USER,
       currentUser: currentUser
-    });
-    console.log(currentUser);
+    })
   },
   logoutCurrentUser: function () {
     Dispatcher.dispatch({
       actionType: SessionConstants.RECEIVE_CURRENT_USER,
       currentUser: {}
-    });
-    console.log("logged out");
+    })
   }
 }
 

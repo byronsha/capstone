@@ -20,6 +20,48 @@
   opacity: 1;
 }
 
+.dropdown .dropdown-menu#you-dropdown {
+  margin-right: 5px;
+  border: none;
+  padding: 0 0 0 0;
+
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+
+  max-height: 0;
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.dropdown.open .dropdown-menu#you-dropdown {
+  max-height: 220px;
+  opacity: 1;
+}
+
+.you-dropdown-item {
+  padding: 8px 0px 8px 15px;
+  color: #505050;
+  -webkit-transition: all .3s ease-out;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  -ms-transition: all .3s ease-out;
+  transition: all .3s ease-out;
+}
+
+.you-dropdown-item:hover {
+  background: #D0D0D0;
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+
 .dropdown .dropdown-menu#login-dropdown {
   margin-right: 5px;
   border: none;

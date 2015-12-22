@@ -24313,6 +24313,11 @@
 	var App = React.createClass({
 	  displayName: 'App',
 
+	  componentWillMount: function () {
+	    if (window.currentUserId !== null) {
+	      ApiUtil.fetchCurrentUser(window.currentUserId);
+	    }
+	  },
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -24335,6 +24340,7 @@
 
 	var ApiActions = __webpack_require__(210),
 	    UiActions = __webpack_require__(218),
+	    SessionActions = __webpack_require__(253),
 	    CollectionStore = __webpack_require__(220);
 
 	var ApiUtil = {
@@ -24343,6 +24349,15 @@
 	    $.ajax({
 	      url: 'api/photos',
 	      data: { collection: collection },
+	      success: function (photos) {
+	        ApiActions.receiveAllPhotos(photos);
+	      }
+	    });
+	  },
+	  fetchUserPhotos: function (userId) {
+	    $.ajax({
+	      url: 'api/photos',
+	      data: { userId: userId },
 	      success: function (photos) {
 	        ApiActions.receiveAllPhotos(photos);
 	      }
@@ -24371,6 +24386,16 @@
 	        console.log(data);
 	        console.log("create photo error");
 	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
+	      }
+	    });
+	  },
+	  deletePhoto: function (photoId) {
+	    $.ajax({
+	      url: 'api/photos/' + photoId,
+	      type: 'DELETE',
+	      dataType: 'json',
+	      success: function (photo) {
+	        ApiActions.deletePhoto(photo);
 	      }
 	    });
 	  },
@@ -24409,6 +24434,29 @@
 	        ApiActions.receiveSingleUser(user);
 	      }
 	    });
+	  },
+	  fetchCurrentUser: function (userId) {
+	    $.ajax({
+	      url: "/api/users/" + userId,
+	      type: "GET",
+	      success: function (user) {
+	        SessionActions.receiveCurrentUser(user);
+	      }
+	    });
+	  },
+	  fetchUserFavorites: function (userId) {
+	    if (typeof userId !== "undefined") {
+	      $.ajax({
+	        url: "api/favorites",
+	        data: { userId: userId },
+	        success: function (favorites) {
+	          ApiActions.receiveUserFavorites(favorites);
+	        }
+	      });
+	    }
+	  },
+	  clearFavorites: function () {
+	    ApiActions.clearFavorites();
 	  }
 	};
 
@@ -24421,6 +24469,7 @@
 	var Dispatcher = __webpack_require__(211),
 	    PhotoConstants = __webpack_require__(215),
 	    CommentConstants = __webpack_require__(216),
+	    FavoriteConstants = __webpack_require__(279),
 	    UserConstants = __webpack_require__(217);
 
 	var ApiActions = {
@@ -24442,6 +24491,12 @@
 	      comment: comment
 	    });
 	  },
+	  deletePhoto: function (photo) {
+	    Dispatcher.dispatch({
+	      actionType: PhotoConstants.DELETE_PHOTO,
+	      photo: photo
+	    });
+	  },
 	  deleteComment: function (comment) {
 	    Dispatcher.dispatch({
 	      actionType: CommentConstants.DELETE_COMMENT,
@@ -24452,6 +24507,17 @@
 	    Dispatcher.dispatch({
 	      actionType: UserConstants.RECEIVE_SINGLE_USER,
 	      user: user
+	    });
+	  },
+	  receiveUserFavorites: function (favorites) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.USER_FAVORITES_RECEIVED,
+	      favorites: favorites
+	    });
+	  },
+	  clearFavorites: function () {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.CLEAR_FAVORITES
 	    });
 	  }
 	};
@@ -24779,8 +24845,8 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  ALL_PHOTOS_RECEIVED: "ALL_PHOTOS_RECEIVED"
-	  // CREATE_PHOTO: "CREATE_PHOTO"
+	  ALL_PHOTOS_RECEIVED: "ALL_PHOTOS_RECEIVED",
+	  DELETE_PHOTO: "DELETE_PHOTO"
 	};
 
 /***/ },
@@ -31339,8 +31405,8 @@
 	      sessionButtons = React.createElement(
 	        'ul',
 	        { className: 'nav navbar-nav navbar-right' },
-	        React.createElement(YouButton, { currentUser: this.state.currentUser }),
 	        React.createElement(CreateButton, { currentUser: this.state.currentUser }),
+	        React.createElement(YouButton, { currentUser: this.state.currentUser }),
 	        React.createElement(LogoutButton, null)
 	      );
 	    };
@@ -31405,8 +31471,20 @@
 	  _currentUser = user;
 	};
 
+	SessionStore.isLoggedIn = function () {
+	  if (Object.keys(_currentUser).length === 0) {
+	    return false;
+	  } else {
+	    return true;
+	  }
+	};
+
 	SessionStore.currentUser = function () {
 	  return _currentUser;
+	};
+
+	SessionStore.currentUserId = function () {
+	  return _currentUser.id;
 	};
 
 	SessionStore.__onDispatch = function (payload) {
@@ -31610,13 +31688,12 @@
 	var React = __webpack_require__(1),
 	    LinkedStateMixin = __webpack_require__(248),
 	    SessionsUtil = __webpack_require__(252),
-	    UiStore = __webpack_require__(254),
-	    History = __webpack_require__(159).History;
+	    UiStore = __webpack_require__(254);
 
 	var LoginButton = React.createClass({
 	  displayName: 'LoginButton',
 
-	  mixins: [History, LinkedStateMixin],
+	  mixins: [LinkedStateMixin],
 	  getInitialState: function () {
 	    return {
 	      username: "",
@@ -31645,7 +31722,6 @@
 
 	    this.setState({ username: "", password: "" });
 	    SessionsUtil.login(loginParams);
-	    // this.history.pushState(null, "/photos", {});
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -31954,7 +32030,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(253),
-	    UiActions = __webpack_require__(218);
+	    UiActions = __webpack_require__(218),
+	    ApiUtil = __webpack_require__(209);
 
 	var SessionsUtil = {
 	  signup: function (signupParams) {
@@ -31981,6 +32058,7 @@
 	      success: function (currentUser) {
 	        SessionActions.receiveCurrentUser(currentUser);
 	        UiActions.removeFlash();
+	        ApiUtil.fetchUserFavorites(currentUser.id);
 	      },
 	      error: function (data) {
 	        UiActions.setFlash($.parseJSON(data.responseText).errors);
@@ -31993,6 +32071,7 @@
 	      type: "DELETE",
 	      success: function (currentUser) {
 	        SessionActions.logoutCurrentUser(currentUser);
+	        ApiUtil.clearFavorites();
 	      }
 	    });
 	  }
@@ -32005,7 +32084,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(211),
-	    SessionConstants = __webpack_require__(241);
+	    SessionConstants = __webpack_require__(241),
+	    ApiUtil = __webpack_require__(209);
 
 	var SessionActions = {
 	  receiveCurrentUser: function (currentUser) {
@@ -32013,14 +32093,12 @@
 	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
 	      currentUser: currentUser
 	    });
-	    console.log(currentUser);
 	  },
 	  logoutCurrentUser: function () {
 	    Dispatcher.dispatch({
 	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
 	      currentUser: {}
 	    });
-	    console.log("logged out");
 	  }
 	};
 
@@ -32071,16 +32149,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(252),
-	    History = __webpack_require__(159).History;
+	    SessionsUtil = __webpack_require__(252);
 
 	var LogoutButton = React.createClass({
 	  displayName: 'LogoutButton',
 
-	  mixins: [History],
 	  onClick: function () {
 	    SessionsUtil.logout();
-	    this.history.pushState(null, "/", {});
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -32102,13 +32177,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(252),
-	    History = __webpack_require__(159).History;
+	    SessionsUtil = __webpack_require__(252);
 
 	var Signup = React.createClass({
 	  displayName: 'Signup',
 
-	  mixins: [History],
 	  getInitialState: function () {
 	    return {
 	      username: "",
@@ -32126,7 +32199,6 @@
 	    };
 
 	    SessionsUtil.signup(signupParams);
-	    this.history.pushState(null, "/photos", {});
 	  },
 	  usernameChange: function (e) {
 	    this.setState({ username: e.target.value });
@@ -32213,11 +32285,11 @@
 	  displayName: 'YouButton',
 
 	  mixins: [History],
-	  handleClick: function (e) {
-	    e.preventDefault();
-
-	    currentUser = SessionStore.currentUser();
-	    this.history.pushState(null, "/users/" + currentUser.id, {});
+	  componentDidMount: function () {
+	    this.currentUser = SessionStore.currentUser();
+	  },
+	  handleClick: function () {
+	    this.history.pushState(null, "/users/" + this.currentUser.id, {});
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -32233,6 +32305,37 @@
 	});
 
 	module.exports = YouButton;
+
+	// handleProfileClick: function () {
+	//   this.history.pushState(null, "/users/" + this.currentUser.id, {});
+	// },
+	// handlePhotosClick: function () {
+	//   this.history.pushState(null, "/users/" + this.currentUser.id, { currentTab: "photoIndex" });
+	// },
+	// handleFavoritesClick: function () {
+	//   this.history.pushState(null, "/users/" + this.currentUser.id, { currentTab: "favorites" });
+	// },
+	// handleFollowingClick: function () {
+	//   this.history.pushState(null, "/users/" + this.currentUser.id, { currentTab: "following" });
+	// },
+
+	// <li className="dropdown">
+	//   <a className="dropdown-toggle"
+	//      data-toggle="dropdown"
+	//      role="button"
+	//      aria-haspopup="true"
+	//      aria-expanded="false">YOU <span className="caret"></span>
+	//   </a>
+	//   <ul className="dropdown-menu" id="you-dropdown">
+	//     <li onClick={this.handleProfileClick} className="you-dropdown-item">Profile</li>
+	//     <li role="separator" className="divider"></li>
+	//     <li onClick={this.handlePhotosClick} className="you-dropdown-item">Photos</li>
+	//     <li role="separator" className="divider"></li>
+	//     <li onClick={this.handleFavoritesClick} className="you-dropdown-item">Favorites</li>
+	//     <li role="separator" className="divider"></li>
+	//     <li onClick={this.handleFollowingClick} className="you-dropdown-item">Following</li>
+	//   </ul>
+	// </li>
 
 /***/ },
 /* 258 */
@@ -32270,23 +32373,34 @@
 	var React = __webpack_require__(1),
 	    PhotoItem = __webpack_require__(260),
 	    PhotoStore = __webpack_require__(261),
+	    SessionStore = __webpack_require__(240),
 	    CollectionStore = __webpack_require__(220),
+	    FavoriteStore = __webpack_require__(280),
 	    ApiUtil = __webpack_require__(209);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
 
 	  getInitialState: function () {
-	    return { photos: [], collection: "All" };
+	    return { currentUser: {}, photos: [], favorites: [], collection: "All" };
 	  },
 	  componentDidMount: function () {
 	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
 	    this.collectionListener = CollectionStore.addListener(this._onCollectionChange);
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+
 	    ApiUtil.fetchAllPhotos();
+
+	    if (SessionStore.isLoggedIn()) {
+	      ApiUtil.fetchUserFavorites(SessionStore.currentUserId());
+	    };
 	  },
 	  componentWillUnmount: function () {
 	    this.photoListener.remove();
 	    this.collectionListener.remove();
+	    this.sessionListener.remove();
+	    this.favoriteListener.remove();
 	  },
 	  _onPhotosChange: function () {
 	    this.setState({ photos: PhotoStore.all() });
@@ -32294,7 +32408,16 @@
 	  _onCollectionChange: function () {
 	    this.setState({ collection: CollectionStore.currentCollection() });
 	  },
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+	  },
+	  _onFavoritesChange: function () {
+	    this.setState({ favorites: FavoriteStore.all() });
+	  },
 	  render: function () {
+	    console.log(this.state.currentUser.id);
+	    console.log(this.state.favorites);
+
 	    var currentCollectionPhotos = [];
 
 	    if (this.state.collection === "All") {
@@ -32344,8 +32467,12 @@
 	  displayName: 'PhotoItem',
 
 	  mixins: [History],
-	  onClick: function () {
+	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
+	  },
+	  favoritePhoto: function (e) {
+	    e.stopPropagation();
+	    console.log("favorite button");
 	  },
 	  render: function () {
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
@@ -32353,8 +32480,13 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: 'photo-thumb', onClick: this.onClick },
-	      React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url })
+	      { className: 'photo-thumb', onClick: this.handleClick },
+	      React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	      React.createElement(
+	        'span',
+	        { className: 'favorite', onClick: this.favoritePhoto },
+	        React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
+	      )
 	    );
 	  }
 	});
@@ -32376,6 +32508,14 @@
 	  _photos = photos;
 	};
 
+	var deletePhoto = function (photo) {
+	  for (var i = 0; i < _photos.length; i++) {
+	    if (_photos[i].id === photo.id) {
+	      _photos.splice(i, 1);
+	    }
+	  }
+	};
+
 	PhotoStore.all = function () {
 	  return _photos.slice();
 	};
@@ -32392,10 +32532,10 @@
 	      resetPhotos(payload.photos);
 	      PhotoStore.__emitChange();
 	      break;
-	    // case PhotoConstants.CREATE_PHOTO:
-	    //   createPhoto(payload.photo);
-	    //   PhotoStore.__emitChange();
-	    //   break;
+	    case PhotoConstants.DELETE_PHOTO:
+	      deletePhoto(payload.photo);
+	      PhotoStore.__emitChange();
+	      break;
 	  }
 
 	  PhotoStore.__emitChange();
@@ -32794,7 +32934,7 @@
 	      'span',
 	      { onClick: this.handleClick },
 	      ' ',
-	      React.createElement('i', { className: 'fa fa-trash faa-pulse animated-hover', id: 'comment-delete-button' })
+	      React.createElement('i', { className: 'fa fa-trash-o faa-pulse animated-hover', id: 'comment-delete-button' })
 	    );
 	  }
 	});
@@ -32895,12 +33035,13 @@
 	    LinkedStateMixin = __webpack_require__(248),
 	    SessionStore = __webpack_require__(240),
 	    ApiUtil = __webpack_require__(209),
-	    UploadPhotoButton = __webpack_require__(270);
+	    UploadPhotoButton = __webpack_require__(270),
+	    History = __webpack_require__(159).History;
 
 	var UploadPhotoForm = React.createClass({
 	  displayName: 'UploadPhotoForm',
 
-	  mixins: [LinkedStateMixin],
+	  mixins: [History, LinkedStateMixin],
 	  getInitialState: function () {
 	    return {
 	      title: "",
@@ -32926,11 +33067,9 @@
 	    };
 
 	    ApiUtil.createPhoto(photoParams);
+	    this.history.pushState(null, "/users/" + currentUser.id, {});
 	  },
 	  render: function () {
-	    // console.log(this.state.title);
-	    // console.log(this.state.description);
-	    // console.log(this.state.photo_url);
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
 	        photoOptions = "w_500,h_282,c_fit/";
 
@@ -33088,9 +33227,9 @@
 	    UserStore = __webpack_require__(272),
 	    Summary = __webpack_require__(273),
 	    PhotoIndex = __webpack_require__(274),
-	    Favorites = __webpack_require__(275),
-	    Following = __webpack_require__(276),
-	    FollowButton = __webpack_require__(277);
+	    Favorites = __webpack_require__(276),
+	    Following = __webpack_require__(277),
+	    FollowButton = __webpack_require__(278);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
@@ -33316,11 +33455,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoItem = __webpack_require__(260);
+	    ApiUtil = __webpack_require__(209),
+	    PhotoIndexItem = __webpack_require__(275),
+	    PhotoStore = __webpack_require__(261);
 
 	var PhotoIndex = React.createClass({
 	  displayName: 'PhotoIndex',
 
+	  getInitialState: function () {
+	    return { photos: [] };
+	  },
+	  componentDidMount: function () {
+	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
+	    ApiUtil.fetchUserPhotos(this.props.user.id);
+	  },
+	  componentWillUnmount: function () {
+	    this.photoListener.remove();
+	  },
+	  _onPhotosChange: function () {
+	    this.setState({ photos: PhotoStore.all() });
+	  },
 	  render: function () {
 	    if (this.props.user.photos.length > 0) {
 	      return React.createElement(
@@ -33329,8 +33483,8 @@
 	        React.createElement(
 	          'div',
 	          null,
-	          this.props.user.photos.map(function (photo) {
-	            return React.createElement(PhotoItem, { key: photo.id,
+	          this.state.photos.map(function (photo) {
+	            return React.createElement(PhotoIndexItem, { key: photo.id,
 	              photo: photo,
 	              size: 200 });
 	          })
@@ -33346,6 +33500,68 @@
 
 /***/ },
 /* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    SessionStore = __webpack_require__(240),
+	    ApiUtil = __webpack_require__(209),
+	    History = __webpack_require__(159).History;
+
+	var PhotoIndexItem = React.createClass({
+	  displayName: 'PhotoIndexItem',
+
+	  mixins: [History],
+	  handleClick: function () {
+	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
+	  },
+	  deletePhoto: function (e) {
+	    e.stopPropagation();
+	    ApiUtil.deletePhoto(this.props.photo.id);
+	  },
+	  favoritePhoto: function (e) {
+	    e.stopPropagation();
+	    console.log("favorite button");
+	  },
+	  render: function () {
+	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
+	    var photoOptions = "w_" + this.props.size + ",h_" + this.props.size + ",c_fill/";
+	    var currentUser = SessionStore.currentUser();
+
+	    if (currentUser.id === this.props.photo.user_id) {
+	      return React.createElement(
+	        'div',
+	        { className: 'photo-thumb', onClick: this.handleClick },
+	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	        React.createElement(
+	          'span',
+	          { className: 'delete', onClick: this.deletePhoto },
+	          React.createElement('i', { className: 'fa fa-trash-o faa-pulse animated-hover', id: 'photo-delete-button' })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'favorite', onClick: this.favoritePhoto },
+	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'photo-thumb', onClick: this.handleClick },
+	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	        React.createElement(
+	          'span',
+	          { className: 'favorite', onClick: this.favoritePhoto },
+	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
+	        )
+	      );
+	    }
+	  }
+	});
+
+	module.exports = PhotoIndexItem;
+
+/***/ },
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -33378,7 +33594,7 @@
 	module.exports = Favorites;
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -33421,7 +33637,7 @@
 	module.exports = Following;
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33439,6 +33655,59 @@
 	});
 
 	module.exports = CreateButton;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  USER_FAVORITES_RECEIVED: "USER_FAVORITES_RECEIVED",
+	  CLEAR_FAVORITES: "CLEAR_FAVORITES"
+	};
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(221).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    FavoriteConstants = __webpack_require__(279),
+	    FavoriteStore = new Store(AppDispatcher);
+
+	var _favorites = [];
+
+	var resetFavorites = function (favorites) {
+	  _favorites = favorites;
+	};
+
+	// var removeFavorite = function (favorite) {
+	//   for (var i = 0; i < _favorites.length; i++) {
+	//     if (_favorites[i].id === favorite.id) {
+	//       _favorites.splice(i, 1);
+	//     }
+	//   }
+	// };
+
+	FavoriteStore.all = function () {
+	  return _favorites.slice();
+	};
+
+	FavoriteStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FavoriteConstants.USER_FAVORITES_RECEIVED:
+	      resetFavorites(payload.favorites);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.CLEAR_FAVORITES:
+	      resetFavorites([]);
+	      FavoriteStore.__emitChange();
+	      break;
+	  }
+
+	  FavoriteStore.__emitChange();
+	};
+
+	module.exports = FavoriteStore;
 
 /***/ }
 /******/ ]);

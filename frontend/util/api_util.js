@@ -1,5 +1,6 @@
 var ApiActions = require('../actions/api_actions.js'),
     UiActions = require('../actions/ui_actions.js'),
+    SessionActions = require('../actions/session_actions.js'),
     CollectionStore = require('../stores/collection_store.js');
 
 var ApiUtil = {
@@ -8,6 +9,15 @@ var ApiUtil = {
     $.ajax({
       url: 'api/photos',
       data: { collection: collection },
+      success: function (photos) {
+        ApiActions.receiveAllPhotos(photos);
+      }
+    })
+  },
+  fetchUserPhotos: function (userId) {
+    $.ajax({
+      url: 'api/photos',
+      data: { userId: userId },
       success: function (photos) {
         ApiActions.receiveAllPhotos(photos);
       }
@@ -36,6 +46,16 @@ var ApiUtil = {
         console.log(data);
         console.log("create photo error");
         // UiActions.setFlash($.parseJSON(data.responseText).errors);
+      }
+    })
+  },
+  deletePhoto: function (photoId) {
+    $.ajax({
+      url: 'api/photos/' + photoId,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (photo) {
+        ApiActions.deletePhoto(photo);
       }
     })
   },
@@ -74,6 +94,29 @@ var ApiUtil = {
         ApiActions.receiveSingleUser(user);
       }
     })
+  },
+  fetchCurrentUser: function (userId) {
+    $.ajax({
+      url: "/api/users/" + userId,
+      type: "GET",
+      success: function (user) {
+        SessionActions.receiveCurrentUser(user);
+      }
+    })
+  },
+  fetchUserFavorites: function (userId) {
+    if (typeof userId !== "undefined") {
+      $.ajax({
+        url: "api/favorites",
+        data: { userId: userId },
+        success: function (favorites) {
+          ApiActions.receiveUserFavorites(favorites);
+        }
+      })
+    }
+  },
+  clearFavorites: function () {
+    ApiActions.clearFavorites();
   }
 };
 

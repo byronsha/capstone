@@ -1,11 +1,10 @@
 var React = require('react'),
     LinkedStateMixin = require('react-addons-linked-state-mixin'),
     SessionsUtil = require('../../util/sessions_util.js'),
-    UiStore = require("../../stores/ui_store.js"),
-    History = require('react-router').History;
+    UiStore = require("../../stores/ui_store.js");
 
 var LoginButton = React.createClass({
-  mixins: [History, LinkedStateMixin],
+  mixins: [LinkedStateMixin],
   getInitialState: function () {
     return ({
       username: "",
@@ -34,7 +33,6 @@ var LoginButton = React.createClass({
 
     this.setState({ username: "", password: "" });
     SessionsUtil.login(loginParams);
-    // this.history.pushState(null, "/photos", {});
   },
   render: function () {
     return (

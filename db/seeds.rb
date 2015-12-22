@@ -11,12 +11,16 @@ Photo.destroy_all
 PhotoComment.destroy_all
 Collection.destroy_all
 PhotoCollection.destroy_all
+Favorite.destroy_all
+Following.destroy_all
 
 ActiveRecord::Base.connection.reset_pk_sequence!('users')
 ActiveRecord::Base.connection.reset_pk_sequence!('photos')
 ActiveRecord::Base.connection.reset_pk_sequence!('photo_comments')
 ActiveRecord::Base.connection.reset_pk_sequence!('collections')
 ActiveRecord::Base.connection.reset_pk_sequence!('photo_collections')
+ActiveRecord::Base.connection.reset_pk_sequence!('favorites')
+ActiveRecord::Base.connection.reset_pk_sequence!('followings')
 
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
