@@ -1111,7 +1111,8 @@
    font-size: 15px;
    line-height: 1.42857143;
    color: #333333;
-   background-color: #ffffff;
+   background-color: #f3f5f6;
+   //bookmark
  }
  input,
  button,
@@ -3577,13 +3578,19 @@
    -webkit-background-clip: padding-box;
            background-clip: padding-box;
  }
+ // .dropdown-menu#collections-dropdown {
+ //   color: red;
+ //   left: 5px;
+ //   border: none;
+ //   padding: 0 0 0 0;
+ // }
  .dropdown-menu.pull-right {
    right: 0;
    left: auto;
  }
  .dropdown-menu .divider {
    height: 1px;
-   margin: 5px 0;
+   margin: 0;
    overflow: hidden;
    background-color: #e5e5e5;
  }
@@ -4555,7 +4562,7 @@
    background: #ffffff;
    color: #808080;
    padding-left: 80px;
-   border-bottom: 1px solid #808080;
+   margin-bottom: 5px;
  }
  .navbar-default .navbar-brand {
    color: #ffffff;

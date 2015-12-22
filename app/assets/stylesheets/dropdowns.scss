@@ -1,0 +1,65 @@
+.dropdown .dropdown-menu#collections-dropdown {
+  margin-left: 5px;
+  border: none;
+  padding: 0 0 0 0;
+
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+
+  max-height: 0;
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.dropdown.open .dropdown-menu#collections-dropdown {
+  max-height: 700px;
+  opacity: 1;
+}
+
+.dropdown .dropdown-menu#login-dropdown {
+  margin-right: 5px;
+  border: none;
+  padding: 8 0 0 0;
+
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+
+  max-height: 0;
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.dropdown.open .dropdown-menu#login-dropdown {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.dropdown .dropdown-menu#signup-dropdown {
+  margin-right: 5px;
+  border: none;
+  padding: 8 0 0 0;
+
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+
+  max-height: 0;
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.dropdown.open .dropdown-menu#signup-dropdown {
+  max-height: 200px;
+  opacity: 1;
+}

@@ -46,7 +46,7 @@ var LoginButton = React.createClass({
            aria-expanded="false">LOG IN <span className="caret"></span>
         </a>
 
-        <div className="dropdown-menu">
+        <div className="dropdown-menu" id="login-dropdown">
 
           <form>
             <div className="col-md-12">
@@ -57,8 +57,6 @@ var LoginButton = React.createClass({
                        className="form-control input-sm" />
               </div>
             </div>
-
-            <br/>
 
             <div className="col-md-12">
               <div className="login-password-input">

@@ -23,7 +23,7 @@ var CollectionsDropdown = React.createClass({
            aria-haspopup="true"
            aria-expanded="false">COLLECTION: {this.state.collection}<span className="caret"></span>
         </a>
-        <ul className="dropdown-menu">
+        <ul className="dropdown-menu" id="collections-dropdown">
           {
             collections.map(function (collection, idx) {
               return <CollectionsDropdownItem key={idx}

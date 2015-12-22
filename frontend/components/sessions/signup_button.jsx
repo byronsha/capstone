@@ -39,7 +39,7 @@ var Signup = React.createClass({
            aria-expanded="false">SIGN UP <span className="caret"></span>
         </a>
 
-        <div className="dropdown-menu">
+        <div className="dropdown-menu" id="signup-dropdown">
 
           <form>
             <div className="col-md-12">
@@ -50,8 +50,6 @@ var Signup = React.createClass({
                        onChange={this.usernameChange} />
               </div>
             </div>
-
-            <br/>
 
             <div className="col-md-12">
               <div className="login-password-input">
