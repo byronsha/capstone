@@ -24,3 +24,23 @@
 .comment-date {
   color: #909090;
 }
+
+#comment-delete-button {
+  margin-left: 3px;
+  margin-right: 3px;
+  font-size: 1.3em;
+}
+
+#comment-delete-button:hover {
+  cursor: pointer;
+}
+
+#comment-edit-button {
+  margin-left: 7px;
+  margin-right: 3px;
+  font-size: 1.3em;
+}
+
+#comment-edit-button:hover {
+  cursor: pointer;
+}

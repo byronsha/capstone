@@ -8,7 +8,7 @@ var EditCommentButton = React.createClass({
   },
   render: function () {
     return (
-      <span onClick={this.handleClick}> <i className="fa fa-pencil"></i></span>
+      <span onClick={this.handleClick}> <i className="fa fa-pencil faa-pulse animated-hover" id="comment-edit-button"></i></span>
     );
   }
 });

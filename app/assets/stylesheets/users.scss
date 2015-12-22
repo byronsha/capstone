@@ -12,6 +12,17 @@
   padding-top: 110px;
 }
 
+#selected-profile-tab {
+  height: 50px;
+  // border-bottom: 5px solid #808080;
+  border-bottom: 5px solid #006dac;
+  -webkit-transition: all 0s ease;
+  -moz-transition: all 0s ease;
+  -o-transition: all 0s ease;
+  -ms-transition: all 0s ease;
+  transition: all 0s ease;
+}
+
 #user-info-bullet {
   margin: 5px;
 }

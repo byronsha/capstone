@@ -27,7 +27,8 @@ var PhotoComment = React.createClass({
       if (currentUser.id === this.props.authorId) {
         commentItem = (
           <li className="photo-comment-item">
-            <span className="comment-author">{this.props.author}</span>
+            <span onClick={this.handleClick}
+                  className="comment-author">{this.props.author}</span>
             <span> </span>
             <span className="comment-date">{this.props.createdAt}</span>
             <EditCommentButton commentId={this.props.commentId} />

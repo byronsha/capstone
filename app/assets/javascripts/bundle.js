@@ -24320,7 +24320,7 @@
 	      React.createElement(Sidebar, null),
 	      React.createElement(
 	        'div',
-	        { className: 'navbar-top-space' },
+	        { className: 'spacing-object-50' },
 	        this.props.children
 	      )
 	    );
@@ -31299,7 +31299,7 @@
 	    LoginButton = __webpack_require__(246),
 	    LogoutButton = __webpack_require__(254),
 	    SignupButton = __webpack_require__(255),
-	    ProfileButton = __webpack_require__(256),
+	    YouButton = __webpack_require__(277),
 	    CreateButton = __webpack_require__(257);
 
 	var Sidebar = React.createClass({
@@ -31331,7 +31331,7 @@
 	      sessionButtons = React.createElement(
 	        'ul',
 	        { className: 'nav navbar-nav navbar-right' },
-	        React.createElement(ProfileButton, { currentUser: this.state.currentUser }),
+	        React.createElement(YouButton, { currentUser: this.state.currentUser }),
 	        React.createElement(CreateButton, { currentUser: this.state.currentUser }),
 	        React.createElement(LogoutButton, null)
 	      );
@@ -32196,33 +32196,7 @@
 	module.exports = Signup;
 
 /***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var ProfileButton = React.createClass({
-	  displayName: "ProfileButton",
-
-	  onClick: function () {
-	    console.log("hello " + this.props.currentUser.username);
-	  },
-	  render: function () {
-	    return React.createElement(
-	      "li",
-	      null,
-	      React.createElement(
-	        "a",
-	        { onClick: this.onClick },
-	        "YOU"
-	      )
-	    );
-	  }
-	});
-
-	module.exports = ProfileButton;
-
-/***/ },
+/* 256 */,
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32428,7 +32402,7 @@
 	        React.createElement(
 	          "span",
 	          { className: "introduction-3" },
-	          "...and discover breath-taking sights from around the world."
+	          "...and discover breathtaking sights from around the world."
 	        )
 	      )
 	    );
@@ -32591,7 +32565,9 @@
 	          )
 	        ),
 	        React.createElement('br', null),
-	        commentForm
+	        commentForm,
+	        React.createElement('br', null),
+	        React.createElement('br', null)
 	      );
 	    } else {
 	      return React.createElement('div', null);
@@ -32703,7 +32679,8 @@
 	          { className: 'photo-comment-item' },
 	          React.createElement(
 	            'span',
-	            { className: 'comment-author' },
+	            { onClick: this.handleClick,
+	              className: 'comment-author' },
 	            this.props.author
 	          ),
 	          React.createElement(
@@ -33031,7 +33008,7 @@
 	      "span",
 	      { onClick: this.handleClick },
 	      " ",
-	      React.createElement("i", { className: "fa fa-pencil" })
+	      React.createElement("i", { className: "fa fa-pencil faa-pulse animated-hover", id: "comment-edit-button" })
 	    );
 	  }
 	});
@@ -33050,7 +33027,6 @@
 
 	  handleClick: function (e) {
 	    e.preventDefault();
-
 	    ApiUtil.deleteComment(this.props.commentId);
 	  },
 	  render: function () {
@@ -33058,7 +33034,7 @@
 	      'span',
 	      { onClick: this.handleClick },
 	      ' ',
-	      React.createElement('i', { className: 'fa fa-trash' })
+	      React.createElement('i', { className: 'fa fa-trash faa-pulse animated-hover', id: 'comment-delete-button' })
 	    );
 	  }
 	});
@@ -33075,7 +33051,8 @@
 	    Summary = __webpack_require__(271),
 	    PhotoIndex = __webpack_require__(272),
 	    Favorites = __webpack_require__(273),
-	    Following = __webpack_require__(274);
+	    Following = __webpack_require__(274),
+	    FollowButton = __webpack_require__(278);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
@@ -33086,6 +33063,10 @@
 	  componentDidMount: function () {
 	    this.userListener = UserStore.addListener(this._onUserChange);
 	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
+	    this.setState({ currentTab: "summary" });
 	  },
 	  componentWillUnmount: function () {
 	    this.userListener.remove();
@@ -33195,7 +33176,8 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { onClick: this.handleSummaryClick },
+	                { id: this.state.currentTab === "summary" ? "selected-profile-tab" : "",
+	                  onClick: this.handleSummaryClick },
 	                'Summary'
 	              )
 	            ),
@@ -33204,7 +33186,8 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { onClick: this.handlePhotoIndexClick },
+	                { id: this.state.currentTab === "photoIndex" ? "selected-profile-tab" : "",
+	                  onClick: this.handlePhotoIndexClick },
 	                'Photos'
 	              )
 	            ),
@@ -33213,7 +33196,8 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { onClick: this.handleFavoritesClick },
+	                { id: this.state.currentTab === "favorites" ? "selected-profile-tab" : "",
+	                  onClick: this.handleFavoritesClick },
 	                'Favorites'
 	              )
 	            ),
@@ -33222,7 +33206,8 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { onClick: this.handleFollowingClick },
+	                { id: this.state.currentTab === "following" ? "selected-profile-tab" : "",
+	                  onClick: this.handleFollowingClick },
 	                'Following'
 	              )
 	            )
@@ -33326,11 +33311,18 @@
 /* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209),
+	    History = __webpack_require__(159).History;
 
 	var Following = React.createClass({
 	  displayName: 'Following',
 
+	  mixins: [History],
+	  handleClick: function (e) {
+	    e.preventDefault();
+	    this.history.pushState(null, "/users/" + e.target.id, {});
+	  },
 	  render: function () {
 	    if (this.props.user.followed_users.length > 0) {
 	      return React.createElement(
@@ -33339,13 +33331,15 @@
 	        React.createElement(
 	          'ul',
 	          null,
-	          this.props.user.followed_users.map(function (user) {
+	          this.props.user.followed_users.map((function (user) {
 	            return React.createElement(
 	              'li',
-	              { key: user.id },
+	              { onClick: this.handleClick,
+	                id: user.id,
+	                key: user.id },
 	              user.username
 	            );
-	          })
+	          }).bind(this))
 	        )
 	      );
 	    } else {
@@ -33395,6 +33389,59 @@
 	module.exports = {
 	  RECEIVE_SINGLE_USER: "RECEIVE_SINGLE_USER"
 	};
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    History = __webpack_require__(159).History,
+	    SessionStore = __webpack_require__(239);
+
+	var YouButton = React.createClass({
+	  displayName: 'YouButton',
+
+	  mixins: [History],
+	  handleClick: function (e) {
+	    e.preventDefault();
+
+	    currentUser = SessionStore.currentUser();
+	    this.history.pushState(null, "/users/" + currentUser.id, {});
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'a',
+	        { onClick: this.handleClick },
+	        'YOU'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = YouButton;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var CreateButton = React.createClass({
+	  displayName: 'CreateButton',
+
+	  render: function () {
+	    return React.createElement(
+	      'button',
+	      null,
+	      'Follow'
+	    );
+	  }
+	});
+
+	module.exports = CreateButton;
 
 /***/ }
 /******/ ]);

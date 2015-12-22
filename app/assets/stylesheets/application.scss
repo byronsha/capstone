@@ -4367,6 +4367,8 @@
  .navbar-nav > li > a {
    padding-top: 10px;
    padding-bottom: 10px;
+   margin-left: 5px;
+   margin-right: 5px;
    line-height: 21px;
    color: #F0F0F0;
    -webkit-transition: all .3s ease-out;
@@ -4552,7 +4554,7 @@
  .navbar-default {
    background: #ffffff;
    color: #808080;
-   padding-left: 100px;
+   padding-left: 80px;
    border-bottom: 1px solid #808080;
  }
  .navbar-default .navbar-brand {
@@ -4567,6 +4569,8 @@
    color: #808080;
  }
  .navbar-default .navbar-nav > li > a {
+   margin-left: 30px;
+   margin-right: 30px;
    color: #808080;
  }
  .navbar-default .navbar-nav > li > a:hover,
@@ -4578,7 +4582,7 @@
  .navbar-default .navbar-nav > .active > a:hover,
  .navbar-default .navbar-nav > .active > a:focus {
    color: #ffffff;
-   background-color: #090909;
+   background-color: #808080;
  }
  .navbar-default .navbar-nav > .disabled > a,
  .navbar-default .navbar-nav > .disabled > a:hover,

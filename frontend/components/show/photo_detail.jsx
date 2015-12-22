@@ -106,6 +106,8 @@ var PhotoDetail = React.createClass({
 
           <br/>
           { commentForm }
+          <br/>
+          <br/>
         </div>
       );
     } else {

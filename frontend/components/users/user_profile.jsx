@@ -4,7 +4,8 @@ var React = require('react'),
     Summary = require('./summary.jsx'),
     PhotoIndex = require('./photo_index.jsx'),
     Favorites = require('./favorites.jsx'),
-    Following = require('./following.jsx');
+    Following = require('./following.jsx'),
+    FollowButton = require('./follow_button.jsx');
 
 var FeedMain = React.createClass({
   getInitialState: function () {
@@ -13,6 +14,10 @@ var FeedMain = React.createClass({
   componentDidMount: function () {
     this.userListener = UserStore.addListener(this._onUserChange);
     ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+  },
+  componentWillReceiveProps: function (nextProps) {
+    ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
+    this.setState({ currentTab: "summary" })
   },
   componentWillUnmount: function () {
     this.userListener.remove();
@@ -76,10 +81,14 @@ var FeedMain = React.createClass({
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <ul className="nav navbar-nav navbar-left">
-              <li><a onClick={this.handleSummaryClick}>Summary</a></li>
-              <li><a onClick={this.handlePhotoIndexClick}>Photos</a></li>
-              <li><a onClick={this.handleFavoritesClick}>Favorites</a></li>
-              <li><a onClick={this.handleFollowingClick}>Following</a></li>
+              <li><a id={this.state.currentTab === "summary" ? "selected-profile-tab" : ""}
+                     onClick={this.handleSummaryClick}>Summary</a></li>
+              <li><a id={this.state.currentTab === "photoIndex" ? "selected-profile-tab" : ""}
+                     onClick={this.handlePhotoIndexClick}>Photos</a></li>
+              <li><a id={this.state.currentTab === "favorites" ? "selected-profile-tab" : ""}
+                     onClick={this.handleFavoritesClick}>Favorites</a></li>
+              <li><a id={this.state.currentTab === "following" ? "selected-profile-tab" : ""}
+                     onClick={this.handleFollowingClick}>Following</a></li>
             </ul>
           </div>
         </nav>

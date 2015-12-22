@@ -7,7 +7,7 @@ var App = React.createClass({
     return (
       <div>
         <Sidebar />
-        <div className="navbar-top-space">
+        <div className="spacing-object-50">
           {this.props.children}
         </div>
       </div>

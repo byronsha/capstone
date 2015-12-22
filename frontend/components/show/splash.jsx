@@ -14,7 +14,7 @@ var Splash = React.createClass({
         </div>
 
         <div className="splash-main-3">
-          <span className="introduction-3">...and discover breath-taking sights from around the world.</span>
+          <span className="introduction-3">...and discover breathtaking sights from around the world.</span>
         </div>
 
       </div>
