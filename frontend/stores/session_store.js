@@ -9,14 +9,6 @@ var setCurrentUser = function (user) {
   _currentUser = user;
 };
 
-SessionStore.isLoggedIn = function () {
-  if (Object.keys(_currentUser).length === 0) {
-    return false
-  } else {
-    return true
-  }
-};
-
 SessionStore.currentUser = function () {
   return _currentUser;
 };

@@ -14,7 +14,6 @@
   position: relative;
   display: inline-block;
   margin: 1px;
-
   -webkit-transition: all .1s ease-out;
      -moz-transition: all .1s ease-out;
        -o-transition: all .1s ease-out;
@@ -24,15 +23,12 @@
 
 .photo-thumb:hover img {
   z-index: 100;
-
   opacity: 0.5;
-
   // -webkit-transform: scale(1.1);
   //    -moz-transform: scale(1.1);
   //      -o-transform: scale(1.1);
   //     -ms-transform: scale(1.1);
   //         transform: scale(1.1);
-
   -webkit-transition: all .25s ease;
      -moz-transition: all .25s ease;
        -o-transition: all .25s ease;
@@ -76,6 +72,18 @@
 }
 
 #photo-favorite-button:hover {
+  cursor: pointer;
+}
+
+#photo-unfavorite-button {
+  margin-right: 10px;
+  margin-bottom: 6px;
+  font-size: 2em;
+  color: #D00000;
+  // color: #cc3352;
+}
+
+#photo-unfavorite-button:hover {
   cursor: pointer;
 }
 

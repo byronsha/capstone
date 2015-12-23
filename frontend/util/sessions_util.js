@@ -41,6 +41,7 @@ var SessionsUtil = {
       success: function (currentUser) {
         SessionActions.logoutCurrentUser(currentUser);
         ApiUtil.clearFavorites();
+        window.currentUserId = null;
       }
     });
   }

@@ -105,15 +105,13 @@ var ApiUtil = {
     })
   },
   fetchUserFavorites: function (userId) {
-    if (typeof userId !== "undefined") {
-      $.ajax({
-        url: "api/favorites",
-        data: { userId: userId },
-        success: function (favorites) {
-          ApiActions.receiveUserFavorites(favorites);
-        }
-      })
-    }
+    $.ajax({
+      url: "api/favorites",
+      data: { userId: userId },
+      success: function (favorites) {
+        ApiActions.receiveUserFavorites(favorites);
+      }
+    })
   },
   clearFavorites: function () {
     ApiActions.clearFavorites();

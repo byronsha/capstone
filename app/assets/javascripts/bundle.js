@@ -24316,6 +24316,7 @@
 	  componentWillMount: function () {
 	    if (window.currentUserId !== null) {
 	      ApiUtil.fetchCurrentUser(window.currentUserId);
+	      ApiUtil.fetchUserFavorites(window.currentUserId);
 	    }
 	  },
 	  render: function () {
@@ -24445,15 +24446,13 @@
 	    });
 	  },
 	  fetchUserFavorites: function (userId) {
-	    if (typeof userId !== "undefined") {
-	      $.ajax({
-	        url: "api/favorites",
-	        data: { userId: userId },
-	        success: function (favorites) {
-	          ApiActions.receiveUserFavorites(favorites);
-	        }
-	      });
-	    }
+	    $.ajax({
+	      url: "api/favorites",
+	      data: { userId: userId },
+	      success: function (favorites) {
+	        ApiActions.receiveUserFavorites(favorites);
+	      }
+	    });
 	  },
 	  clearFavorites: function () {
 	    ApiActions.clearFavorites();
@@ -31471,14 +31470,6 @@
 	  _currentUser = user;
 	};
 
-	SessionStore.isLoggedIn = function () {
-	  if (Object.keys(_currentUser).length === 0) {
-	    return false;
-	  } else {
-	    return true;
-	  }
-	};
-
 	SessionStore.currentUser = function () {
 	  return _currentUser;
 	};
@@ -32072,6 +32063,7 @@
 	      success: function (currentUser) {
 	        SessionActions.logoutCurrentUser(currentUser);
 	        ApiUtil.clearFavorites();
+	        window.currentUserId = null;
 	      }
 	    });
 	  }
@@ -32375,32 +32367,33 @@
 	    PhotoStore = __webpack_require__(261),
 	    SessionStore = __webpack_require__(240),
 	    CollectionStore = __webpack_require__(220),
-	    FavoriteStore = __webpack_require__(280),
-	    ApiUtil = __webpack_require__(209);
+
+	// FavoriteStore = require('../../stores/favorite_store.js'),
+	ApiUtil = __webpack_require__(209);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
 
 	  getInitialState: function () {
-	    return { currentUser: {}, photos: [], favorites: [], collection: "All" };
+	    return { currentUser: {}, photos: [], collection: "All" };
 	  },
 	  componentDidMount: function () {
 	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
 	    this.collectionListener = CollectionStore.addListener(this._onCollectionChange);
-	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
-	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+	    // this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	    // this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
 
 	    ApiUtil.fetchAllPhotos();
 
-	    if (SessionStore.isLoggedIn()) {
-	      ApiUtil.fetchUserFavorites(SessionStore.currentUserId());
-	    };
+	    // if (window.currentUserId !== null) {
+	    //   ApiUtil.fetchUserFavorites(window.currentUserId)
+	    // };
 	  },
 	  componentWillUnmount: function () {
 	    this.photoListener.remove();
 	    this.collectionListener.remove();
-	    this.sessionListener.remove();
-	    this.favoriteListener.remove();
+	    // this.sessionListener.remove();
+	    // this.favoriteListener.remove();
 	  },
 	  _onPhotosChange: function () {
 	    this.setState({ photos: PhotoStore.all() });
@@ -32415,9 +32408,6 @@
 	    this.setState({ favorites: FavoriteStore.all() });
 	  },
 	  render: function () {
-	    console.log(this.state.currentUser.id);
-	    console.log(this.state.favorites);
-
 	    var currentCollectionPhotos = [];
 
 	    if (this.state.collection === "All") {
@@ -32461,12 +32451,33 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209),
+	    SessionStore = __webpack_require__(240),
+	    FavoriteStore = __webpack_require__(280),
 	    History = __webpack_require__(159).History;
 
 	var PhotoItem = React.createClass({
 	  displayName: 'PhotoItem',
 
 	  mixins: [History],
+	  getInitialState: function () {
+	    return { currentUser: {}, favorited: false };
+	  },
+	  componentDidMount: function () {
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+	    this.setState({ favorited: FavoriteStore.isFavorited(this.props.photo.id) });
+	  },
+	  componentWillUnmount: function () {
+	    this.sessionListener.remove();
+	    this.favoriteListener.remove();
+	  },
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+	  },
+	  _onFavoritesChange: function () {
+	    this.setState({ favorited: FavoriteStore.isFavorited(this.props.photo.id) });
+	  },
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
 	  },
@@ -32475,19 +32486,36 @@
 	    console.log("favorite button");
 	  },
 	  render: function () {
-	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
-	        photoOptions = "w_" + this.props.size + ",h_" + this.props.size + ",c_fill/";
+	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
+	    var photoOptions = "w_" + this.props.size + ",h_" + this.props.size + ",c_fill/";
 
-	    return React.createElement(
-	      'div',
-	      { className: 'photo-thumb', onClick: this.handleClick },
-	      React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
-	      React.createElement(
-	        'span',
-	        { className: 'favorite', onClick: this.favoritePhoto },
-	        React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
-	      )
-	    );
+	    if (this.state.favorited) {
+	      return React.createElement(
+	        'div',
+	        { className: 'photo-thumb', onClick: this.handleClick },
+	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	        React.createElement(
+	          'span',
+	          { className: 'favorite',
+	            onClick: this.favoritePhoto },
+	          React.createElement('i', { className: 'fa fa-heart faa-pulse animated-hover',
+	            id: 'photo-unfavorite-button' })
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'photo-thumb', onClick: this.handleClick },
+	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	        React.createElement(
+	          'span',
+	          { className: 'favorite',
+	            onClick: this.favoritePhoto },
+	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover',
+	            id: 'photo-favorite-button' })
+	        )
+	      );
+	    }
 	  }
 	});
 
@@ -33677,19 +33705,31 @@
 	var _favorites = [];
 
 	var resetFavorites = function (favorites) {
+	  // var lookup = {};
+	  // for (var i = 0, len = favorites.length; i < len; i++) {
+	  //   lookup[favorites[i].id] = favorites[i];
+	  // };
+	  // _favorites = lookup;
 	  _favorites = favorites;
 	};
 
-	// var removeFavorite = function (favorite) {
-	//   for (var i = 0; i < _favorites.length; i++) {
-	//     if (_favorites[i].id === favorite.id) {
-	//       _favorites.splice(i, 1);
-	//     }
-	//   }
-	// };
+	var clearFavorites = function () {
+	  _favorites = [];
+	};
 
 	FavoriteStore.all = function () {
-	  return _favorites.slice();
+	  return _favorites;
+	};
+
+	FavoriteStore.isFavorited = function (photoId) {
+	  var favorited = false;
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].photo_id == photoId) {
+	      console.log("asdasd");
+	      favorited = true;
+	    }
+	  }
+	  return favorited;
 	};
 
 	FavoriteStore.__onDispatch = function (payload) {
@@ -33699,7 +33739,7 @@
 	      FavoriteStore.__emitChange();
 	      break;
 	    case FavoriteConstants.CLEAR_FAVORITES:
-	      resetFavorites([]);
+	      clearFavorites();
 	      FavoriteStore.__emitChange();
 	      break;
 	  }

@@ -5,7 +5,8 @@ var React = require('react'),
 var App = React.createClass({
   componentWillMount: function () {
     if (window.currentUserId !== null) {
-      ApiUtil.fetchCurrentUser(window.currentUserId)
+      ApiUtil.fetchCurrentUser(window.currentUserId);
+      ApiUtil.fetchUserFavorites(window.currentUserId);
     }
   },
   render: function () {
