@@ -1,6 +1,6 @@
 var React = require('react'),
-    CollectionsDropdownItem = require('./collections_dropdown_item.jsx'),
-    ApiUtil = require('../../util/api_util.js');
+    ApiUtil = require('../../util/api_util.js'),
+    CollectionsDropdownItem = require('./collections_dropdown_item.jsx');
 
 var CollectionsDropdown = React.createClass({
   getInitialState: function () {
@@ -15,13 +15,19 @@ var CollectionsDropdown = React.createClass({
                        "Places", "Red", "Orange", "Yellow", "Green",
                        "Blue", "Purple", "Brown", "White", "Black"];
 
+    for (var i = 0; i < collections.length; i++) {
+      if (collections[i] === this.state.collection) {
+        collections.splice(i, 1);
+      }
+    };
+
     return (
       <li className="dropdown">
         <a className="dropdown-toggle"
            data-toggle="dropdown"
            role="button"
            aria-haspopup="true"
-           aria-expanded="false">COLLECTION: {this.state.collection}<span className="caret"></span>
+           aria-expanded="false">Collection: {this.state.collection} <i className="fa fa-angle-down"></i>
         </a>
         <ul className="dropdown-menu" id="collections-dropdown">
           {

@@ -10,6 +10,7 @@ json.photos @user.photos do |photo|
   json.title photo.title
   json.description photo.description
   json.photo_url photo.photo_url
+  json.favorite_count photo.favorites.length
   json.created_at photo.created_at.strftime('%a %d %b %Y')
 end
 
@@ -35,5 +36,6 @@ json.favorited_photos @user.favorited_photos do |favorited_photo|
   json.title favorited_photo.title
   json.description favorited_photo.description
   json.photo_url favorited_photo.photo_url
+  json.favorite_count favorited_photo.favorites.length
   json.created_at favorited_photo.created_at.strftime('%a %d %b %Y')
 end

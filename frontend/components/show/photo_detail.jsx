@@ -13,9 +13,9 @@ var PhotoDetail = React.createClass({
     return { comments: [] };
   },
   componentDidMount: function () {
-    this.commentListener = CommentStore.addListener(this._onCommentsChange);
-    ApiUtil.fetchPhotoComments(this.props.params.photoId);
     ApiUtil.fetchAllPhotos();
+    ApiUtil.fetchPhotoComments(this.props.params.photoId);
+    this.commentListener = CommentStore.addListener(this._onCommentsChange);
   },
   componentWillUnmount: function () {
     this.commentListener.remove();
@@ -28,12 +28,6 @@ var PhotoDetail = React.createClass({
   },
   render: function () {
     var currentPhoto = PhotoStore.find(this.props.params.photoId);
-    var currentPhotoUrl;
-
-    if (currentPhoto) {
-      currentPhotoUrl = currentPhoto.photo_url;
-    };
-
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
     var photo_options = "w_1100,h_550,c_fill/";
     var currentUser = SessionStore.currentUser();
@@ -60,6 +54,8 @@ var PhotoDetail = React.createClass({
     };
 
     if (currentPhoto) {
+      var currentPhotoUrl = currentPhoto.photo_url;
+
       return (
         <div className="container">
 
@@ -111,7 +107,7 @@ var PhotoDetail = React.createClass({
         </div>
       );
     } else {
-      return (<div></div>);
+      return ( <div></div> );
     }
   }
 });

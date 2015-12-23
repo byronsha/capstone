@@ -8,7 +8,7 @@ var CreateButton = React.createClass({
   },
   render: function () {
     return (
-      <li><a onClick={this.onClick}>CREATE</a></li>
+      <li><a onClick={this.onClick}>Create</a></li>
     );
   }
 });

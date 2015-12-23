@@ -6,11 +6,6 @@ var Store = require('flux/utils').Store,
 var _favorites = [];
 
 var resetFavorites = function (favorites) {
-  // var lookup = {};
-  // for (var i = 0, len = favorites.length; i < len; i++) {
-  //   lookup[favorites[i].id] = favorites[i];
-  // };
-  // _favorites = lookup;
   _favorites = favorites;
 };
 
@@ -26,7 +21,6 @@ FavoriteStore.isFavorited = function (photoId) {
   var favorited = false;
   for (var i = 0; i < _favorites.length; i++) {
     if (_favorites[i].photo_id == photoId) {
-      console.log("asdasd")
       favorited = true;
     }
   }
@@ -44,8 +38,7 @@ FavoriteStore.__onDispatch = function (payload) {
       FavoriteStore.__emitChange();
       break;
   }
-
-  FavoriteStore.__emitChange();
+  // FavoriteStore.__emitChange();
 }
 
 module.exports = FavoriteStore;

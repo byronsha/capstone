@@ -12,7 +12,7 @@ var YouButton = React.createClass({
   },
   render: function () {
     return (
-      <li><a onClick={this.handleClick}>YOU</a></li>
+      <li><a onClick={this.handleClick}>You</a></li>
     );
   }
 });

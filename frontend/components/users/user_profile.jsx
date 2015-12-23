@@ -77,7 +77,6 @@ var FeedMain = React.createClass({
     return (
       <div>
         { userInfo }
-
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <ul className="nav navbar-nav navbar-left">
@@ -92,7 +91,6 @@ var FeedMain = React.createClass({
             </ul>
           </div>
         </nav>
-
         { currentTab }
       </div>
     )

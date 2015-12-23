@@ -28,8 +28,7 @@ UiStore.__onDispatch = function (payload) {
       UiStore.__emitChange();
       break;
   }
-
-  UiStore.__emitChange();
+  // UiStore.__emitChange();
 }
 
 module.exports = UiStore;

@@ -14,6 +14,7 @@
   position: relative;
   display: inline-block;
   margin: 1px;
+
   -webkit-transition: all .1s ease-out;
      -moz-transition: all .1s ease-out;
        -o-transition: all .1s ease-out;
@@ -24,11 +25,7 @@
 .photo-thumb:hover img {
   z-index: 100;
   opacity: 0.5;
-  // -webkit-transform: scale(1.1);
-  //    -moz-transform: scale(1.1);
-  //      -o-transform: scale(1.1);
-  //     -ms-transform: scale(1.1);
-  //         transform: scale(1.1);
+
   -webkit-transition: all .25s ease;
      -moz-transition: all .25s ease;
        -o-transition: all .25s ease;
@@ -47,11 +44,24 @@
 
 .photo-thumb span.delete {
   bottom:0;
-  left:0;
+  right:0;
+}
+
+.photo-thumb span.favorite {
+  bottom:0;
+  right:0;
+}
+
+.photo-thumb span.favorite-count {
+  right:0;
+  bottom:0;
+  margin-right: 10px;
+  margin-bottom: 3px;
+  font-size: 2em;
 }
 
 #photo-delete-button {
-  margin-left: 10px;
+  margin-right: 10px;
   margin-bottom: 6px;
   font-size: 2em;
 }
@@ -60,13 +70,8 @@
   cursor: pointer;
 }
 
-.photo-thumb span.favorite {
-  bottom:0;
-  right:0;
-}
-
 #photo-favorite-button {
-  margin-right: 10px;
+  margin-right: 30px;
   margin-bottom: 6px;
   font-size: 2em;
 }
@@ -76,11 +81,11 @@
 }
 
 #photo-unfavorite-button {
-  margin-right: 10px;
+  margin-right: 30px;
   margin-bottom: 6px;
   font-size: 2em;
-  color: #D00000;
-  // color: #cc3352;
+  opacity: .85;
+  color: #cc3352;
 }
 
 #photo-unfavorite-button:hover {

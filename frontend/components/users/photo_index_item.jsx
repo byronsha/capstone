@@ -26,14 +26,12 @@ var PhotoIndexItem = React.createClass({
         <div className="photo-thumb" onClick={this.handleClick}>
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
           <span className="delete" onClick={this.deletePhoto}><i className="fa fa-trash-o faa-pulse animated-hover" id="photo-delete-button"></i></span>
-          <span className="favorite" onClick={this.favoritePhoto}><i className="fa fa-heart-o faa-pulse animated-hover" id="photo-favorite-button"></i></span>
         </div>
       );
     } else {
       return (
         <div className="photo-thumb" onClick={this.handleClick}>
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
-          <span className="favorite" onClick={this.favoritePhoto}><i className="fa fa-heart-o faa-pulse animated-hover" id="photo-favorite-button"></i></span>
         </div>
       )
     }

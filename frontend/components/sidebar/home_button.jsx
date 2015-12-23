@@ -8,7 +8,7 @@ var HomeButton = React.createClass({
   },
   render: function () {
     return (
-      <li><a onClick={this.onClick}>HOME</a></li>
+      <li><a onClick={this.onClick}>omnify</a></li>
     );
   }
 });

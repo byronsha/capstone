@@ -41,7 +41,7 @@ var LoginButton = React.createClass({
            data-toggle="dropdown"
            role="button"
            aria-haspopup="true"
-           aria-expanded="false">LOG IN <span className="caret"></span>
+           aria-expanded="false">Log in <i className="fa fa-angle-down"></i>
         </a>
 
         <div className="dropdown-menu" id="login-dropdown">

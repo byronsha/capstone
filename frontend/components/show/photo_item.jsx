@@ -41,10 +41,10 @@ var PhotoItem = React.createClass({
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
           <span className="favorite"
                 onClick={this.favoritePhoto}>
-                <i className="fa fa-heart faa-pulse animated-hover"
-                   id="photo-unfavorite-button">
-                </i>
+                <i className="fa fa-heart faa-pulse animated-hover" id="photo-unfavorite-button"></i>
           </span>
+          <span className="favorite-count">{this.props.photo.favorite_count}</span>
+
         </div>
       );
     } else {
@@ -53,10 +53,9 @@ var PhotoItem = React.createClass({
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
           <span className="favorite"
                 onClick={this.favoritePhoto}>
-                <i className="fa fa-heart-o faa-pulse animated-hover"
-                   id="photo-favorite-button">
-                </i>
+                <i className="fa fa-heart-o faa-pulse animated-hover" id="photo-favorite-button"></i>
           </span>
+          <span className="favorite-count">{this.props.photo.favorite_count}</span>
         </div>
       );
     }

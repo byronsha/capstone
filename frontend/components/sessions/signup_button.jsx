@@ -33,7 +33,7 @@ var Signup = React.createClass({
            data-toggle="dropdown"
            role="button"
            aria-haspopup="true"
-           aria-expanded="false">SIGN UP <span className="caret"></span>
+           aria-expanded="false">Sign up <i className="fa fa-angle-down"></i>
         </a>
 
         <div className="dropdown-menu" id="signup-dropdown">

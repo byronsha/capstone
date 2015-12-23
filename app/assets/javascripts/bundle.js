@@ -50,11 +50,11 @@
 	    Route = __webpack_require__(159).Route,
 	    IndexRoute = __webpack_require__(159).IndexRoute,
 	    App = __webpack_require__(208),
-	    FeedMain = __webpack_require__(259),
-	    Splash = __webpack_require__(262),
-	    PhotoDetail = __webpack_require__(263),
-	    UploadPhotoForm = __webpack_require__(269),
-	    UserProfile = __webpack_require__(271);
+	    FeedMain = __webpack_require__(260),
+	    Splash = __webpack_require__(264),
+	    PhotoDetail = __webpack_require__(265),
+	    UploadPhotoForm = __webpack_require__(271),
+	    UserProfile = __webpack_require__(273);
 
 	var routes = React.createElement(
 	  Route,
@@ -24308,7 +24308,7 @@
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    Sidebar = __webpack_require__(239);
+	    Sidebar = __webpack_require__(242);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24317,7 +24317,8 @@
 	    if (window.currentUserId !== null) {
 	      ApiUtil.fetchCurrentUser(window.currentUserId);
 	      ApiUtil.fetchUserFavorites(window.currentUserId);
-	    }
+	    };
+	    ApiUtil.fetchAllPhotos();
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -24340,9 +24341,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(210),
-	    UiActions = __webpack_require__(218),
-	    SessionActions = __webpack_require__(253),
-	    CollectionStore = __webpack_require__(220);
+	    UiActions = __webpack_require__(219),
+	    SessionActions = __webpack_require__(221),
+	    CollectionStore = __webpack_require__(223);
 
 	var ApiUtil = {
 	  fetchAllPhotos: function () {
@@ -24468,8 +24469,8 @@
 	var Dispatcher = __webpack_require__(211),
 	    PhotoConstants = __webpack_require__(215),
 	    CommentConstants = __webpack_require__(216),
-	    FavoriteConstants = __webpack_require__(279),
-	    UserConstants = __webpack_require__(217);
+	    FavoriteConstants = __webpack_require__(217),
+	    UserConstants = __webpack_require__(218);
 
 	var ApiActions = {
 	  receiveAllPhotos: function (photos) {
@@ -24863,15 +24864,24 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  RECEIVE_SINGLE_USER: "RECEIVE_SINGLE_USER"
+	  USER_FAVORITES_RECEIVED: "USER_FAVORITES_RECEIVED",
+	  CLEAR_FAVORITES: "CLEAR_FAVORITES"
 	};
 
 /***/ },
 /* 218 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  RECEIVE_SINGLE_USER: "RECEIVE_SINGLE_USER"
+	};
+
+/***/ },
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(211),
-	    UiConstants = __webpack_require__(219);
+	    UiConstants = __webpack_require__(220);
 
 	var UiActions = {
 	  setFlash: function (messages) {
@@ -24890,7 +24900,7 @@
 	module.exports = UiActions;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -24899,12 +24909,45 @@
 	};
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(221).Store,
+	var Dispatcher = __webpack_require__(211),
+	    SessionConstants = __webpack_require__(222),
+	    ApiUtil = __webpack_require__(209);
+
+	var SessionActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  },
+	  logoutCurrentUser: function () {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
+	      currentUser: {}
+	    });
+	  }
+	};
+
+	module.exports = SessionActions;
+
+/***/ },
+/* 222 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	};
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(224).Store,
 	    AppDispatcher = __webpack_require__(211),
-	    CollectionConstants = __webpack_require__(238),
+	    CollectionConstants = __webpack_require__(241),
 	    CollectionStore = new Store(AppDispatcher);
 
 	var _collection = "All";
@@ -24924,14 +24967,13 @@
 	      CollectionStore.__emitChange();
 	      break;
 	  }
-
-	  CollectionStore.__emitChange();
+	  // CollectionStore.__emitChange();
 	};
 
 	module.exports = CollectionStore;
 
 /***/ },
-/* 221 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24943,15 +24985,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(222);
-	module.exports.MapStore = __webpack_require__(225);
-	module.exports.Mixin = __webpack_require__(237);
-	module.exports.ReduceStore = __webpack_require__(226);
-	module.exports.Store = __webpack_require__(227);
+	module.exports.Container = __webpack_require__(225);
+	module.exports.MapStore = __webpack_require__(228);
+	module.exports.Mixin = __webpack_require__(240);
+	module.exports.ReduceStore = __webpack_require__(229);
+	module.exports.Store = __webpack_require__(230);
 
 
 /***/ },
-/* 222 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24973,10 +25015,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(223);
+	var FluxStoreGroup = __webpack_require__(226);
 
 	var invariant = __webpack_require__(214);
-	var shallowEqual = __webpack_require__(224);
+	var shallowEqual = __webpack_require__(227);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25134,7 +25176,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 223 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25215,7 +25257,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 224 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/**
@@ -25270,7 +25312,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 225 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25291,8 +25333,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(226);
-	var Immutable = __webpack_require__(236);
+	var FluxReduceStore = __webpack_require__(229);
+	var Immutable = __webpack_require__(239);
 
 	var invariant = __webpack_require__(214);
 
@@ -25420,7 +25462,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 226 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25441,9 +25483,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(227);
+	var FluxStore = __webpack_require__(230);
 
-	var abstractMethod = __webpack_require__(235);
+	var abstractMethod = __webpack_require__(238);
 	var invariant = __webpack_require__(214);
 
 	var FluxReduceStore = (function (_FluxStore) {
@@ -25527,7 +25569,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 227 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25546,7 +25588,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(228);
+	var _require = __webpack_require__(231);
 
 	var EventEmitter = _require.EventEmitter;
 
@@ -25710,7 +25752,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 228 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25723,14 +25765,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(229)
+	  EventEmitter: __webpack_require__(232)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 229 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25749,11 +25791,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(230);
-	var EventSubscriptionVendor = __webpack_require__(232);
+	var EmitterSubscription = __webpack_require__(233);
+	var EventSubscriptionVendor = __webpack_require__(235);
 
-	var emptyFunction = __webpack_require__(234);
-	var invariant = __webpack_require__(233);
+	var emptyFunction = __webpack_require__(237);
+	var invariant = __webpack_require__(236);
 
 	/**
 	 * @class BaseEventEmitter
@@ -25927,7 +25969,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25948,7 +25990,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(231);
+	var EventSubscription = __webpack_require__(234);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -25980,7 +26022,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 231 */
+/* 234 */
 /***/ function(module, exports) {
 
 	/**
@@ -26031,7 +26073,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 232 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26050,7 +26092,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(233);
+	var invariant = __webpack_require__(236);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26140,7 +26182,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 233 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26195,7 +26237,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 237 */
 /***/ function(module, exports) {
 
 	/**
@@ -26238,7 +26280,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 235 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26265,7 +26307,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31230,7 +31272,7 @@
 	}));
 
 /***/ },
-/* 237 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31247,7 +31289,7 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(223);
+	var FluxStoreGroup = __webpack_require__(226);
 
 	var invariant = __webpack_require__(214);
 
@@ -31353,7 +31395,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
+/* 241 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -31361,19 +31403,19 @@
 	};
 
 /***/ },
-/* 239 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionStore = __webpack_require__(240),
-	    HomeButton = __webpack_require__(242),
-	    ExploreButton = __webpack_require__(243),
-	    CollectionsDropdown = __webpack_require__(244),
-	    LoginButton = __webpack_require__(247),
-	    LogoutButton = __webpack_require__(255),
-	    SignupButton = __webpack_require__(256),
-	    YouButton = __webpack_require__(257),
-	    CreateButton = __webpack_require__(258);
+	    SessionStore = __webpack_require__(243),
+	    HomeButton = __webpack_require__(244),
+	    ExploreButton = __webpack_require__(245),
+	    CollectionsDropdown = __webpack_require__(246),
+	    LoginButton = __webpack_require__(249),
+	    LogoutButton = __webpack_require__(256),
+	    SignupButton = __webpack_require__(257),
+	    YouButton = __webpack_require__(258),
+	    CreateButton = __webpack_require__(259);
 
 	var Sidebar = React.createClass({
 	  displayName: 'Sidebar',
@@ -31456,12 +31498,12 @@
 	module.exports = Sidebar;
 
 /***/ },
-/* 240 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(221).Store,
+	var Store = __webpack_require__(224).Store,
 	    AppDispatcher = __webpack_require__(211),
-	    SessionConstants = __webpack_require__(241),
+	    SessionConstants = __webpack_require__(222),
 	    SessionStore = new Store(AppDispatcher);
 
 	var _currentUser = {};
@@ -31485,22 +31527,13 @@
 	      SessionStore.__emitChange();
 	      break;
 	  }
-
-	  SessionStore.__emitChange();
+	  // SessionStore.__emitChange();
 	};
 
 	module.exports = SessionStore;
 
 /***/ },
-/* 241 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
-	};
-
-/***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -31520,7 +31553,7 @@
 	      React.createElement(
 	        'a',
 	        { onClick: this.onClick },
-	        'HOME'
+	        'omnify'
 	      )
 	    );
 	  }
@@ -31529,7 +31562,7 @@
 	module.exports = HomeButton;
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -31549,7 +31582,7 @@
 	      React.createElement(
 	        'a',
 	        { onClick: this.onClick },
-	        'EXPLORE'
+	        'Explore'
 	      )
 	    );
 	  }
@@ -31558,12 +31591,12 @@
 	module.exports = ExploreButton;
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CollectionsDropdownItem = __webpack_require__(245),
-	    ApiUtil = __webpack_require__(209);
+	    ApiUtil = __webpack_require__(209),
+	    CollectionsDropdownItem = __webpack_require__(247);
 
 	var CollectionsDropdown = React.createClass({
 	  displayName: 'CollectionsDropdown',
@@ -31578,6 +31611,12 @@
 	    var that = this;
 	    var collections = ["All", "People", "Technology", "Nature", "Places", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Brown", "White", "Black"];
 
+	    for (var i = 0; i < collections.length; i++) {
+	      if (collections[i] === this.state.collection) {
+	        collections.splice(i, 1);
+	      }
+	    };
+
 	    return React.createElement(
 	      'li',
 	      { className: 'dropdown' },
@@ -31588,9 +31627,10 @@
 	          role: 'button',
 	          'aria-haspopup': 'true',
 	          'aria-expanded': 'false' },
-	        'COLLECTION: ',
+	        'Collection: ',
 	        this.state.collection,
-	        React.createElement('span', { className: 'caret' })
+	        ' ',
+	        React.createElement('i', { className: 'fa fa-angle-down' })
 	      ),
 	      React.createElement(
 	        'ul',
@@ -31609,12 +31649,12 @@
 	module.exports = CollectionsDropdown;
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    CollectionActions = __webpack_require__(246),
-	    CollectionStore = __webpack_require__(220),
+	    CollectionActions = __webpack_require__(248),
+	    CollectionStore = __webpack_require__(223),
 	    History = __webpack_require__(159).History;
 
 	var CollectionsDropdownItem = React.createClass({
@@ -31655,11 +31695,11 @@
 	module.exports = CollectionsDropdownItem;
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(211);
-	var CollectionConstants = __webpack_require__(238);
+	var CollectionConstants = __webpack_require__(241);
 
 	var CollectionActions = {
 	  updateCollection: function (collection) {
@@ -31673,13 +31713,13 @@
 	module.exports = CollectionActions;
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(248),
-	    SessionsUtil = __webpack_require__(252),
-	    UiStore = __webpack_require__(254);
+	    LinkedStateMixin = __webpack_require__(250),
+	    SessionsUtil = __webpack_require__(254),
+	    UiStore = __webpack_require__(255);
 
 	var LoginButton = React.createClass({
 	  displayName: 'LoginButton',
@@ -31725,8 +31765,8 @@
 	          role: 'button',
 	          'aria-haspopup': 'true',
 	          'aria-expanded': 'false' },
-	        'LOG IN ',
-	        React.createElement('span', { className: 'caret' })
+	        'Log in ',
+	        React.createElement('i', { className: 'fa fa-angle-down' })
 	      ),
 	      React.createElement(
 	        'div',
@@ -31787,13 +31827,13 @@
 	module.exports = LoginButton;
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(249);
+	module.exports = __webpack_require__(251);
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31810,8 +31850,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(250);
-	var ReactStateSetters = __webpack_require__(251);
+	var ReactLink = __webpack_require__(252);
+	var ReactStateSetters = __webpack_require__(253);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -31834,7 +31874,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31908,7 +31948,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports) {
 
 	/**
@@ -32017,11 +32057,11 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionActions = __webpack_require__(253),
-	    UiActions = __webpack_require__(218),
+	var SessionActions = __webpack_require__(221),
+	    UiActions = __webpack_require__(219),
 	    ApiUtil = __webpack_require__(209);
 
 	var SessionsUtil = {
@@ -32072,37 +32112,12 @@
 	module.exports = SessionsUtil;
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(211),
-	    SessionConstants = __webpack_require__(241),
-	    ApiUtil = __webpack_require__(209);
-
-	var SessionActions = {
-	  receiveCurrentUser: function (currentUser) {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  },
-	  logoutCurrentUser: function () {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.RECEIVE_CURRENT_USER,
-	      currentUser: {}
-	    });
-	  }
-	};
-
-	module.exports = SessionActions;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(221).Store,
+	var Store = __webpack_require__(224).Store,
 	    AppDispatcher = __webpack_require__(211),
-	    UiConstants = __webpack_require__(219),
+	    UiConstants = __webpack_require__(220),
 	    UiStore = new Store(AppDispatcher);
 
 	var _flash = "";
@@ -32130,18 +32145,17 @@
 	      UiStore.__emitChange();
 	      break;
 	  }
-
-	  UiStore.__emitChange();
+	  // UiStore.__emitChange();
 	};
 
 	module.exports = UiStore;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(252);
+	    SessionsUtil = __webpack_require__(254);
 
 	var LogoutButton = React.createClass({
 	  displayName: 'LogoutButton',
@@ -32156,7 +32170,7 @@
 	      React.createElement(
 	        'a',
 	        { onClick: this.onClick },
-	        'LOGOUT'
+	        'Logout'
 	      )
 	    );
 	  }
@@ -32165,11 +32179,11 @@
 	module.exports = LogoutButton;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(252);
+	    SessionsUtil = __webpack_require__(254);
 
 	var Signup = React.createClass({
 	  displayName: 'Signup',
@@ -32209,8 +32223,8 @@
 	          role: 'button',
 	          'aria-haspopup': 'true',
 	          'aria-expanded': 'false' },
-	        'SIGN UP ',
-	        React.createElement('span', { className: 'caret' })
+	        'Sign up ',
+	        React.createElement('i', { className: 'fa fa-angle-down' })
 	      ),
 	      React.createElement(
 	        'div',
@@ -32266,12 +32280,12 @@
 	module.exports = Signup;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    History = __webpack_require__(159).History,
-	    SessionStore = __webpack_require__(240);
+	    SessionStore = __webpack_require__(243);
 
 	var YouButton = React.createClass({
 	  displayName: 'YouButton',
@@ -32290,7 +32304,7 @@
 	      React.createElement(
 	        'a',
 	        { onClick: this.handleClick },
-	        'YOU'
+	        'You'
 	      )
 	    );
 	  }
@@ -32330,7 +32344,7 @@
 	// </li>
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -32350,7 +32364,7 @@
 	      React.createElement(
 	        'a',
 	        { onClick: this.onClick },
-	        'CREATE'
+	        'Create'
 	      )
 	    );
 	  }
@@ -32359,17 +32373,15 @@
 	module.exports = CreateButton;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoItem = __webpack_require__(260),
-	    PhotoStore = __webpack_require__(261),
-	    SessionStore = __webpack_require__(240),
-	    CollectionStore = __webpack_require__(220),
-
-	// FavoriteStore = require('../../stores/favorite_store.js'),
-	ApiUtil = __webpack_require__(209);
+	    PhotoItem = __webpack_require__(261),
+	    PhotoStore = __webpack_require__(263),
+	    SessionStore = __webpack_require__(243),
+	    CollectionStore = __webpack_require__(223),
+	    ApiUtil = __webpack_require__(209);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
@@ -32380,20 +32392,11 @@
 	  componentDidMount: function () {
 	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
 	    this.collectionListener = CollectionStore.addListener(this._onCollectionChange);
-	    // this.sessionListener = SessionStore.addListener(this._onSessionChange);
-	    // this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
-
 	    ApiUtil.fetchAllPhotos();
-
-	    // if (window.currentUserId !== null) {
-	    //   ApiUtil.fetchUserFavorites(window.currentUserId)
-	    // };
 	  },
 	  componentWillUnmount: function () {
 	    this.photoListener.remove();
 	    this.collectionListener.remove();
-	    // this.sessionListener.remove();
-	    // this.favoriteListener.remove();
 	  },
 	  _onPhotosChange: function () {
 	    this.setState({ photos: PhotoStore.all() });
@@ -32447,13 +32450,13 @@
 	module.exports = FeedMain;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    SessionStore = __webpack_require__(240),
-	    FavoriteStore = __webpack_require__(280),
+	    SessionStore = __webpack_require__(243),
+	    FavoriteStore = __webpack_require__(262),
 	    History = __webpack_require__(159).History;
 
 	var PhotoItem = React.createClass({
@@ -32498,8 +32501,12 @@
 	          'span',
 	          { className: 'favorite',
 	            onClick: this.favoritePhoto },
-	          React.createElement('i', { className: 'fa fa-heart faa-pulse animated-hover',
-	            id: 'photo-unfavorite-button' })
+	          React.createElement('i', { className: 'fa fa-heart faa-pulse animated-hover', id: 'photo-unfavorite-button' })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'favorite-count' },
+	          this.props.photo.favorite_count
 	        )
 	      );
 	    } else {
@@ -32511,8 +32518,12 @@
 	          'span',
 	          { className: 'favorite',
 	            onClick: this.favoritePhoto },
-	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover',
-	            id: 'photo-favorite-button' })
+	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'favorite-count' },
+	          this.props.photo.favorite_count
 	        )
 	      );
 	    }
@@ -32522,10 +32533,59 @@
 	module.exports = PhotoItem;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(221).Store,
+	var Store = __webpack_require__(224).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    FavoriteConstants = __webpack_require__(217),
+	    FavoriteStore = new Store(AppDispatcher);
+
+	var _favorites = [];
+
+	var resetFavorites = function (favorites) {
+	  _favorites = favorites;
+	};
+
+	var clearFavorites = function () {
+	  _favorites = [];
+	};
+
+	FavoriteStore.all = function () {
+	  return _favorites;
+	};
+
+	FavoriteStore.isFavorited = function (photoId) {
+	  var favorited = false;
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].photo_id == photoId) {
+	      favorited = true;
+	    }
+	  }
+	  return favorited;
+	};
+
+	FavoriteStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FavoriteConstants.USER_FAVORITES_RECEIVED:
+	      resetFavorites(payload.favorites);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.CLEAR_FAVORITES:
+	      clearFavorites();
+	      FavoriteStore.__emitChange();
+	      break;
+	  }
+	  // FavoriteStore.__emitChange();
+	};
+
+	module.exports = FavoriteStore;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(224).Store,
 	    AppDispatcher = __webpack_require__(211),
 	    PhotoConstants = __webpack_require__(215),
 	    PhotoStore = new Store(AppDispatcher);
@@ -32565,14 +32625,13 @@
 	      PhotoStore.__emitChange();
 	      break;
 	  }
-
-	  PhotoStore.__emitChange();
+	  // PhotoStore.__emitChange();
 	};
 
 	module.exports = PhotoStore;
 
 /***/ },
-/* 262 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32618,16 +32677,16 @@
 	module.exports = Splash;
 
 /***/ },
-/* 263 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    PhotoStore = __webpack_require__(261),
-	    CommentStore = __webpack_require__(264),
-	    PhotoComment = __webpack_require__(265),
-	    PhotoCommentForm = __webpack_require__(268),
-	    SessionStore = __webpack_require__(240),
+	    PhotoStore = __webpack_require__(263),
+	    CommentStore = __webpack_require__(266),
+	    PhotoComment = __webpack_require__(267),
+	    PhotoCommentForm = __webpack_require__(270),
+	    SessionStore = __webpack_require__(243),
 	    History = __webpack_require__(159).History;
 
 	var PhotoDetail = React.createClass({
@@ -32638,9 +32697,9 @@
 	    return { comments: [] };
 	  },
 	  componentDidMount: function () {
-	    this.commentListener = CommentStore.addListener(this._onCommentsChange);
-	    ApiUtil.fetchPhotoComments(this.props.params.photoId);
 	    ApiUtil.fetchAllPhotos();
+	    ApiUtil.fetchPhotoComments(this.props.params.photoId);
+	    this.commentListener = CommentStore.addListener(this._onCommentsChange);
 	  },
 	  componentWillUnmount: function () {
 	    this.commentListener.remove();
@@ -32653,12 +32712,6 @@
 	  },
 	  render: function () {
 	    var currentPhoto = PhotoStore.find(this.props.params.photoId);
-	    var currentPhotoUrl;
-
-	    if (currentPhoto) {
-	      currentPhotoUrl = currentPhoto.photo_url;
-	    };
-
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
 	    var photo_options = "w_1100,h_550,c_fill/";
 	    var currentUser = SessionStore.currentUser();
@@ -32695,6 +32748,8 @@
 	    };
 
 	    if (currentPhoto) {
+	      var currentPhotoUrl = currentPhoto.photo_url;
+
 	      return React.createElement(
 	        'div',
 	        { className: 'container' },
@@ -32784,10 +32839,10 @@
 	module.exports = PhotoDetail;
 
 /***/ },
-/* 264 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(221).Store,
+	var Store = __webpack_require__(224).Store,
 	    AppDispatcher = __webpack_require__(211),
 	    CommentConstants = __webpack_require__(216),
 	    CommentStore = new Store(AppDispatcher);
@@ -32829,21 +32884,20 @@
 	      CommentStore.__emitChange();
 	      break;
 	  }
-
-	  CommentStore.__emitChange();
+	  // CommentStore.__emitChange();
 	};
 
 	module.exports = CommentStore;
 
 /***/ },
-/* 265 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoStore = __webpack_require__(261),
-	    SessionStore = __webpack_require__(240),
-	    EditCommentButton = __webpack_require__(266),
-	    DeleteCommentButton = __webpack_require__(267),
+	    PhotoStore = __webpack_require__(263),
+	    SessionStore = __webpack_require__(243),
+	    EditCommentButton = __webpack_require__(268),
+	    DeleteCommentButton = __webpack_require__(269),
 	    History = __webpack_require__(159).History;
 
 	var PhotoComment = React.createClass({
@@ -32918,7 +32972,7 @@
 	module.exports = PhotoComment;
 
 /***/ },
-/* 266 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32944,7 +32998,7 @@
 	module.exports = EditCommentButton;
 
 /***/ },
-/* 267 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -32970,13 +33024,13 @@
 	module.exports = DeleteCommentButton;
 
 /***/ },
-/* 268 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(248),
+	    LinkedStateMixin = __webpack_require__(250),
 	    ApiUtil = __webpack_require__(209),
-	    SessionStore = __webpack_require__(240);
+	    SessionStore = __webpack_require__(243);
 
 	var PhotoCommentForm = React.createClass({
 	  displayName: 'PhotoCommentForm',
@@ -33056,14 +33110,14 @@
 	module.exports = PhotoCommentForm;
 
 /***/ },
-/* 269 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    LinkedStateMixin = __webpack_require__(248),
-	    SessionStore = __webpack_require__(240),
+	    LinkedStateMixin = __webpack_require__(250),
+	    SessionStore = __webpack_require__(243),
 	    ApiUtil = __webpack_require__(209),
-	    UploadPhotoButton = __webpack_require__(270),
+	    UploadPhotoButton = __webpack_require__(272),
 	    History = __webpack_require__(159).History;
 
 	var UploadPhotoForm = React.createClass({
@@ -33211,7 +33265,7 @@
 	module.exports = UploadPhotoForm;
 
 /***/ },
-/* 270 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33247,17 +33301,17 @@
 	module.exports = UploadPhotoButton;
 
 /***/ },
-/* 271 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    UserStore = __webpack_require__(272),
-	    Summary = __webpack_require__(273),
-	    PhotoIndex = __webpack_require__(274),
-	    Favorites = __webpack_require__(276),
-	    Following = __webpack_require__(277),
-	    FollowButton = __webpack_require__(278);
+	    UserStore = __webpack_require__(274),
+	    Summary = __webpack_require__(275),
+	    PhotoIndex = __webpack_require__(276),
+	    Favorites = __webpack_require__(278),
+	    Following = __webpack_require__(279),
+	    FollowButton = __webpack_require__(280);
 
 	var FeedMain = React.createClass({
 	  displayName: 'FeedMain',
@@ -33427,12 +33481,12 @@
 	module.exports = FeedMain;
 
 /***/ },
-/* 272 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(221).Store,
+	var Store = __webpack_require__(224).Store,
 	    AppDispatcher = __webpack_require__(211),
-	    UserConstants = __webpack_require__(217),
+	    UserConstants = __webpack_require__(218),
 	    UserStore = new Store(AppDispatcher);
 
 	var _user = {};
@@ -33452,14 +33506,13 @@
 	      UserStore.__emitChange();
 	      break;
 	  }
-
-	  UserStore.__emitChange();
+	  // UserStore.__emitChange();
 	};
 
 	module.exports = UserStore;
 
 /***/ },
-/* 273 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33479,13 +33532,13 @@
 	module.exports = Summary;
 
 /***/ },
-/* 274 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    PhotoIndexItem = __webpack_require__(275),
-	    PhotoStore = __webpack_require__(261);
+	    PhotoIndexItem = __webpack_require__(277),
+	    PhotoStore = __webpack_require__(263);
 
 	var PhotoIndex = React.createClass({
 	  displayName: 'PhotoIndex',
@@ -33527,11 +33580,11 @@
 	module.exports = PhotoIndex;
 
 /***/ },
-/* 275 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionStore = __webpack_require__(240),
+	    SessionStore = __webpack_require__(243),
 	    ApiUtil = __webpack_require__(209),
 	    History = __webpack_require__(159).History;
 
@@ -33564,23 +33617,13 @@
 	          'span',
 	          { className: 'delete', onClick: this.deletePhoto },
 	          React.createElement('i', { className: 'fa fa-trash-o faa-pulse animated-hover', id: 'photo-delete-button' })
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'favorite', onClick: this.favoritePhoto },
-	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
 	        )
 	      );
 	    } else {
 	      return React.createElement(
 	        'div',
 	        { className: 'photo-thumb', onClick: this.handleClick },
-	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
-	        React.createElement(
-	          'span',
-	          { className: 'favorite', onClick: this.favoritePhoto },
-	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
-	        )
+	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url })
 	      );
 	    }
 	  }
@@ -33589,11 +33632,11 @@
 	module.exports = PhotoIndexItem;
 
 /***/ },
-/* 276 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoItem = __webpack_require__(260);
+	    PhotoItem = __webpack_require__(261);
 
 	var Favorites = React.createClass({
 	  displayName: 'Favorites',
@@ -33622,7 +33665,7 @@
 	module.exports = Favorites;
 
 /***/ },
-/* 277 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -33665,7 +33708,7 @@
 	module.exports = Following;
 
 /***/ },
-/* 278 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33683,71 +33726,6 @@
 	});
 
 	module.exports = CreateButton;
-
-/***/ },
-/* 279 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  USER_FAVORITES_RECEIVED: "USER_FAVORITES_RECEIVED",
-	  CLEAR_FAVORITES: "CLEAR_FAVORITES"
-	};
-
-/***/ },
-/* 280 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(221).Store,
-	    AppDispatcher = __webpack_require__(211),
-	    FavoriteConstants = __webpack_require__(279),
-	    FavoriteStore = new Store(AppDispatcher);
-
-	var _favorites = [];
-
-	var resetFavorites = function (favorites) {
-	  // var lookup = {};
-	  // for (var i = 0, len = favorites.length; i < len; i++) {
-	  //   lookup[favorites[i].id] = favorites[i];
-	  // };
-	  // _favorites = lookup;
-	  _favorites = favorites;
-	};
-
-	var clearFavorites = function () {
-	  _favorites = [];
-	};
-
-	FavoriteStore.all = function () {
-	  return _favorites;
-	};
-
-	FavoriteStore.isFavorited = function (photoId) {
-	  var favorited = false;
-	  for (var i = 0; i < _favorites.length; i++) {
-	    if (_favorites[i].photo_id == photoId) {
-	      console.log("asdasd");
-	      favorited = true;
-	    }
-	  }
-	  return favorited;
-	};
-
-	FavoriteStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case FavoriteConstants.USER_FAVORITES_RECEIVED:
-	      resetFavorites(payload.favorites);
-	      FavoriteStore.__emitChange();
-	      break;
-	    case FavoriteConstants.CLEAR_FAVORITES:
-	      clearFavorites();
-	      FavoriteStore.__emitChange();
-	      break;
-	  }
-
-	  FavoriteStore.__emitChange();
-	};
-
-	module.exports = FavoriteStore;
 
 /***/ }
 /******/ ]);

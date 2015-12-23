@@ -8,7 +8,7 @@ var ExploreButton = React.createClass({
   },
   render: function () {
     return (
-      <li><a onClick={this.onClick}>EXPLORE</a></li>
+      <li><a onClick={this.onClick}>Explore</a></li>
     );
   }
 });

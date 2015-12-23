@@ -22,4 +22,6 @@ json.array! @photos do |photo|
   json.collections photo.collections do |collection|
     json.title collection.title
   end
+
+  json.favorite_count photo.favorites.length
 end

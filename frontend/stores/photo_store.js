@@ -38,8 +38,7 @@ PhotoStore.__onDispatch = function (payload) {
       PhotoStore.__emitChange();
       break;
   }
-
-  PhotoStore.__emitChange();
+  // PhotoStore.__emitChange();
 }
 
 module.exports = PhotoStore;
