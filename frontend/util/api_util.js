@@ -1,6 +1,7 @@
 var ApiActions = require('../actions/api_actions.js'),
     UiActions = require('../actions/ui_actions.js'),
     SessionActions = require('../actions/session_actions.js'),
+    FavoriteActions = require('../actions/favorite_actions.js'),
     CollectionStore = require('../stores/collection_store.js');
 
 var ApiUtil = {
@@ -97,8 +98,8 @@ var ApiUtil = {
   },
   fetchCurrentUser: function (userId) {
     $.ajax({
-      url: "/api/users/" + userId,
-      type: "GET",
+      url: '/api/users/' + userId,
+      type: 'GET',
       success: function (user) {
         SessionActions.receiveCurrentUser(user);
       }
@@ -106,7 +107,7 @@ var ApiUtil = {
   },
   fetchUserFavorites: function (userId) {
     $.ajax({
-      url: "api/favorites",
+      url: 'api/favorites',
       data: { userId: userId },
       success: function (favorites) {
         ApiActions.receiveUserFavorites(favorites);
@@ -115,6 +116,27 @@ var ApiUtil = {
   },
   clearFavorites: function () {
     ApiActions.clearFavorites();
+  },
+  addFavorite: function (favoriteParams) {
+    $.ajax({
+      url: 'api/favorites',
+      type: 'POST',
+      dataType: 'json',
+      data: favoriteParams,
+      success: function (favorite) {
+        FavoriteActions.addFavorite(favorite);
+      }
+    })
+  },
+  removeFavorite: function (favoriteId) {
+    $.ajax({
+      url: 'api/favorites/' + favoriteId,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (favorite) {
+        FavoriteActions.removeFavorite(favorite);
+      }
+    })
   }
 };
 

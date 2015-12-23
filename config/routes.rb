@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resources :photo_comments, only: [:index, :show, :create, :destroy]
     resources :collections, only: [:index]
     resources :users, only: [:show]
-    resources :favorites, only: [:index]
+    resources :favorites, only: [:index, :create, :destroy]
   end
 
 end

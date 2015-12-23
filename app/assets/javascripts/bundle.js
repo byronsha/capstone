@@ -24343,6 +24343,7 @@
 	var ApiActions = __webpack_require__(210),
 	    UiActions = __webpack_require__(219),
 	    SessionActions = __webpack_require__(221),
+	    FavoriteActions = __webpack_require__(283),
 	    CollectionStore = __webpack_require__(223);
 
 	var ApiUtil = {
@@ -24439,8 +24440,8 @@
 	  },
 	  fetchCurrentUser: function (userId) {
 	    $.ajax({
-	      url: "/api/users/" + userId,
-	      type: "GET",
+	      url: '/api/users/' + userId,
+	      type: 'GET',
 	      success: function (user) {
 	        SessionActions.receiveCurrentUser(user);
 	      }
@@ -24448,7 +24449,7 @@
 	  },
 	  fetchUserFavorites: function (userId) {
 	    $.ajax({
-	      url: "api/favorites",
+	      url: 'api/favorites',
 	      data: { userId: userId },
 	      success: function (favorites) {
 	        ApiActions.receiveUserFavorites(favorites);
@@ -24457,6 +24458,27 @@
 	  },
 	  clearFavorites: function () {
 	    ApiActions.clearFavorites();
+	  },
+	  addFavorite: function (favoriteParams) {
+	    $.ajax({
+	      url: 'api/favorites',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: favoriteParams,
+	      success: function (favorite) {
+	        FavoriteActions.addFavorite(favorite);
+	      }
+	    });
+	  },
+	  removeFavorite: function (favoriteId) {
+	    $.ajax({
+	      url: 'api/favorites/' + favoriteId,
+	      type: 'DELETE',
+	      dataType: 'json',
+	      success: function (favorite) {
+	        FavoriteActions.removeFavorite(favorite);
+	      }
+	    });
 	  }
 	};
 
@@ -24865,7 +24887,9 @@
 
 	module.exports = {
 	  USER_FAVORITES_RECEIVED: "USER_FAVORITES_RECEIVED",
-	  CLEAR_FAVORITES: "CLEAR_FAVORITES"
+	  CLEAR_FAVORITES: "CLEAR_FAVORITES",
+	  ADD_FAVORITE: "ADD_FAVORITE",
+	  REMOVE_FAVORITE: "REMOVE_FAVORITE"
 	};
 
 /***/ },
@@ -31698,8 +31722,8 @@
 /* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(211);
-	var CollectionConstants = __webpack_require__(241);
+	var Dispatcher = __webpack_require__(211),
+	    CollectionConstants = __webpack_require__(241);
 
 	var CollectionActions = {
 	  updateCollection: function (collection) {
@@ -32457,6 +32481,8 @@
 	    ApiUtil = __webpack_require__(209),
 	    SessionStore = __webpack_require__(243),
 	    FavoriteStore = __webpack_require__(262),
+	    FavoriteButton = __webpack_require__(281),
+	    UnfavoriteButton = __webpack_require__(282),
 	    History = __webpack_require__(159).History;
 
 	var PhotoItem = React.createClass({
@@ -32464,12 +32490,16 @@
 
 	  mixins: [History],
 	  getInitialState: function () {
-	    return { currentUser: {}, favorited: false };
+	    return {
+	      currentUser: {},
+	      favorited: FavoriteStore.isFavorited(this.props.photo.id),
+	      favoriteCount: this.props.photo.favorite_count
+	    };
 	  },
 	  componentDidMount: function () {
 	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
 	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
-	    this.setState({ favorited: FavoriteStore.isFavorited(this.props.photo.id) });
+	    // this.setState({ favorited: FavoriteStore.isFavorited(this.props.photo.id) });
 	  },
 	  componentWillUnmount: function () {
 	    this.sessionListener.remove();
@@ -32484,49 +32514,36 @@
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
 	  },
-	  favoritePhoto: function (e) {
-	    e.stopPropagation();
-	    console.log("favorite button");
+	  decrementFavoriteCount: function () {
+	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
+	  },
+	  incrementFavoriteCount: function () {
+	    this.setState({ favoriteCount: this.state.favoriteCount + 1 });
 	  },
 	  render: function () {
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
 	    var photoOptions = "w_" + this.props.size + ",h_" + this.props.size + ",c_fill/";
+	    var button;
 
 	    if (this.state.favorited) {
-	      return React.createElement(
-	        'div',
-	        { className: 'photo-thumb', onClick: this.handleClick },
-	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
-	        React.createElement(
-	          'span',
-	          { className: 'favorite',
-	            onClick: this.favoritePhoto },
-	          React.createElement('i', { className: 'fa fa-heart faa-pulse animated-hover', id: 'photo-unfavorite-button' })
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'favorite-count' },
-	          this.props.photo.favorite_count
-	        )
-	      );
+	      button = React.createElement(UnfavoriteButton, { photoId: this.props.photo.id,
+	        decrementFavoriteCount: this.decrementFavoriteCount });
 	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'photo-thumb', onClick: this.handleClick },
-	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
-	        React.createElement(
-	          'span',
-	          { className: 'favorite',
-	            onClick: this.favoritePhoto },
-	          React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'favorite-count' },
-	          this.props.photo.favorite_count
-	        )
-	      );
-	    }
+	      button = React.createElement(FavoriteButton, { photoId: this.props.photo.id,
+	        incrementFavoriteCount: this.incrementFavoriteCount });
+	    };
+
+	    return React.createElement(
+	      'div',
+	      { className: 'photo-thumb', onClick: this.handleClick },
+	      React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	      button,
+	      React.createElement(
+	        'span',
+	        { className: 'favorite-count' },
+	        this.state.favoriteCount
+	      )
+	    );
 	  }
 	});
 
@@ -32551,6 +32568,18 @@
 	  _favorites = [];
 	};
 
+	var addFavorite = function (favorite) {
+	  _favorites.push(favorite);
+	};
+
+	var removeFavorite = function (favorite) {
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].id == favorite.id) {
+	      _favorites.splice(i, 1);
+	    }
+	  }
+	};
+
 	FavoriteStore.all = function () {
 	  return _favorites;
 	};
@@ -32565,6 +32594,14 @@
 	  return favorited;
 	};
 
+	FavoriteStore.findFavoriteId = function (userId, photoId) {
+	  for (var i = 0; i < _favorites.length; i++) {
+	    if (_favorites[i].user_id == userId && _favorites[i].photo_id == photoId) {
+	      return _favorites[i].id;
+	    }
+	  }
+	};
+
 	FavoriteStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case FavoriteConstants.USER_FAVORITES_RECEIVED:
@@ -32573,6 +32610,14 @@
 	      break;
 	    case FavoriteConstants.CLEAR_FAVORITES:
 	      clearFavorites();
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.ADD_FAVORITE:
+	      addFavorite(payload.favorite);
+	      FavoriteStore.__emitChange();
+	      break;
+	    case FavoriteConstants.REMOVE_FAVORITE:
+	      removeFavorite(payload.favorite);
 	      FavoriteStore.__emitChange();
 	      break;
 	  }
@@ -32694,18 +32739,23 @@
 
 	  mixins: [History],
 	  getInitialState: function () {
-	    return { comments: [] };
+	    return { currentUser: {}, comments: [] };
 	  },
 	  componentDidMount: function () {
 	    ApiUtil.fetchAllPhotos();
 	    ApiUtil.fetchPhotoComments(this.props.params.photoId);
 	    this.commentListener = CommentStore.addListener(this._onCommentsChange);
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
+	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
 	  componentWillUnmount: function () {
 	    this.commentListener.remove();
 	  },
 	  _onCommentsChange: function () {
 	    this.setState({ comments: CommentStore.all() });
+	  },
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.params.userId, {});
@@ -32714,10 +32764,9 @@
 	    var currentPhoto = PhotoStore.find(this.props.params.photoId);
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
 	    var photo_options = "w_1100,h_550,c_fill/";
-	    var currentUser = SessionStore.currentUser();
 	    var commentForm;
 
-	    if (Object.keys(currentUser).length === 0) {
+	    if (Object.keys(this.state.currentUser).length === 0) {
 	      commentForm = React.createElement(
 	        'div',
 	        { className: 'row' },
@@ -33726,6 +33775,98 @@
 	});
 
 	module.exports = CreateButton;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    SessionStore = __webpack_require__(243),
+	    ApiUtil = __webpack_require__(209);
+
+	var FavoriteButton = React.createClass({
+	  displayName: 'FavoriteButton',
+
+	  favoritePhoto: function (e) {
+	    e.stopPropagation();
+
+	    var favoriteParams = {
+	      favorite: {
+	        user_id: SessionStore.currentUserId(),
+	        photo_id: this.props.photoId
+	      }
+	    };
+
+	    ApiUtil.addFavorite(favoriteParams);
+	    this.props.incrementFavoriteCount();
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'span',
+	      { className: 'favorite',
+	        onClick: this.favoritePhoto },
+	      React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
+	    );
+	  }
+	});
+
+	module.exports = FavoriteButton;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209),
+	    SessionStore = __webpack_require__(243),
+	    FavoriteStore = __webpack_require__(262);
+
+	var UnfavoriteButton = React.createClass({
+	  displayName: 'UnfavoriteButton',
+
+	  unfavoritePhoto: function (e) {
+	    e.stopPropagation();
+
+	    var favoriteId = FavoriteStore.findFavoriteId(SessionStore.currentUserId(), this.props.photoId);
+
+	    ApiUtil.removeFavorite(favoriteId);
+	    this.props.decrementFavoriteCount();
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'span',
+	      { className: 'favorite',
+	        onClick: this.unfavoritePhoto },
+	      React.createElement('i', { className: 'fa fa-heart faa-pulse animated-hover', id: 'photo-unfavorite-button' })
+	    );
+	  }
+	});
+
+	module.exports = UnfavoriteButton;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(211),
+	    FavoriteConstants = __webpack_require__(217);
+
+	var FavoriteActions = {
+	  addFavorite: function (favorite) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.ADD_FAVORITE,
+	      favorite: favorite
+	    });
+	  },
+	  removeFavorite: function (favorite) {
+	    Dispatcher.dispatch({
+	      actionType: FavoriteConstants.REMOVE_FAVORITE,
+	      favorite: favorite
+	    });
+	  }
+	};
+
+	module.exports = FavoriteActions;
 
 /***/ }
 /******/ ]);

@@ -10,18 +10,23 @@ var React = require('react'),
 var PhotoDetail = React.createClass({
   mixins: [History],
   getInitialState: function () {
-    return { comments: [] };
+    return { currentUser: {}, comments: [] };
   },
   componentDidMount: function () {
     ApiUtil.fetchAllPhotos();
     ApiUtil.fetchPhotoComments(this.props.params.photoId);
     this.commentListener = CommentStore.addListener(this._onCommentsChange);
+    this.sessionListener = SessionStore.addListener(this._onSessionChange);
+    this.setState({ currentUser: SessionStore.currentUser() });
   },
   componentWillUnmount: function () {
     this.commentListener.remove();
   },
   _onCommentsChange: function () {
     this.setState({ comments: CommentStore.all() });
+  },
+  _onSessionChange: function () {
+    this.setState({ currentUser: SessionStore.currentUser() });
   },
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.params.userId, {});
@@ -30,10 +35,9 @@ var PhotoDetail = React.createClass({
     var currentPhoto = PhotoStore.find(this.props.params.photoId);
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
     var photo_options = "w_1100,h_550,c_fill/";
-    var currentUser = SessionStore.currentUser();
     var commentForm;
 
-    if (Object.keys(currentUser).length === 0) {
+    if (Object.keys(this.state.currentUser).length === 0) {
       commentForm = (
         <div className="row">
           <div className="col-md-6">

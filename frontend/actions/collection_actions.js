@@ -1,5 +1,5 @@
-var Dispatcher = require('../dispatcher/dispatcher.js');
-var CollectionConstants = require('../constants/collection_constants.js');
+var Dispatcher = require('../dispatcher/dispatcher.js'),
+    CollectionConstants = require('../constants/collection_constants.js');
 
 var CollectionActions = {
   updateCollection: function (collection) {
