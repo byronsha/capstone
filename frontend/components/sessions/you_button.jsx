@@ -8,7 +8,7 @@ var YouButton = React.createClass({
     this.currentUser = SessionStore.currentUser();
   },
   handleClick: function () {
-    this.history.pushState(null, "/users/" + this.currentUser.id, {});
+    this.history.pushState(null, "/users/" + this.currentUser.id + "/summary", {});
   },
   render: function () {
     return (

@@ -15,7 +15,7 @@ var App = React.createClass({
       <div>
         <Sidebar />
         <div className="spacing-object-50">
-          {this.props.children}
+          { this.props.children }
         </div>
       </div>
     );

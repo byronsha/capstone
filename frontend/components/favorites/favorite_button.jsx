@@ -16,13 +16,25 @@ var FavoriteButton = React.createClass({
     ApiUtil.addFavorite(favoriteParams);
     this.props.incrementFavoriteCount();
   },
+  preventClick: function (e) {
+    e.stopPropagation();
+  },
   render: function () {
-    return (
-      <span className="favorite"
-            onClick={this.favoritePhoto}>
-            <i className="fa fa-heart-o faa-pulse animated-hover" id="photo-favorite-button"></i>
-      </span>
-    );
+    if (SessionStore.isLoggedIn()) {
+      return (
+        <span className="favorite"
+              onClick={this.favoritePhoto}>
+              <i className="fa fa-heart-o faa-pulse animated-hover" id="photo-favorite-button"></i>
+        </span>
+      )
+    } else {
+      return (
+        <span className="favorite"
+              onClick={this.preventClick}>
+              <i className="fa fa-heart-o" id="photo-favorite-button-ghost"><span className="favorite-tooltip">Login to favorite</span></i>
+        </span>
+      )
+    }
   }
 });
 

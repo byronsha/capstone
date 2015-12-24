@@ -29,7 +29,7 @@ var PhotoDetail = React.createClass({
     this.setState({ currentUser: SessionStore.currentUser() });
   },
   handleClick: function () {
-    this.history.pushState(null, "/users/" + this.props.params.userId, {});
+    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
   },
   render: function () {
     var currentPhoto = PhotoStore.find(this.props.params.photoId);
@@ -42,7 +42,7 @@ var PhotoDetail = React.createClass({
         <div className="row">
           <div className="col-md-6">
             <span className="comment-date">
-              Log in to add comments.
+              Log in to add comments
             </span>
           </div><br/><br/>
         </div>

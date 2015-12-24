@@ -54,6 +54,10 @@
 	    Splash = __webpack_require__(264),
 	    PhotoDetail = __webpack_require__(265),
 	    UploadPhotoForm = __webpack_require__(271),
+	    Summary = __webpack_require__(275),
+	    PhotoIndex = __webpack_require__(276),
+	    Favorites = __webpack_require__(278),
+	    Following = __webpack_require__(279),
 	    UserProfile = __webpack_require__(273);
 
 	var routes = React.createElement(
@@ -63,7 +67,14 @@
 	  React.createElement(Route, { path: '/photos', component: FeedMain }),
 	  React.createElement(Route, { path: '/users/:userId/photos/new', component: UploadPhotoForm }),
 	  React.createElement(Route, { path: '/users/:userId/photos/:photoId', component: PhotoDetail }),
-	  React.createElement(Route, { path: '/users/:userId', component: UserProfile })
+	  React.createElement(
+	    Route,
+	    { path: '/users/:userId', component: UserProfile },
+	    React.createElement(Route, { path: 'summary', component: Summary }),
+	    React.createElement(Route, { path: 'photoIndex', component: PhotoIndex }),
+	    React.createElement(Route, { path: 'favorites', component: Favorites }),
+	    React.createElement(Route, { path: 'following', component: Following })
+	  )
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31544,6 +31555,10 @@
 	  return _currentUser.id;
 	};
 
+	SessionStore.isLoggedIn = function () {
+	  return !!_currentUser.id;
+	};
+
 	SessionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case SessionConstants.RECEIVE_CURRENT_USER:
@@ -32319,7 +32334,7 @@
 	    this.currentUser = SessionStore.currentUser();
 	  },
 	  handleClick: function () {
-	    this.history.pushState(null, "/users/" + this.currentUser.id, {});
+	    this.history.pushState(null, "/users/" + this.currentUser.id + "/summary", {});
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -32758,7 +32773,7 @@
 	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
 	  handleClick: function () {
-	    this.history.pushState(null, "/users/" + this.props.params.userId, {});
+	    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
 	  },
 	  render: function () {
 	    var currentPhoto = PhotoStore.find(this.props.params.photoId);
@@ -32776,7 +32791,7 @@
 	          React.createElement(
 	            'span',
 	            { className: 'comment-date' },
-	            'Log in to add comments.'
+	            'Log in to add comments'
 	          )
 	        ),
 	        React.createElement('br', null),
@@ -32954,7 +32969,7 @@
 
 	  mixins: [History],
 	  handleClick: function () {
-	    this.history.pushState(null, "/users/" + this.props.authorId, {});
+	    this.history.pushState(null, "/users/" + this.props.authorId + "/summary", {});
 	  },
 	  render: function () {
 	    var currentUser = SessionStore.currentUser();
@@ -33360,21 +33375,24 @@
 	    PhotoIndex = __webpack_require__(276),
 	    Favorites = __webpack_require__(278),
 	    Following = __webpack_require__(279),
-	    FollowButton = __webpack_require__(280);
+	    FollowButton = __webpack_require__(284),
+	    UnfollowButton = __webpack_require__(285),
+	    History = __webpack_require__(159).History;
 
-	var FeedMain = React.createClass({
-	  displayName: 'FeedMain',
+	var UserProfile = React.createClass({
+	  displayName: 'UserProfile',
 
+	  mixins: [History],
 	  getInitialState: function () {
-	    return { user: {}, currentTab: "summary" };
+	    return { user: {}, currentTab: this.props.routes[2].path };
 	  },
 	  componentDidMount: function () {
 	    this.userListener = UserStore.addListener(this._onUserChange);
 	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
 	  },
 	  componentWillReceiveProps: function (nextProps) {
+	    this.setState({ currentTab: nextProps.routes[2].path });
 	    ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
-	    this.setState({ currentTab: "summary" });
 	  },
 	  componentWillUnmount: function () {
 	    this.userListener.remove();
@@ -33384,15 +33402,19 @@
 	  },
 	  handleSummaryClick: function () {
 	    this.setState({ currentTab: "summary" });
+	    this.history.pushState(null, "/users/" + this.state.user.id + "/summary", {});
 	  },
 	  handlePhotoIndexClick: function () {
 	    this.setState({ currentTab: "photoIndex" });
+	    this.history.pushState(null, "/users/" + this.state.user.id + "/photoIndex", {});
 	  },
 	  handleFavoritesClick: function () {
 	    this.setState({ currentTab: "favorites" });
+	    this.history.pushState(null, "/users/" + this.state.user.id + "/favorites", {});
 	  },
 	  handleFollowingClick: function () {
 	    this.setState({ currentTab: "following" });
+	    this.history.pushState(null, "/users/" + this.state.user.id + "/following", {});
 	  },
 	  render: function () {
 	    var userInfo;
@@ -33402,11 +33424,12 @@
 	        { className: 'user-banner' },
 	        React.createElement(
 	          'div',
-	          { className: 'container user-info' },
+	          { className: 'user-info' },
 	          React.createElement(
 	            'h1',
 	            null,
-	            this.state.user.username
+	            this.state.user.username,
+	            React.createElement(FollowButton, null)
 	          ),
 	          this.state.user.full_name,
 	          ' ',
@@ -33432,38 +33455,6 @@
 	      );
 	    } else {
 	      userInfo = React.createElement('div', { className: 'user-banner' });
-	    };
-
-	    var currentTab;
-	    switch (this.state.currentTab) {
-	      case "summary":
-	        currentTab = React.createElement(
-	          'div',
-	          null,
-	          React.createElement(Summary, { user: this.state.user })
-	        );
-	        break;
-	      case "photoIndex":
-	        currentTab = React.createElement(
-	          'div',
-	          null,
-	          React.createElement(PhotoIndex, { user: this.state.user })
-	        );
-	        break;
-	      case "favorites":
-	        currentTab = React.createElement(
-	          'div',
-	          null,
-	          React.createElement(Favorites, { user: this.state.user })
-	        );
-	        break;
-	      case "following":
-	        currentTab = React.createElement(
-	          'div',
-	          null,
-	          React.createElement(Following, { user: this.state.user })
-	        );
-	        break;
 	    };
 
 	    return React.createElement(
@@ -33522,12 +33513,104 @@
 	          )
 	        )
 	      ),
-	      currentTab
+	      this.props.children
 	    );
 	  }
 	});
 
-	module.exports = FeedMain;
+	module.exports = UserProfile;
+
+	// var UserProfile = React.createClass({
+	//   getInitialState: function () {
+	//     return { user: {}, currentTab: "summary" };
+	//   },
+	//   componentDidMount: function () {
+	//     this.userListener = UserStore.addListener(this._onUserChange);
+	//     ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+	//   },
+	//   componentWillReceiveProps: function (nextProps) {
+	//     ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
+	//     this.setState({ currentTab: "summary" })
+	//   },
+	//   componentWillUnmount: function () {
+	//     this.userListener.remove();
+	//   },
+	//   _onUserChange: function () {
+	//     this.setState({ user: UserStore.user() });
+	//   },
+	//   handleSummaryClick: function () {
+	//     this.setState({ currentTab: "summary" });
+	//   },
+	//   handlePhotoIndexClick: function () {
+	//     this.setState({ currentTab: "photoIndex" });
+	//   },
+	//   handleFavoritesClick: function () {
+	//     this.setState({ currentTab: "favorites" });
+	//   },
+	//   handleFollowingClick: function () {
+	//     this.setState({ currentTab: "following" });
+	//   },
+	//   render: function () {
+	//     var userInfo;
+	//     if (Object.keys(this.state.user).length > 0) {
+	//       userInfo = (
+	//         <div className="user-banner">
+	//           <div className="container user-info">
+	//             <h1>{this.state.user.username}</h1>
+	//             {this.state.user.full_name} <i className="fa fa-bolt"
+	//                                            id="user-info-bullet"></i><span> </span>
+	//             {this.state.user.photos.length} Photos <i className="fa fa-bolt"
+	//                                                       id="user-info-bullet"></i><span> </span>
+	//             Joined {this.state.user.created_at}
+	//           </div>
+	//         </div>
+	//       )
+	//     } else {
+	//       userInfo = (
+	//         <div className="user-banner"></div>
+	//       )
+	//     };
+	//
+	//     var currentTab;
+	//     switch(this.state.currentTab) {
+	//       case "summary":
+	//         currentTab = (<div><Summary user={this.state.user} /></div>)
+	//         break;
+	//       case "photoIndex":
+	//         currentTab = (<div><PhotoIndex user={this.state.user} /></div>)
+	//         break;
+	//       case "favorites":
+	//         currentTab = (<div><Favorites user={this.state.user} /></div>)
+	//         break;
+	//       case "following":
+	//         currentTab = (<div><Following user={this.state.user} /></div>)
+	//         break;
+	//     };
+	//
+	//     return (
+	//       <div>
+	//         { userInfo }
+	//         <nav className="navbar navbar-default">
+	//           <div className="container-fluid">
+	//             <ul className="nav navbar-nav navbar-left">
+	//               <li><a id={this.state.currentTab === "summary" ? "selected-profile-tab" : ""}
+	//                      onClick={this.handleSummaryClick}>Summary</a></li>
+	//               <li><a id={this.state.currentTab === "photoIndex" ? "selected-profile-tab" : ""}
+	//                      onClick={this.handlePhotoIndexClick}>Photos</a></li>
+	//               <li><a id={this.state.currentTab === "favorites" ? "selected-profile-tab" : ""}
+	//                      onClick={this.handleFavoritesClick}>Favorites</a></li>
+	//               <li><a id={this.state.currentTab === "following" ? "selected-profile-tab" : ""}
+	//                      onClick={this.handleFollowingClick}>Following</a></li>
+	//             </ul>
+	//           </div>
+	//         </nav>
+	//         { currentTab }
+	//       </div>
+	//     )
+	//   }
+	// });
+	//
+	// module.exports = UserProfile;
 
 /***/ },
 /* 274 */
@@ -33564,17 +33647,36 @@
 /* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209),
+	    UserStore = __webpack_require__(274);
 
 	var Summary = React.createClass({
 	  displayName: 'Summary',
 
+	  getInitialState: function () {
+	    return { user: {} };
+	  },
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._onUserChange);
+	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+	  },
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	  },
+	  _onUserChange: function () {
+	    this.setState({ user: UserStore.user() });
+	  },
 	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      this.props.user.summary
-	    );
+	    if (Object.keys(this.state.user).length > 0) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        this.state.user.summary
+	      );
+	    } else {
+	      return React.createElement('div', null);
+	    }
 	  }
 	});
 
@@ -33587,33 +33689,42 @@
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
 	    PhotoIndexItem = __webpack_require__(277),
-	    PhotoStore = __webpack_require__(263);
+
+	// PhotoStore = require('../../stores/photo_store.js'),
+	UserStore = __webpack_require__(274);
 
 	var PhotoIndex = React.createClass({
 	  displayName: 'PhotoIndex',
 
 	  getInitialState: function () {
-	    return { photos: [] };
+	    return { user: {} };
+	    // return { user: {}, photos: [] }
 	  },
 	  componentDidMount: function () {
-	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
-	    ApiUtil.fetchUserPhotos(this.props.user.id);
+	    // this.photoListener = PhotoStore.addListener(this._onPhotosChange);
+	    this.userListener = UserStore.addListener(this._onUserChange);
+	    // ApiUtil.fetchUserPhotos(parseInt(this.props.params.userId));
+	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
 	  },
 	  componentWillUnmount: function () {
-	    this.photoListener.remove();
+	    // this.photoListener.remove();
+	    this.userListener.remove();
 	  },
-	  _onPhotosChange: function () {
-	    this.setState({ photos: PhotoStore.all() });
+	  // _onPhotosChange: function () {
+	  //   this.setState({ photos: PhotoStore.all() })
+	  // },
+	  _onUserChange: function () {
+	    this.setState({ user: UserStore.user() });
 	  },
 	  render: function () {
-	    if (this.props.user.photos.length > 0) {
+	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
 	        'div',
 	        { className: 'feed-main' },
 	        React.createElement(
 	          'div',
 	          null,
-	          this.state.photos.map(function (photo) {
+	          this.state.user.photos.map(function (photo) {
 	            return React.createElement(PhotoIndexItem, { key: photo.id,
 	              photo: photo,
 	              size: 200 });
@@ -33685,20 +33796,35 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    PhotoItem = __webpack_require__(261);
+	    ApiUtil = __webpack_require__(209),
+	    PhotoItem = __webpack_require__(261),
+	    UserStore = __webpack_require__(274);
 
 	var Favorites = React.createClass({
 	  displayName: 'Favorites',
 
+	  getInitialState: function () {
+	    return { user: {} };
+	  },
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._onUserChange);
+	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+	  },
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	  },
+	  _onUserChange: function () {
+	    this.setState({ user: UserStore.user() });
+	  },
 	  render: function () {
-	    if (this.props.user.favorited_photos.length > 0) {
+	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
 	        'div',
 	        { className: 'feed-main' },
 	        React.createElement(
 	          'div',
 	          null,
-	          this.props.user.favorited_photos.map(function (photo) {
+	          this.state.user.favorited_photos.map(function (photo) {
 	            return React.createElement(PhotoItem, { key: photo.id,
 	              photo: photo,
 	              size: 200 });
@@ -33719,25 +33845,39 @@
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
+	    UserStore = __webpack_require__(274),
 	    History = __webpack_require__(159).History;
 
 	var Following = React.createClass({
 	  displayName: 'Following',
 
 	  mixins: [History],
+	  getInitialState: function () {
+	    return { user: {} };
+	  },
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._onUserChange);
+	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+	  },
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	  },
+	  _onUserChange: function () {
+	    this.setState({ user: UserStore.user() });
+	  },
 	  handleClick: function (e) {
 	    e.preventDefault();
-	    this.history.pushState(null, "/users/" + e.target.id, {});
+	    this.history.pushState(null, "/users/" + e.target.id + "/summary", {});
 	  },
 	  render: function () {
-	    if (this.props.user.followed_users.length > 0) {
+	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
 	        'div',
 	        null,
 	        React.createElement(
 	          'ul',
 	          null,
-	          this.props.user.followed_users.map((function (user) {
+	          this.state.user.followed_users.map((function (user) {
 	            return React.createElement(
 	              'li',
 	              { onClick: this.handleClick,
@@ -33757,26 +33897,7 @@
 	module.exports = Following;
 
 /***/ },
-/* 280 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var CreateButton = React.createClass({
-	  displayName: 'CreateButton',
-
-	  render: function () {
-	    return React.createElement(
-	      'button',
-	      null,
-	      'Follow'
-	    );
-	  }
-	});
-
-	module.exports = CreateButton;
-
-/***/ },
+/* 280 */,
 /* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33800,13 +33921,33 @@
 	    ApiUtil.addFavorite(favoriteParams);
 	    this.props.incrementFavoriteCount();
 	  },
+	  preventClick: function (e) {
+	    e.stopPropagation();
+	  },
 	  render: function () {
-	    return React.createElement(
-	      'span',
-	      { className: 'favorite',
-	        onClick: this.favoritePhoto },
-	      React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
-	    );
+	    if (SessionStore.isLoggedIn()) {
+	      return React.createElement(
+	        'span',
+	        { className: 'favorite',
+	          onClick: this.favoritePhoto },
+	        React.createElement('i', { className: 'fa fa-heart-o faa-pulse animated-hover', id: 'photo-favorite-button' })
+	      );
+	    } else {
+	      return React.createElement(
+	        'span',
+	        { className: 'favorite',
+	          onClick: this.preventClick },
+	        React.createElement(
+	          'i',
+	          { className: 'fa fa-heart-o', id: 'photo-favorite-button-ghost' },
+	          React.createElement(
+	            'span',
+	            { className: 'favorite-tooltip' },
+	            'Login to favorite'
+	          )
+	        )
+	      );
+	    }
 	  }
 	});
 
@@ -33867,6 +34008,46 @@
 	};
 
 	module.exports = FavoriteActions;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209);
+
+	var FollowButton = React.createClass({
+	  displayName: 'FollowButton',
+
+	  render: function () {
+	    return React.createElement(
+	      'span',
+	      { className: 'btn btn-success btn-sm',
+	        id: 'follow-button' },
+	      React.createElement('i', { className: 'fa fa-plus' }),
+	      ' Follow'
+	    );
+	  }
+	});
+
+	module.exports = FollowButton;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209);
+
+	var UnfollowButton = React.createClass({
+	  displayName: 'UnfollowButton',
+
+	  render: function () {
+	    return React.createElement('span', null);
+	  }
+	});
+
+	module.exports = UnfollowButton;
 
 /***/ }
 /******/ ]);

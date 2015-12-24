@@ -17,6 +17,10 @@ SessionStore.currentUserId = function () {
   return _currentUser.id;
 };
 
+SessionStore.isLoggedIn = function () {
+  return !!_currentUser.id;
+};
+
 SessionStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case SessionConstants.RECEIVE_CURRENT_USER:

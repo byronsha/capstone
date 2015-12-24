@@ -92,6 +92,31 @@
   cursor: pointer;
 }
 
+#photo-favorite-button-ghost {
+  margin-right: 30px;
+  margin-bottom: 6px;
+  font-size: 2em;
+}
+
+.favorite-tooltip {
+  font-size: 12px;
+  width: 100px;
+  bottom: 40px;
+  right: 10px;
+  opacity: 0;
+  position:absolute;
+
+  -webkit-transition: opacity 0.5s;
+     -moz-transition: opacity 0.5s;
+      -ms-transition: opacity 0.5s;
+       -o-transition: opacity 0.5s;
+          transition: opacity 0.5s;
+}
+
+#photo-favorite-button-ghost:hover .favorite-tooltip {
+  opacity: 1;
+}
+
 .photo-show {
   position: relative;
   margin-top: 5px;
