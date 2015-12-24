@@ -11,8 +11,6 @@ class Api::FavoritesController < ApplicationController
   def create
     @favorite = Favorite.new(favorite_params)
 
-    p favorite_params
-
     if @favorite.save
       render 'create'
     else

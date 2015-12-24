@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     resources :collections, only: [:index]
     resources :users, only: [:show]
     resources :favorites, only: [:index, :create, :destroy]
+    resources :followings, only: [:index, :create, :destroy]
   end
 
 end

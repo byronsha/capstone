@@ -2,6 +2,7 @@ var Dispatcher = require('../dispatcher/dispatcher.js'),
     PhotoConstants = require('../constants/photo_constants.js'),
     CommentConstants = require('../constants/comment_constants.js'),
     FavoriteConstants = require('../constants/favorite_constants.js'),
+    FollowingConstants = require('../constants/following_constants.js'),
     UserConstants = require('../constants/user_constants.js');
 
 var ApiActions = {
@@ -50,6 +51,17 @@ var ApiActions = {
   clearFavorites: function () {
     Dispatcher.dispatch({
       actionType: FavoriteConstants.CLEAR_FAVORITES
+    })
+  },
+  receiveUserFollowings: function (followings) {
+    Dispatcher.dispatch({
+      actionType: FollowingConstants.USER_FOLLOWINGS_RECEIVED,
+      followings: followings
+    })
+  },
+  clearFollowings: function () {
+    Dispatcher.dispatch({
+      actionType: FollowingConstants.CLEAR_FAVORITES
     })
   }
 };

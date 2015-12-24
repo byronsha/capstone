@@ -28,6 +28,7 @@ var SessionsUtil = {
         SessionActions.receiveCurrentUser(currentUser);
         UiActions.removeFlash();
         ApiUtil.fetchUserFavorites(currentUser.id);
+        ApiUtil.fetchUserFollowings(currentUser.id);
       },
       error: function (data) {
         UiActions.setFlash($.parseJSON(data.responseText).errors);
@@ -41,6 +42,7 @@ var SessionsUtil = {
       success: function (currentUser) {
         SessionActions.logoutCurrentUser(currentUser);
         ApiUtil.clearFavorites();
+        ApiUtil.clearFollowings();
         window.currentUserId = null;
       }
     });

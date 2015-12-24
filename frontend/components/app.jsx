@@ -7,6 +7,7 @@ var App = React.createClass({
     if (window.currentUserId !== null) {
       ApiUtil.fetchCurrentUser(window.currentUserId);
       ApiUtil.fetchUserFavorites(window.currentUserId);
+      ApiUtil.fetchUserFollowings(window.currentUserId);
     };
     ApiUtil.fetchAllPhotos();
   },

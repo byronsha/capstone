@@ -51,7 +51,7 @@ var UserProfile = React.createClass({
         <div className="user-banner">
           <div className="user-info">
             <h1>{this.state.user.username}
-              <FollowButton />
+              <FollowButton userId={this.state.user.id}/>
             </h1>
             {this.state.user.full_name} <i className="fa fa-bolt"
                                            id="user-info-bullet"></i><span> </span>

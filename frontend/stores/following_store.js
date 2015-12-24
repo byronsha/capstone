@@ -9,32 +9,56 @@ var resetFollowings = function (followings) {
   _followings = followings;
 };
 
+var clearFollowings = function () {
+  _followings = [];
+};
+
+var addFollowing = function (following) {
+  _followings.push(following);
+};
+
+var removeFollowing = function (following) {
+  for (var i = 0; i < _followings.length; i++) {
+    if (_followings[i].id == following.id) {
+      _followings.splice(i, 1);
+    }
+  }
+};
+
 FollowingStore.all = function () {
   return _followings;
 };
 
-// FollowingStore.isFavorited = function (photoId) {
-//   var favorited = false;
-//   for (var i = 0; i < _favorites.length; i++) {
-//     if (_favorites[i].photo_id == photoId) {
-//       favorited = true;
-//     }
-//   }
-//   return favorited;
-// };
-//
-// FollowingStore.findFavoriteId = function (userId, photoId) {
-//   for (var i = 0; i < _favorites.length; i++) {
-//     if (_favorites[i].user_id == userId && _favorites[i].photo_id == photoId) {
-//       return _favorites[i].id
-//     }
-//   }
-// };
+FollowingStore.isFollowing = function (followedId) {
+  console.log(_followings)
+  var followed = false;
+  for (var i = 0; i < _followings.length; i++) {
+    if (_followings[i].followed_id == followedId) {
+      followed = true;
+      //
+      // console.log(_followings[i].followed_id)
+      // console.log(followedId)
+    }
+  }
+  return followed;
+};
+
+FollowingStore.findFollowingId = function (followerId, followedId) {
+  for (var i = 0; i < _following.length; i++) {
+    if (_following[i].follower_id == followerId && _following[i].followed_id == followedId) {
+      return _following[i].id
+    }
+  }
+};
 
 FollowingStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case FollowingConstants.USER_FOLLOWINGS_RECEIVED:
       resetFollowings(payload.followings);
+      FollowingStore.__emitChange();
+      break;
+    case FollowingConstants.CLEAR_FOLLOWINGS:
+      clearFollowings();
       FollowingStore.__emitChange();
       break;
     case FollowingConstants.ADD_FOLLOWING:

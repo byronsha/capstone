@@ -5,6 +5,18 @@ var React = require('react'),
 
 var PhotoIndexItem = React.createClass({
   mixins: [History],
+  getInitialState: function () {
+    return { currentUser: SessionStore.currentUser() }
+  },
+  componentDidMount: function () {
+    this.sessionListener = SessionStore.addListener(this._onSessionChange);
+  },
+  componentWillUnmount: function () {
+    this.sessionListener.remove();
+  },
+  _onSessionChange: function () {
+    this.setState({ currentUser: SessionStore.currentUser() });
+  },
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
   },
@@ -19,9 +31,8 @@ var PhotoIndexItem = React.createClass({
   render: function () {
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
     var photoOptions = "w_" + this.props.size + ",h_" + this.props.size + ",c_fill/";
-    var currentUser = SessionStore.currentUser();
 
-    if (currentUser.id === this.props.photo.user_id) {
+    if (this.state.currentUser.id === this.props.photo.user_id) {
       return (
         <div className="photo-thumb" onClick={this.handleClick}>
           <img src={url + photoOptions + this.props.photo.photo_url}></img>

@@ -2,6 +2,7 @@ var ApiActions = require('../actions/api_actions.js'),
     UiActions = require('../actions/ui_actions.js'),
     SessionActions = require('../actions/session_actions.js'),
     FavoriteActions = require('../actions/favorite_actions.js'),
+    FollowingActions = require('../actions/following_actions.js'),
     CollectionStore = require('../stores/collection_store.js');
 
 var ApiUtil = {
@@ -68,12 +69,6 @@ var ApiUtil = {
       data: commentParams,
       success: function (comment) {
         ApiActions.createComment(comment);
-        // UiActions.removeFlash();
-      },
-      error: function (data) {
-        console.log(data);
-        console.log("create photo error");
-        // UiActions.setFlash($.parseJSON(data.responseText).errors);
       }
     })
   },
@@ -135,6 +130,39 @@ var ApiUtil = {
       dataType: 'json',
       success: function (favorite) {
         FavoriteActions.removeFavorite(favorite);
+      }
+    })
+  },
+  fetchUserFollowings: function (followerId) {
+    $.ajax({
+      url: 'api/followings',
+      data: { followerId: followerId },
+      success: function (followings) {
+        ApiActions.receiveUserFollowings(followings);
+      }
+    })
+  },
+  clearFollowings: function () {
+    ApiActions.clearFollowings();
+  },
+  addFollowing: function (followingParams) {
+    $.ajax({
+      url: 'api/followings',
+      type: 'POST',
+      dataType: 'json',
+      data: followingParams,
+      success: function (following) {
+        FollowingActions.addFollowing(following);
+      }
+    })
+  },
+  removeFollowing: function (followingId) {
+    $.ajax({
+      url: 'api/followings/' + followingId,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (following) {
+        FollowingActions.removeFollowing(following);
       }
     })
   }
