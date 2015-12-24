@@ -26,7 +26,6 @@ var PhotoIndexItem = React.createClass({
   },
   favoritePhoto: function (e) {
     e.stopPropagation();
-    console.log("favorite button")
   },
   render: function () {
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";

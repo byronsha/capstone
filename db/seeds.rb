@@ -22,12 +22,6 @@ ActiveRecord::Base.connection.reset_pk_sequence!('photo_collections')
 ActiveRecord::Base.connection.reset_pk_sequence!('favorites')
 ActiveRecord::Base.connection.reset_pk_sequence!('followings')
 
-User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
-User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
-User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
-User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
-User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(2, false, 4))
-
 cloudinary_images = Cloudinary::Api.resources(max_results: 1000)
 image_urls = []
 uploaded_image_urls = []
@@ -38,6 +32,33 @@ cloudinary_images["resources"].each do |image|
 end
 
 image_urls.delete("sample.jpg")
+
+User.create(username: "byron", full_name: "Byron Sha", password: "cheese", summary: Faker::Hipster.paragraph(2, false, 4), background_url: "7.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "4.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "5.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "17.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "1.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "18.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "49.jpg")
+User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "53.jpg")
+
+Photo.create(id: 7, user_id: 1, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "7.jpg")
+Photo.create(id: 4, user_id: 2, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "4.jpg")
+Photo.create(id: 5, user_id: 3, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "5.jpg")
+Photo.create(id: 17, user_id: 4, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "17.jpg")
+Photo.create(id: 1, user_id: 5, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "1.jpg")
+Photo.create(id: 18, user_id: 6, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "18.jpg")
+Photo.create(id: 49, user_id: 7, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "49.jpg")
+Photo.create(id: 53, user_id: 8, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "53.jpg")
+
+image_urls.delete("7.jpg")
+image_urls.delete("4.jpg")
+image_urls.delete("5.jpg")
+image_urls.delete("17.jpg")
+image_urls.delete("1.jpg")
+image_urls.delete("18.jpg")
+image_urls.delete("49.jpg")
+image_urls.delete("53.jpg")
 
 user_ids = User.pluck(:id)
 
@@ -318,11 +339,11 @@ end
   PhotoCollection.create(photo_id: i, collection_id: 2)
 end
 
-50.times do
+120.times do
   Favorite.create(photo_id: photo_ids.sample, user_id: user_ids.sample)
 end
 
-8.times do
+30.times do
   Following.create(follower_id: user_ids.sample, followed_id: user_ids.sample)
 end
 

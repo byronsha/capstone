@@ -22,16 +22,25 @@ var Following = React.createClass({
     e.preventDefault();
     this.history.pushState(null, "/users/" + e.target.id + "/summary", {});
   },
+  preventClick: function (e) {
+    e.stopPropagation();
+  },
   render: function () {
     if (Object.keys(this.state.user).length > 0) {
       return (
         <div>
-          <ul>
+          <ul className="followed-user-list">
             {this.state.user.followed_users.map(function (user) {
+              var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_2000,h_150,c_fill/" + user.background_url + "')" };
               return (
-                <li onClick={this.handleClick}
+                <li className="followed-user-banner"
+                    style={backgroundImage}
+                    onClick={this.handleClick}
                     id={user.id}
-                    key={user.id}>{user.username}</li>
+                    key={user.id}>
+                    <h2 className="followed-user-username"
+                        onClick={this.preventClick}><span>{user.username}</span></h2>
+                </li>
               )
             }.bind(this))}
           </ul>

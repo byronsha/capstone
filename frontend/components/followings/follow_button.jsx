@@ -43,7 +43,9 @@ var FollowButton = React.createClass({
     ApiUtil.addFollowing(followingParams);
   },
   removeFollowing: function () {
-    console.log("removeASDSAD");
+    var followingId = FollowingStore.findFollowingId(this.state.currentUser.id, this.state.user.id);
+
+    ApiUtil.removeFollowing(followingId);
   },
   render: function () {
     if (Object.keys(this.state.currentUser).length > 0 && Object.keys(this.state.currentUser).length > 0) {
@@ -51,9 +53,12 @@ var FollowButton = React.createClass({
         if (this.state.following) {
           return (
             <span className="btn btn-success btn-sm"
-                  onClick={this.removeFollowing}
-                  id="follow-button">
+                  id="following-button">
                   <i className="fa fa-check"></i> Following
+                  <span id="unfollow-button"
+                        onClick={this.removeFollowing}>
+                        <i className="fa fa-close faa-pulse animated-hover"></i>
+                  </span>
             </span>
           )
         } else {
@@ -65,8 +70,17 @@ var FollowButton = React.createClass({
             </span>
           )
         }
-      } else {return(<div></div>)}
-    } else {return(<div></div>)}
+      } else if (this.state.user.id === this.state.currentUser.id) {
+        return(<div></div>)
+      }
+    } else {
+      return (
+        <span className="btn btn-success btn-sm"
+              id="follow-button-ghost">
+              <i className="fa fa-plus"><span className="follow-tooltip">Login to follow</span></i> Follow
+        </span>
+      )
+    }
   }
 });
 

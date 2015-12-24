@@ -6,7 +6,6 @@ var React = require('react'),
     Favorites = require('./favorites.jsx'),
     Following = require('./following.jsx'),
     FollowButton = require('../followings/follow_button.jsx'),
-    UnfollowButton = require('../followings/unfollow_button.jsx'),
     History = require('react-router').History;
 
 var UserProfile = React.createClass({
@@ -46,11 +45,14 @@ var UserProfile = React.createClass({
   },
   render: function () {
     var userInfo;
+
     if (Object.keys(this.state.user).length > 0) {
+      var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_2000,h_350,c_fill/" + this.state.user.background_url + "')" };
+
       userInfo = (
-        <div className="user-banner">
+        <div className="user-banner" style={backgroundImage}>
           <div className="user-info">
-            <h1>{this.state.user.username}
+            <h1><span className="profile-username">{this.state.user.username}</span>
               <FollowButton userId={this.state.user.id}/>
             </h1>
             {this.state.user.full_name} <i className="fa fa-bolt"

@@ -18,9 +18,19 @@ var Summary = React.createClass({
   },
   render: function () {
     if (Object.keys(this.state.user).length > 0) {
+
+      console.log(this.state.user)
+
       return (
-        <div>
+        <div className="user-summary">
+          <h3>Bio</h3>
           {this.state.user.summary}
+          <br/><br/>
+          Favorites: {this.state.user.favorited_photos.length}
+          <br/>
+          Following: {this.state.user.followed_users.length}
+          <br/>
+          Followers: {this.state.user.followers.length}
         </div>
       )
     } else {

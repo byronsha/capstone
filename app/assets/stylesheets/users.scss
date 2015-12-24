@@ -1,16 +1,16 @@
-// Place all the styles related to the Users controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 .user-banner {
   height: 25vh;
   width: 100%;
-  background: #f3f5f6;
 }
 
 .user-info {
   padding-top: 110px;
   padding-left: 125px;
+  color: white;
+}
+
+.profile-username {
+  font-weight: 400;
 }
 
 #selected-profile-tab {
@@ -32,4 +32,44 @@
   margin-left: 20px;
   margin-bottom: 5px;
   background: red;
+}
+
+.user-summary {
+  width: 800px;
+  padding-top: 30px;
+  padding-left: 125px;
+}
+
+.followed-user-list {
+  background: black;
+  padding-left: 0;
+  margin-bottom: 0px;
+}
+
+.followed-user-banner {
+  list-style-type: none;
+  height: 150px;
+}
+
+.followed-user-banner:hover {
+  background: black;
+  opacity: .6;
+  -webkit-transition: all .4s ease;
+  -moz-transition: all .4s ease;
+  -o-transition: all .4s ease;
+  -ms-transition: all .4s ease;
+  transition: all .4s ease;
+}
+
+.followed-user-username {
+  margin: 0px;
+  color: white;
+  font-weight: 300;
+}
+
+.followed-user-username > span {
+  position: absolute;
+  padding-top: 60px;
+  padding-left: 125px;
+  z-index: 2000;
 }

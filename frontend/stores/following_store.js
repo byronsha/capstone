@@ -30,23 +30,19 @@ FollowingStore.all = function () {
 };
 
 FollowingStore.isFollowing = function (followedId) {
-  console.log(_followings)
   var followed = false;
   for (var i = 0; i < _followings.length; i++) {
     if (_followings[i].followed_id == followedId) {
       followed = true;
-      //
-      // console.log(_followings[i].followed_id)
-      // console.log(followedId)
     }
   }
   return followed;
 };
 
 FollowingStore.findFollowingId = function (followerId, followedId) {
-  for (var i = 0; i < _following.length; i++) {
-    if (_following[i].follower_id == followerId && _following[i].followed_id == followedId) {
-      return _following[i].id
+  for (var i = 0; i < _followings.length; i++) {
+    if (_followings[i].follower_id == followerId && _followings[i].followed_id == followedId) {
+      return _followings[i].id
     }
   }
 };

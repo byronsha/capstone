@@ -16,7 +16,7 @@ json.array! @photos do |photo|
     json.id comment.id
     json.username comment.user.username
     json.body comment.body
-    json.created_at comment.created_at.strftime('%a %d %b %Y')
+    json.created_at comment.created_at.strftime('%a %d, %b. %Y')
   end
 
   json.collections photo.collections do |collection|

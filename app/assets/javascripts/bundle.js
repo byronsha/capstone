@@ -33545,10 +33545,28 @@
 	  },
 	  render: function () {
 	    if (Object.keys(this.state.user).length > 0) {
+
+	      console.log(this.state.user);
+
 	      return React.createElement(
 	        'div',
-	        null,
-	        this.state.user.summary
+	        { className: 'user-summary' },
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Bio'
+	        ),
+	        this.state.user.summary,
+	        React.createElement('br', null),
+	        React.createElement('br', null),
+	        'Favorites: ',
+	        this.state.user.favorited_photos.length,
+	        React.createElement('br', null),
+	        'Following: ',
+	        this.state.user.followed_users.length,
+	        React.createElement('br', null),
+	        'Followers: ',
+	        this.state.user.followers.length
 	      );
 	    } else {
 	      return React.createElement('div', null);
@@ -33595,53 +33613,73 @@
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
+	    UserStore = __webpack_require__(277),
+	    PhotoStore = __webpack_require__(266),
+	    SessionStore = __webpack_require__(244),
 	    PhotoIndexItem = __webpack_require__(279),
-
-	// PhotoStore = require('../../stores/photo_store.js'),
-	UserStore = __webpack_require__(277);
+	    PhotoItem = __webpack_require__(262);
 
 	var PhotoIndex = React.createClass({
 	  displayName: 'PhotoIndex',
 
 	  getInitialState: function () {
-	    return { user: {} };
-	    // return { user: {}, photos: [] }
+	    return { user: {}, currentUser: SessionStore.currentUser(), photos: [] };
 	  },
 	  componentDidMount: function () {
-	    // this.photoListener = PhotoStore.addListener(this._onPhotosChange);
 	    this.userListener = UserStore.addListener(this._onUserChange);
-	    // ApiUtil.fetchUserPhotos(parseInt(this.props.params.userId));
+	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
 	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
+	    ApiUtil.fetchUserPhotos(parseInt(this.props.params.userId));
 	  },
 	  componentWillUnmount: function () {
-	    // this.photoListener.remove();
 	    this.userListener.remove();
+	    this.photoListener.remove();
+	    this.sessionListener.remove();
 	  },
-	  // _onPhotosChange: function () {
-	  //   this.setState({ photos: PhotoStore.all() })
-	  // },
 	  _onUserChange: function () {
 	    this.setState({ user: UserStore.user() });
 	  },
+	  _onPhotosChange: function () {
+	    this.setState({ photos: PhotoStore.all() });
+	  },
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+	  },
 	  render: function () {
+	    var photoItem;
+
+	    if (Object.keys(this.state.user).length > 0) {
+	      if (this.state.user.id === this.state.currentUser.id) {
+	        photoItem = React.createElement(
+	          'div',
+	          null,
+	          this.state.photos.map(function (photo) {
+	            return React.createElement(PhotoIndexItem, { key: photo.id, photo: photo, size: 200 });
+	          })
+	        );
+	      } else {
+	        photoItem = React.createElement(
+	          'div',
+	          null,
+	          this.state.photos.map(function (photo) {
+	            return React.createElement(PhotoItem, { key: photo.id, photo: photo, size: 200 });
+	          })
+	        );
+	      }
+	    };
+
 	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
 	        'div',
 	        { className: 'feed-main' },
-	        React.createElement(
-	          'div',
-	          null,
-	          this.state.user.photos.map(function (photo) {
-	            return React.createElement(PhotoIndexItem, { key: photo.id,
-	              photo: photo,
-	              size: 200 });
-	          })
-	        )
+	        photoItem
 	      );
 	    } else {
 	      return React.createElement('div', null);
 	    };
 	  }
+
 	});
 
 	module.exports = PhotoIndex;
@@ -33680,7 +33718,6 @@
 	  },
 	  favoritePhoto: function (e) {
 	    e.stopPropagation();
-	    console.log("favorite button");
 	  },
 	  render: function () {
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
@@ -33787,6 +33824,9 @@
 	    e.preventDefault();
 	    this.history.pushState(null, "/users/" + e.target.id + "/summary", {});
 	  },
+	  preventClick: function (e) {
+	    e.stopPropagation();
+	  },
 	  render: function () {
 	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
@@ -33794,14 +33834,26 @@
 	        null,
 	        React.createElement(
 	          'ul',
-	          null,
+	          { className: 'followed-user-list' },
 	          this.state.user.followed_users.map((function (user) {
+	            var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_2000,h_150,c_fill/" + user.background_url + "')" };
 	            return React.createElement(
 	              'li',
-	              { onClick: this.handleClick,
+	              { className: 'followed-user-banner',
+	                style: backgroundImage,
+	                onClick: this.handleClick,
 	                id: user.id,
 	                key: user.id },
-	              user.username
+	              React.createElement(
+	                'h2',
+	                { className: 'followed-user-username',
+	                  onClick: this.preventClick },
+	                React.createElement(
+	                  'span',
+	                  null,
+	                  user.username
+	                )
+	              )
 	            );
 	          }).bind(this))
 	        )
@@ -33826,7 +33878,6 @@
 	    Favorites = __webpack_require__(280),
 	    Following = __webpack_require__(281),
 	    FollowButton = __webpack_require__(283),
-	    UnfollowButton = __webpack_require__(286),
 	    History = __webpack_require__(159).History;
 
 	var UserProfile = React.createClass({
@@ -33868,17 +33919,24 @@
 	  },
 	  render: function () {
 	    var userInfo;
+
 	    if (Object.keys(this.state.user).length > 0) {
+	      var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_2000,h_350,c_fill/" + this.state.user.background_url + "')" };
+
 	      userInfo = React.createElement(
 	        'div',
-	        { className: 'user-banner' },
+	        { className: 'user-banner', style: backgroundImage },
 	        React.createElement(
 	          'div',
 	          { className: 'user-info' },
 	          React.createElement(
 	            'h1',
 	            null,
-	            this.state.user.username,
+	            React.createElement(
+	              'span',
+	              { className: 'profile-username' },
+	              this.state.user.username
+	            ),
 	            React.createElement(FollowButton, { userId: this.state.user.id })
 	          ),
 	          this.state.user.full_name,
@@ -34113,7 +34171,9 @@
 	    ApiUtil.addFollowing(followingParams);
 	  },
 	  removeFollowing: function () {
-	    console.log("removeASDSAD");
+	    var followingId = FollowingStore.findFollowingId(this.state.currentUser.id, this.state.user.id);
+
+	    ApiUtil.removeFollowing(followingId);
 	  },
 	  render: function () {
 	    if (Object.keys(this.state.currentUser).length > 0 && Object.keys(this.state.currentUser).length > 0) {
@@ -34122,10 +34182,15 @@
 	          return React.createElement(
 	            'span',
 	            { className: 'btn btn-success btn-sm',
-	              onClick: this.removeFollowing,
-	              id: 'follow-button' },
+	              id: 'following-button' },
 	            React.createElement('i', { className: 'fa fa-check' }),
-	            ' Following'
+	            ' Following',
+	            React.createElement(
+	              'span',
+	              { id: 'unfollow-button',
+	                onClick: this.removeFollowing },
+	              React.createElement('i', { className: 'fa fa-close faa-pulse animated-hover' })
+	            )
 	          );
 	        } else {
 	          return React.createElement(
@@ -34137,11 +34202,25 @@
 	            ' Follow'
 	          );
 	        }
-	      } else {
+	      } else if (this.state.user.id === this.state.currentUser.id) {
 	        return React.createElement('div', null);
 	      }
 	    } else {
-	      return React.createElement('div', null);
+	      return React.createElement(
+	        'span',
+	        { className: 'btn btn-success btn-sm',
+	          id: 'follow-button-ghost' },
+	        React.createElement(
+	          'i',
+	          { className: 'fa fa-plus' },
+	          React.createElement(
+	            'span',
+	            { className: 'follow-tooltip' },
+	            'Login to follow'
+	          )
+	        ),
+	        ' Follow'
+	      );
 	    }
 	  }
 	});
@@ -34184,23 +34263,19 @@
 	};
 
 	FollowingStore.isFollowing = function (followedId) {
-	  console.log(_followings);
 	  var followed = false;
 	  for (var i = 0; i < _followings.length; i++) {
 	    if (_followings[i].followed_id == followedId) {
 	      followed = true;
-	      //
-	      // console.log(_followings[i].followed_id)
-	      // console.log(followedId)
 	    }
 	  }
 	  return followed;
 	};
 
 	FollowingStore.findFollowingId = function (followerId, followedId) {
-	  for (var i = 0; i < _following.length; i++) {
-	    if (_following[i].follower_id == followerId && _following[i].followed_id == followedId) {
-	      return _following[i].id;
+	  for (var i = 0; i < _followings.length; i++) {
+	    if (_followings[i].follower_id == followerId && _followings[i].followed_id == followedId) {
+	      return _followings[i].id;
 	    }
 	  }
 	};
@@ -34240,23 +34315,7 @@
 	};
 
 /***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    ApiUtil = __webpack_require__(209);
-
-	var UnfollowButton = React.createClass({
-	  displayName: 'UnfollowButton',
-
-	  render: function () {
-	    return React.createElement('span', null);
-	  }
-	});
-
-	module.exports = UnfollowButton;
-
-/***/ },
+/* 286 */,
 /* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
