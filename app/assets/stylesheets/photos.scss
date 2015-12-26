@@ -1,7 +1,3 @@
-// Place all the styles related to the Photos controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 .pictures-collection {
   position: relative;
   float: left;
@@ -102,7 +98,6 @@
   font-size: 12px;
   width: 100px;
   bottom: 40px;
-  // right: 10px;
   right: 5%;
   opacity: 0;
   position:absolute;
@@ -118,17 +113,34 @@
   opacity: 1;
 }
 
-.photo-show {
-  position: relative;
-  margin-top: 5px;
-  margin-right: 0 auto;
-  margin-left: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
+// .photo-show {
+//   position: relative;
+//   margin-top: 5px;
+//   margin-right: 0 auto;
+//   margin-left: 0 auto;
+//   text-align: center;
+//   // overflow: hidden;
+// }
 
 .feed-main {
   text-align: center;
   margin-left: 0px auto;
   margin-right: 0px auto;
+}
+
+.photo-title {
+  font-weight: 400;
+}
+
+.photo-detail-photo {
+  text-align: center;
+  background: black;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  overflow: hidden;
+}
+
+.photo-detail-info {
+  margin-left: 250px;
+  width: 700px;
 }

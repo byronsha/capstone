@@ -42,14 +42,14 @@ User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, pa
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "49.jpg")
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: Faker::Hipster.paragraph(6, false, 4), background_url: "53.jpg")
 
-Photo.create(id: 7, user_id: 1, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "7.jpg")
-Photo.create(id: 4, user_id: 2, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "4.jpg")
-Photo.create(id: 5, user_id: 3, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "5.jpg")
-Photo.create(id: 17, user_id: 4, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "17.jpg")
-Photo.create(id: 1, user_id: 5, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "1.jpg")
-Photo.create(id: 18, user_id: 6, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "18.jpg")
-Photo.create(id: 49, user_id: 7, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "49.jpg")
-Photo.create(id: 53, user_id: 8, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: "53.jpg")
+Photo.create(id: 7, user_id: 1, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "7.jpg")
+Photo.create(id: 4, user_id: 2, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "4.jpg")
+Photo.create(id: 5, user_id: 3, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "5.jpg")
+Photo.create(id: 17, user_id: 4, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "17.jpg")
+Photo.create(id: 1, user_id: 5, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "1.jpg")
+Photo.create(id: 18, user_id: 6, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "18.jpg")
+Photo.create(id: 49, user_id: 7, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "49.jpg")
+Photo.create(id: 53, user_id: 8, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: "53.jpg")
 
 image_urls.delete("7.jpg")
 image_urls.delete("4.jpg")
@@ -64,7 +64,7 @@ user_ids = User.pluck(:id)
 
 image_urls.each do |image_url|
   if image_url[0..-5] =~ /^\d+$/
-    Photo.create(id: image_url[0..-5].to_i, user_id: user_ids.sample, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.sentence, photo_url: image_url)
+    Photo.create(id: image_url[0..-5].to_i, user_id: user_ids.sample, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: image_url)
   else
     uploaded_image_urls << image_url[0..-5]
   end

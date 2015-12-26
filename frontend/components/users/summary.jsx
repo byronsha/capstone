@@ -18,9 +18,6 @@ var Summary = React.createClass({
   },
   render: function () {
     if (Object.keys(this.state.user).length > 0) {
-
-      console.log(this.state.user)
-
       return (
         <div className="user-summary">
           <h3>Bio</h3>

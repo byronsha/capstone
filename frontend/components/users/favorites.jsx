@@ -25,7 +25,7 @@ var Favorites = React.createClass({
             {this.state.user.favorited_photos.map(function (photo) {
               return <PhotoItem key={photo.id}
                                 photo={photo}
-                                size={200} />
+                                size={250} />
             })}
           </div>
         </div>

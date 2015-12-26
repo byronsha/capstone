@@ -16,11 +16,12 @@
 #selected-profile-tab {
   height: 50px;
   border-bottom: 5px solid #006dac;
+
   -webkit-transition: all 0s ease;
-  -moz-transition: all 0s ease;
-  -o-transition: all 0s ease;
-  -ms-transition: all 0s ease;
-  transition: all 0s ease;
+     -moz-transition: all 0s ease;
+       -o-transition: all 0s ease;
+      -ms-transition: all 0s ease;
+          transition: all 0s ease;
 }
 
 #user-info-bullet {
@@ -41,35 +42,75 @@
 }
 
 .followed-user-list {
-  background: black;
+  background: white;
   padding-left: 0;
   margin-bottom: 0px;
 }
 
 .followed-user-banner {
+  color: white;
   list-style-type: none;
   height: 150px;
+  // font-weight: 400;
+  padding-top: 43px;
+  padding-left: 125px;
+  font-size: 39px;
+
+  -webkit-transition: all .4s ease;
+     -moz-transition: all .4s ease;
+       -o-transition: all .4s ease;
+      -ms-transition: all .4s ease;
+          transition: all .4s ease;
 }
 
 .followed-user-banner:hover {
-  background: black;
-  opacity: .6;
+  color: black;
+  opacity: .7;
+  // padding-left: 450px;
+
   -webkit-transition: all .4s ease;
-  -moz-transition: all .4s ease;
-  -o-transition: all .4s ease;
-  -ms-transition: all .4s ease;
-  transition: all .4s ease;
+     -moz-transition: all .4s ease;
+       -o-transition: all .4s ease;
+      -ms-transition: all .4s ease;
+          transition: all .4s ease;
 }
 
-.followed-user-username {
-  margin: 0px;
-  color: white;
-  font-weight: 300;
-}
+// .followed-user-username {
+//   margin: 0px;
+//   color: white;
+//   font-weight: 300;
+// }
+//
+// .followed-user-username span {
+//   position: absolute;
+//   padding-top: 60px;
+//   padding-left: 125px;
+// }
+//
+// .followed-user-username:hover span {
+//   position: absolute;
+//   padding-top: 60px;
+//   padding-left: 125px;
+//   color: black;
+// }
 
-.followed-user-username > span {
-  position: absolute;
-  padding-top: 60px;
-  padding-left: 125px;
-  z-index: 2000;
-}
+// .followed-user-username:hover span {
+//   display: block;
+// z-index: 2000;
+// opacity: 1;
+// transition: none;
+// }
+//
+// .followed-user-username:hover > h2 {
+//   position: absolute;
+//   padding-top: 60px;
+//   padding-left: 125px;
+//   z-index: 2000;
+//   transition: none;
+// opacity: 1;
+//   -moz-transform: none;
+// -webkit-transform: none;
+// -o-transform: none;
+// -ms-transform: none;
+// transform: none;
+// }

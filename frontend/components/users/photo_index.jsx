@@ -39,7 +39,7 @@ var PhotoIndex = React.createClass({
         photoItem = (
           <div>
             {this.state.photos.map(function (photo) {
-              return <PhotoIndexItem key={photo.id} photo={photo} size={200} />
+              return <PhotoIndexItem key={photo.id} photo={photo} size={250} />
             })}
           </div>
         )
@@ -47,7 +47,7 @@ var PhotoIndex = React.createClass({
         photoItem = (
           <div>
             {this.state.photos.map(function (photo) {
-              return <PhotoItem key={photo.id} photo={photo} size={200} />
+              return <PhotoItem key={photo.id} photo={photo} size={250} />
             })}
           </div>
         )

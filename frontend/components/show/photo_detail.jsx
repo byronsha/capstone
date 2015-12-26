@@ -34,13 +34,13 @@ var PhotoDetail = React.createClass({
   render: function () {
     var currentPhoto = PhotoStore.find(this.props.params.photoId);
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
-    var photo_options = "w_1100,h_550,c_fill/";
+    var photo_options = "w_1500,h_750,c_fill/";
     var commentForm;
 
     if (Object.keys(this.state.currentUser).length === 0) {
       commentForm = (
-        <div className="row">
-          <div className="col-md-6">
+        <div>
+          <div>
             <span className="comment-date">
               Log in to add comments
             </span>
@@ -49,8 +49,8 @@ var PhotoDetail = React.createClass({
       )
     } else {
       commentForm = (
-        <div className="row">
-          <div className="col-md-6">
+        <div>
+          <div>
             <PhotoCommentForm photoId={this.props.params.photoId} />
           </div><br/><br/>
         </div>
@@ -59,55 +59,55 @@ var PhotoDetail = React.createClass({
 
     if (currentPhoto) {
       var currentPhotoUrl = currentPhoto.photo_url;
-
       return (
-        <div className="container">
-
-          <div className="row">
-            <div className="col-md-12">
-            <div className="photo-show">
-              <img src={url + photo_options + currentPhotoUrl}></img>
-            </div>
+        <div>
+          <div>
+            <div>
+              <div className="photo-detail-photo">
+                <img src={url + photo_options + currentPhotoUrl}></img>
+              </div>
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-md-6">
-              <h3>{currentPhoto.title}</h3>
-              {currentPhoto.description}
-            </div>
-            <div className="col-md-6">
-              <h3>About the photographer</h3>
-              <span onClick={this.handleClick}
-                    className="comment-author">{currentPhoto.user.username}</span>
+          <br/>
+
+          <div className="photo-detail-info">
+            <div>
+              <div>
+                <h3 className="photo-title">{currentPhoto.title}</h3>
+                {currentPhoto.description}
+              </div>
               <br/>
-              {currentPhoto.user.full_name}<br/>
-              {currentPhoto.user.summary}
+              <div>
+                <h4>About the photographer</h4>
+                <span onClick={this.handleClick}
+                      className="comment-author">{currentPhoto.user.username}</span>
+                <br/>
+                {currentPhoto.user.full_name}<br/>
+                {currentPhoto.user.summary}
+              </div>
             </div>
-          </div>
-
-          <br/>
-
-          <div className="row">
-            <div className="col-md-6">
-              <h3>Comments</h3>
-              <ul className="photo-comment-list">
-                {this.state.comments.map(function (comment) {
-                  return <PhotoComment key={comment.id}
-                                       commentId={comment.id}
-                                       author={comment.username}
-                                       authorId={comment.user_id}
-                                       body={comment.body}
-                                       createdAt={comment.created_at} />;
-                })}
-              </ul>
+            <br/>
+            <div>
+              <div>
+                <h4>Comments</h4>
+                <ul className="photo-comment-list">
+                  {this.state.comments.map(function (comment) {
+                    return <PhotoComment key={comment.id}
+                                         commentId={comment.id}
+                                         author={comment.username}
+                                         authorId={comment.user_id}
+                                         body={comment.body}
+                                         createdAt={comment.created_at} />;
+                  })}
+                </ul>
+              </div>
             </div>
+            <br/>
+            { commentForm }
+            <br/>
+            <br/>
           </div>
-
-          <br/>
-          { commentForm }
-          <br/>
-          <br/>
         </div>
       );
     } else {
