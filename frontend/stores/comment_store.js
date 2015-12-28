@@ -40,7 +40,6 @@ CommentStore.__onDispatch = function (payload) {
       CommentStore.__emitChange();
       break;
   }
-  // CommentStore.__emitChange();
-}
+};
 
 module.exports = CommentStore;

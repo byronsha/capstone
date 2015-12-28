@@ -20,7 +20,6 @@ UserStore.__onDispatch = function (payload) {
       UserStore.__emitChange();
       break;
   }
-  // UserStore.__emitChange();
 }
 
 module.exports = UserStore;

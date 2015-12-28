@@ -24361,10 +24361,8 @@
 
 	var ApiUtil = {
 	  fetchAllPhotos: function () {
-	    var collection = CollectionStore.currentCollection();
 	    $.ajax({
 	      url: 'api/photos',
-	      data: { collection: collection },
 	      success: function (photos) {
 	        ApiActions.receiveAllPhotos(photos);
 	      }
@@ -25102,7 +25100,6 @@
 	      CollectionStore.__emitChange();
 	      break;
 	  }
-	  // CollectionStore.__emitChange();
 	};
 
 	module.exports = CollectionStore;
@@ -32578,7 +32575,7 @@
 	          currentCollectionPhotos.map(function (photo) {
 	            return React.createElement(PhotoItem, { key: photo.id,
 	              photo: photo,
-	              size: 250 });
+	              size: 315 });
 	          })
 	        )
 	      );
@@ -32616,7 +32613,6 @@
 	  componentDidMount: function () {
 	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
 	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
-	    // this.setState({ favorited: FavoriteStore.isFavorited(this.props.photo.id) });
 	  },
 	  componentWillUnmount: function () {
 	    this.sessionListener.remove();
@@ -32630,6 +32626,10 @@
 	  },
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
+	  },
+	  handleAuthorClick: function (e) {
+	    e.stopPropagation();
+	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
 	  },
 	  decrementFavoriteCount: function () {
 	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
@@ -32659,6 +32659,22 @@
 	        'span',
 	        { className: 'favorite-count' },
 	        this.state.favoriteCount
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'title' },
+	        this.props.photo.title
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'author' },
+	        'by '
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'author-two',
+	          onClick: this.handleAuthorClick },
+	        this.props.photo.user.username
 	      )
 	    );
 	  }
@@ -32738,7 +32754,6 @@
 	      FavoriteStore.__emitChange();
 	      break;
 	  }
-	  // FavoriteStore.__emitChange();
 	};
 
 	module.exports = FavoriteStore;
@@ -32864,6 +32879,14 @@
 	  })[0];
 	};
 
+	PhotoStore.fetchFavoriteCount = function (photoId) {
+	  for (var i = 0; i < _photos.length; i++) {
+	    if (_photos[i].id == photoId) {
+	      return _photos[i].favorite_count;
+	    }
+	  }
+	};
+
 	PhotoStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case PhotoConstants.ALL_PHOTOS_RECEIVED:
@@ -32875,7 +32898,6 @@
 	      PhotoStore.__emitChange();
 	      break;
 	  }
-	  // PhotoStore.__emitChange();
 	};
 
 	module.exports = PhotoStore;
@@ -32937,6 +32959,10 @@
 	    PhotoComment = __webpack_require__(272),
 	    PhotoCommentForm = __webpack_require__(275),
 	    SessionStore = __webpack_require__(246),
+	    FavoriteStore = __webpack_require__(265),
+	    FavoriteButton = __webpack_require__(266),
+	    UnfavoriteButton = __webpack_require__(267),
+	    FollowButton = __webpack_require__(285),
 	    History = __webpack_require__(159).History;
 
 	var PhotoDetail = React.createClass({
@@ -32944,17 +32970,34 @@
 
 	  mixins: [History],
 	  getInitialState: function () {
-	    return { currentUser: {}, comments: [] };
+	    return {
+	      currentUser: {},
+	      currentPhoto: {},
+	      comments: [],
+	      favorited: FavoriteStore.isFavorited(this.props.params.photoId),
+	      favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId)
+	    };
 	  },
 	  componentDidMount: function () {
-	    ApiUtil.fetchAllPhotos();
-	    ApiUtil.fetchPhotoComments(this.props.params.photoId);
+	    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
 	    this.commentListener = CommentStore.addListener(this._onCommentsChange);
 	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
-	    this.setState({ currentUser: SessionStore.currentUser() });
+	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
+
+	    ApiUtil.fetchAllPhotos();
+	    ApiUtil.fetchCurrentUser(window.currentUserId);
+	    ApiUtil.fetchPhotoComments(this.props.params.photoId);
 	  },
 	  componentWillUnmount: function () {
+	    this.photoListener.remove();
 	    this.commentListener.remove();
+	    this.sessionListener.remove();
+	    this.favoriteListener.remove();
+	  },
+	  _onPhotosChange: function () {
+	    this.setState({ currentPhoto: PhotoStore.find(this.props.params.photoId) });
+	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
 	  },
 	  _onCommentsChange: function () {
 	    this.setState({ comments: CommentStore.all() });
@@ -32962,13 +33005,22 @@
 	  _onSessionChange: function () {
 	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
+	  _onFavoritesChange: function () {
+	    this.setState({ favorited: FavoriteStore.isFavorited(this.props.params.photoId) });
+	  },
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
 	  },
+	  decrementFavoriteCount: function () {
+	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
+	  },
+	  incrementFavoriteCount: function () {
+	    this.setState({ favoriteCount: this.state.favoriteCount + 1 });
+	  },
 	  render: function () {
-	    var currentPhoto = PhotoStore.find(this.props.params.photoId);
+	    var currentPhoto = this.state.currentPhoto;
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
-	    var photo_options = "w_1500,h_750,c_fill/";
+	    var photo_options = "w_1200,h_650,c_fill/";
 	    var commentForm;
 
 	    if (Object.keys(this.state.currentUser).length === 0) {
@@ -33001,7 +33053,15 @@
 	      );
 	    };
 
-	    if (currentPhoto) {
+	    if (this.state.favorited) {
+	      button = React.createElement(UnfavoriteButton, { photoId: this.props.params.photoId,
+	        decrementFavoriteCount: this.decrementFavoriteCount });
+	    } else {
+	      button = React.createElement(FavoriteButton, { photoId: this.props.params.photoId,
+	        incrementFavoriteCount: this.incrementFavoriteCount });
+	    };
+
+	    if (Object.keys(currentPhoto).length > 0) {
 	      var currentPhotoUrl = currentPhoto.photo_url;
 	      return React.createElement(
 	        'div',
@@ -33011,21 +33071,23 @@
 	          null,
 	          React.createElement(
 	            'div',
-	            null,
+	            { className: 'photo-detail-photo' },
+	            React.createElement('img', { src: url + photo_options + currentPhotoUrl }),
+	            button,
 	            React.createElement(
-	              'div',
-	              { className: 'photo-detail-photo' },
-	              React.createElement('img', { src: url + photo_options + currentPhotoUrl })
+	              'span',
+	              { className: 'favorite-count' },
+	              this.state.favoriteCount
 	            )
 	          )
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'photo-detail-info' },
+	          { className: 'container' },
 	          React.createElement(
 	            'div',
-	            null,
+	            { className: 'photo-detail-info' },
 	            React.createElement(
 	              'div',
 	              null,
@@ -33051,16 +33113,12 @@
 	                  className: 'comment-author' },
 	                currentPhoto.user.username
 	              ),
-	              React.createElement('br', null),
+	              ' - ',
 	              currentPhoto.user.full_name,
 	              React.createElement('br', null),
 	              currentPhoto.user.summary
-	            )
-	          ),
-	          React.createElement('br', null),
-	          React.createElement(
-	            'div',
-	            null,
+	            ),
+	            React.createElement('br', null),
 	            React.createElement(
 	              'div',
 	              null,
@@ -33081,12 +33139,12 @@
 	                    createdAt: comment.created_at });
 	                })
 	              )
-	            )
-	          ),
-	          React.createElement('br', null),
-	          commentForm,
-	          React.createElement('br', null),
-	          React.createElement('br', null)
+	            ),
+	            React.createElement('br', null),
+	            commentForm,
+	            React.createElement('br', null),
+	            React.createElement('br', null)
+	          )
 	        )
 	      );
 	    } else {
@@ -33143,7 +33201,6 @@
 	      CommentStore.__emitChange();
 	      break;
 	  }
-	  // CommentStore.__emitChange();
 	};
 
 	module.exports = CommentStore;
@@ -33212,7 +33269,6 @@
 	            { className: 'comment-date' },
 	            this.props.createdAt
 	          ),
-	          React.createElement(EditCommentButton, { commentId: this.props.commentId }),
 	          React.createElement(DeleteCommentButton, { commentId: this.props.commentId }),
 	          React.createElement('br', null),
 	          this.props.body
@@ -33229,6 +33285,8 @@
 	});
 
 	module.exports = PhotoComment;
+
+	// <EditCommentButton commentId={this.props.commentId} />
 
 /***/ },
 /* 273 */
@@ -33639,7 +33697,6 @@
 	      UserStore.__emitChange();
 	      break;
 	  }
-	  // UserStore.__emitChange();
 	};
 
 	module.exports = UserStore;
@@ -33692,7 +33749,7 @@
 	          'div',
 	          null,
 	          this.state.photos.map(function (photo) {
-	            return React.createElement(PhotoIndexItem, { key: photo.id, photo: photo, size: 250 });
+	            return React.createElement(PhotoIndexItem, { key: photo.id, photo: photo, size: 315 });
 	          })
 	        );
 	      } else {
@@ -33700,7 +33757,7 @@
 	          'div',
 	          null,
 	          this.state.photos.map(function (photo) {
-	            return React.createElement(PhotoItem, { key: photo.id, photo: photo, size: 250 });
+	            return React.createElement(PhotoItem, { key: photo.id, photo: photo, size: 315 });
 	          })
 	        );
 	      }
@@ -33749,6 +33806,10 @@
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
 	  },
+	  handleAuthorClick: function (e) {
+	    e.stopPropagation();
+	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
+	  },
 	  deletePhoto: function (e) {
 	    e.stopPropagation();
 	    ApiUtil.deletePhoto(this.props.photo.id);
@@ -33769,13 +33830,45 @@
 	          'span',
 	          { className: 'delete', onClick: this.deletePhoto },
 	          React.createElement('i', { className: 'fa fa-trash-o faa-pulse animated-hover', id: 'photo-delete-button' })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'title' },
+	          this.props.photo.title
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'author' },
+	          'by '
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'author-two',
+	            onClick: this.handleAuthorClick },
+	          this.props.photo.user.username
 	        )
 	      );
 	    } else {
 	      return React.createElement(
 	        'div',
 	        { className: 'photo-thumb', onClick: this.handleClick },
-	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url })
+	        React.createElement('img', { src: url + photoOptions + this.props.photo.photo_url }),
+	        React.createElement(
+	          'span',
+	          { className: 'title' },
+	          this.props.photo.title
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'author' },
+	          'by '
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'author-two',
+	            onClick: this.handleAuthorClick },
+	          this.props.photo.user.username
+	        )
 	      );
 	    }
 	  }
@@ -33819,7 +33912,7 @@
 	          this.state.user.favorited_photos.map(function (photo) {
 	            return React.createElement(PhotoItem, { key: photo.id,
 	              photo: photo,
-	              size: 250 });
+	              size: 315 });
 	          })
 	        )
 	      );

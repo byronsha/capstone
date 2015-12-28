@@ -20,6 +20,10 @@ var PhotoIndexItem = React.createClass({
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
   },
+  handleAuthorClick: function (e) {
+    e.stopPropagation();
+    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
+  },
   deletePhoto: function (e) {
     e.stopPropagation();
     ApiUtil.deletePhoto(this.props.photo.id);
@@ -36,12 +40,18 @@ var PhotoIndexItem = React.createClass({
         <div className="photo-thumb" onClick={this.handleClick}>
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
           <span className="delete" onClick={this.deletePhoto}><i className="fa fa-trash-o faa-pulse animated-hover" id="photo-delete-button"></i></span>
+            <span className="title">{this.props.photo.title}</span>
+            <span className="author">by </span><span className="author-two"
+                                                     onClick={this.handleAuthorClick}>{this.props.photo.user.username}</span>
         </div>
       );
     } else {
       return (
         <div className="photo-thumb" onClick={this.handleClick}>
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
+            <span className="title">{this.props.photo.title}</span>
+            <span className="author">by </span><span className="author-two"
+                                                     onClick={this.handleAuthorClick}>{this.props.photo.user.username}</span>
         </div>
       )
     }

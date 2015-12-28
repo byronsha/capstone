@@ -51,10 +51,9 @@
   color: white;
   list-style-type: none;
   height: 150px;
-  // font-weight: 400;
-  padding-top: 43px;
+  padding-top: 52px;
   padding-left: 125px;
-  font-size: 39px;
+  font-size: 30px;
 
   -webkit-transition: all .4s ease;
      -moz-transition: all .4s ease;
@@ -66,7 +65,7 @@
 .followed-user-banner:hover {
   color: black;
   opacity: .7;
-  // padding-left: 450px;
+  cursor: pointer;
 
   -webkit-transition: all .4s ease;
      -moz-transition: all .4s ease;
@@ -74,43 +73,3 @@
       -ms-transition: all .4s ease;
           transition: all .4s ease;
 }
-
-// .followed-user-username {
-//   margin: 0px;
-//   color: white;
-//   font-weight: 300;
-// }
-//
-// .followed-user-username span {
-//   position: absolute;
-//   padding-top: 60px;
-//   padding-left: 125px;
-// }
-//
-// .followed-user-username:hover span {
-//   position: absolute;
-//   padding-top: 60px;
-//   padding-left: 125px;
-//   color: black;
-// }
-
-// .followed-user-username:hover span {
-//   display: block;
-// z-index: 2000;
-// opacity: 1;
-// transition: none;
-// }
-//
-// .followed-user-username:hover > h2 {
-//   position: absolute;
-//   padding-top: 60px;
-//   padding-left: 125px;
-//   z-index: 2000;
-//   transition: none;
-// opacity: 1;
-//   -moz-transform: none;
-// -webkit-transform: none;
-// -o-transform: none;
-// -ms-transform: none;
-// transform: none;
-// }

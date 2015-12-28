@@ -9,24 +9,45 @@
 .photo-thumb {
   position: relative;
   display: inline-block;
-  margin: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 1px;
+  margin-bottom: -4px;
+  background: black;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
 
   -webkit-transition: all .1s ease-out;
      -moz-transition: all .1s ease-out;
        -o-transition: all .1s ease-out;
       -ms-transition: all .1s ease-out;
           transition: all .1s ease-out;
+
+}
+
+.photo-thumb img {
+  position: absolute;
+  left: -33px;
+  top: -33px;
 }
 
 .photo-thumb:hover img {
   z-index: 100;
-  opacity: 0.5;
+  opacity: 0.4;
+  transform: scale(.8);
 
-  -webkit-transition: all .25s ease;
-     -moz-transition: all .25s ease;
-       -o-transition: all .25s ease;
-      -ms-transition: all .25s ease;
-          transition: all .25s ease;
+  -webkit-transition: all .5s ease;
+     -moz-transition: all .5s ease;
+       -o-transition: all .5s ease;
+      -ms-transition: all .5s ease;
+          transition: all .5s ease;
+
+  -webkit-transform: all .5s ease;
+     -moz-transform: all .5s ease;
+       -o-transform: all .5s ease;
+      -ms-transform: all .5s ease;
+          transform: all .5s ease;
 }
 
 .photo-thumb:hover span {
@@ -39,18 +60,59 @@
 }
 
 .photo-thumb span.delete {
+  z-index: 3000;
+  color: #f3f5f6;
   bottom:0;
   right:0;
 }
 
 .photo-thumb span.favorite {
+  z-index: 3000;
+  color: #f3f5f6;
   bottom:0;
   right:0;
+}
+
+.photo-thumb span.title {
+  font-weight: bold;
+  z-index: 3000;
+  color: #f3f5f6;
+  top: 15%;
+  left: 15%;
+}
+
+.photo-thumb span.title:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.photo-thumb span.author {
+  font-size: 13px;
+  z-index: 3000;
+  color: #f3f5f6;
+  top: 23%;
+  left: 15%;
+}
+
+.photo-thumb span.author-two {
+  padding-left: 17px;
+  font-size: 13px;
+  z-index: 3000;
+  color: #f3f5f6;
+  top: 23%;
+  left: 15%;
+}
+
+.photo-thumb span.author-two:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .photo-thumb span.favorite-count {
   right:0;
   bottom:0;
+  z-index: 3000;
+  color: #f3f5f6;
   margin-right: 10px;
   margin-bottom: 3px;
   font-size: 2em;
@@ -100,7 +162,7 @@
   bottom: 40px;
   right: 5%;
   opacity: 0;
-  position:absolute;
+  position: absolute;
 
   -webkit-transition: opacity 0.5s;
      -moz-transition: opacity 0.5s;
@@ -112,15 +174,6 @@
 #photo-favorite-button-ghost:hover .favorite-tooltip {
   opacity: 1;
 }
-
-// .photo-show {
-//   position: relative;
-//   margin-top: 5px;
-//   margin-right: 0 auto;
-//   margin-left: 0 auto;
-//   text-align: center;
-//   // overflow: hidden;
-// }
 
 .feed-main {
   text-align: center;
@@ -134,13 +187,33 @@
 
 .photo-detail-photo {
   text-align: center;
-  background: black;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  background: #202020;
+  padding-top: 40px;
+  padding-bottom: 40px;
   overflow: hidden;
+  position: relative;
 }
 
 .photo-detail-info {
-  margin-left: 250px;
   width: 700px;
+}
+
+.photo-detail-photo span {
+  position: absolute;
+  display: block;
+}
+
+.photo-detail-photo span.favorite {
+  bottom: 0;
+  right: 0;
+  color: #f3f5f6;
+}
+
+.photo-detail-photo span.favorite-count {
+  right: 0;
+  bottom: 0;
+  color: #f3f5f6;
+  margin-right: 10px;
+  margin-bottom: 3px;
+  font-size: 2em;
 }

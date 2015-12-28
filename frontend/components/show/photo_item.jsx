@@ -18,7 +18,6 @@ var PhotoItem = React.createClass({
   componentDidMount: function () {
     this.sessionListener = SessionStore.addListener(this._onSessionChange);
     this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
-    // this.setState({ favorited: FavoriteStore.isFavorited(this.props.photo.id) });
   },
   componentWillUnmount: function () {
     this.sessionListener.remove();
@@ -32,6 +31,10 @@ var PhotoItem = React.createClass({
   },
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photos/" + this.props.photo.id, {});
+  },
+  handleAuthorClick: function (e) {
+    e.stopPropagation();
+    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
   },
   decrementFavoriteCount: function () {
     this.setState({ favoriteCount: this.state.favoriteCount - 1 });
@@ -61,6 +64,9 @@ var PhotoItem = React.createClass({
         <img src={url + photoOptions + this.props.photo.photo_url}></img>
         { button }
         <span className="favorite-count">{this.state.favoriteCount}</span>
+        <span className="title">{this.props.photo.title}</span>
+        <span className="author">by </span><span className="author-two"
+                                                 onClick={this.handleAuthorClick}>{this.props.photo.user.username}</span>
       </div>
     );
   }

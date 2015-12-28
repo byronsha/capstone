@@ -27,6 +27,14 @@ PhotoStore.find = function (id) {
   })[0];
 };
 
+PhotoStore.fetchFavoriteCount = function (photoId) {
+  for (var i = 0; i < _photos.length; i++) {
+    if (_photos[i].id == photoId) {
+      return _photos[i].favorite_count
+    }
+  }
+};
+
 PhotoStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case PhotoConstants.ALL_PHOTOS_RECEIVED:
@@ -38,7 +46,6 @@ PhotoStore.__onDispatch = function (payload) {
       PhotoStore.__emitChange();
       break;
   }
-  // PhotoStore.__emitChange();
 }
 
 module.exports = PhotoStore;

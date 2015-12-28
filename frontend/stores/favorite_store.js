@@ -66,7 +66,6 @@ FavoriteStore.__onDispatch = function (payload) {
       FavoriteStore.__emitChange();
       break;
   }
-  // FavoriteStore.__emitChange();
-}
+};
 
 module.exports = FavoriteStore;

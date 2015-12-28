@@ -5,22 +5,43 @@ var React = require('react'),
     PhotoComment = require('./photo_comment.jsx'),
     PhotoCommentForm = require('./photo_comment_form.jsx'),
     SessionStore = require('../../stores/session_store.js'),
+    FavoriteStore = require('../../stores/favorite_store.js'),
+    FavoriteButton = require('../favorites/favorite_button.jsx'),
+    UnfavoriteButton = require('../favorites/unfavorite_button.jsx'),
+    FollowButton = require('../followings/follow_button.jsx'),
     History = require('react-router').History;
 
 var PhotoDetail = React.createClass({
   mixins: [History],
   getInitialState: function () {
-    return { currentUser: {}, comments: [] };
+    return {
+      currentUser: {},
+      currentPhoto: {},
+      comments: [],
+      favorited: FavoriteStore.isFavorited(this.props.params.photoId),
+      favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId)
+    };
   },
   componentDidMount: function () {
-    ApiUtil.fetchAllPhotos();
-    ApiUtil.fetchPhotoComments(this.props.params.photoId);
+    this.photoListener = PhotoStore.addListener(this._onPhotosChange);
     this.commentListener = CommentStore.addListener(this._onCommentsChange);
     this.sessionListener = SessionStore.addListener(this._onSessionChange);
-    this.setState({ currentUser: SessionStore.currentUser() });
+    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
+
+    ApiUtil.fetchAllPhotos();
+    ApiUtil.fetchCurrentUser(window.currentUserId);
+    ApiUtil.fetchPhotoComments(this.props.params.photoId);
   },
   componentWillUnmount: function () {
+    this.photoListener.remove();
     this.commentListener.remove();
+    this.sessionListener.remove();
+    this.favoriteListener.remove();
+  },
+  _onPhotosChange: function () {
+    this.setState({ currentPhoto: PhotoStore.find(this.props.params.photoId) });
+    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId )});
   },
   _onCommentsChange: function () {
     this.setState({ comments: CommentStore.all() });
@@ -28,13 +49,22 @@ var PhotoDetail = React.createClass({
   _onSessionChange: function () {
     this.setState({ currentUser: SessionStore.currentUser() });
   },
+  _onFavoritesChange: function () {
+    this.setState({ favorited: FavoriteStore.isFavorited(this.props.params.photoId) });
+  },
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
   },
+  decrementFavoriteCount: function () {
+    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
+  },
+  incrementFavoriteCount: function () {
+    this.setState({ favoriteCount: this.state.favoriteCount + 1 });
+  },
   render: function () {
-    var currentPhoto = PhotoStore.find(this.props.params.photoId);
+    var currentPhoto = this.state.currentPhoto;
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
-    var photo_options = "w_1500,h_750,c_fill/";
+    var photo_options = "w_1200,h_650,c_fill/";
     var commentForm;
 
     if (Object.keys(this.state.currentUser).length === 0) {
@@ -57,22 +87,32 @@ var PhotoDetail = React.createClass({
       )
     };
 
-    if (currentPhoto) {
+    if (this.state.favorited) {
+      button = (
+        <UnfavoriteButton photoId={this.props.params.photoId}
+                          decrementFavoriteCount={this.decrementFavoriteCount} />
+      )
+    } else {
+      button = (
+        <FavoriteButton photoId={this.props.params.photoId}
+                        incrementFavoriteCount={this.incrementFavoriteCount} />
+      )
+    };
+
+    if (Object.keys(currentPhoto).length > 0) {
       var currentPhotoUrl = currentPhoto.photo_url;
       return (
         <div>
           <div>
-            <div>
-              <div className="photo-detail-photo">
-                <img src={url + photo_options + currentPhotoUrl}></img>
-              </div>
+            <div className="photo-detail-photo">
+              <img src={url + photo_options + currentPhotoUrl}></img>
+              { button }
+              <span className="favorite-count">{this.state.favoriteCount}</span>
             </div>
           </div>
-
           <br/>
-
-          <div className="photo-detail-info">
-            <div>
+          <div className="container">
+            <div className="photo-detail-info">
               <div>
                 <h3 className="photo-title">{currentPhoto.title}</h3>
                 {currentPhoto.description}
@@ -81,14 +121,12 @@ var PhotoDetail = React.createClass({
               <div>
                 <h4>About the photographer</h4>
                 <span onClick={this.handleClick}
-                      className="comment-author">{currentPhoto.user.username}</span>
+                      className="comment-author">{currentPhoto.user.username}
+                      </span> - {currentPhoto.user.full_name}
                 <br/>
-                {currentPhoto.user.full_name}<br/>
                 {currentPhoto.user.summary}
               </div>
-            </div>
-            <br/>
-            <div>
+              <br/>
               <div>
                 <h4>Comments</h4>
                 <ul className="photo-comment-list">
@@ -102,11 +140,10 @@ var PhotoDetail = React.createClass({
                   })}
                 </ul>
               </div>
+              <br/>
+              { commentForm }
+              <br/><br/>
             </div>
-            <br/>
-            { commentForm }
-            <br/>
-            <br/>
           </div>
         </div>
       );

@@ -20,7 +20,6 @@ CollectionStore.__onDispatch = function (payload) {
       CollectionStore.__emitChange();
       break;
   }
-  // CollectionStore.__emitChange();
 }
 
 module.exports = CollectionStore;
