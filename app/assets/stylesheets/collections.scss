@@ -5,6 +5,7 @@
 .collection-dropdown-item {
   padding: 8px 0px 8px 15px;
   color: #505050;
+  background: #f3f5f6;
   -webkit-transition: all .3s ease-out;
   -moz-transition: all .3s ease-out;
   -o-transition: all .3s ease-out;
@@ -13,7 +14,9 @@
 }
 
 .collection-dropdown-item:hover {
-  background: #D0D0D0;
+  cursor: pointer;
+  color: white;
+  background: #006dac;
   -webkit-transition: all .3s ease;
   -moz-transition: all .3s ease;
   -o-transition: all .3s ease;

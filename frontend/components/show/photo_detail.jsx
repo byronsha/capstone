@@ -1,6 +1,7 @@
 var React = require('react'),
     ApiUtil = require('../../util/api_util.js'),
     PhotoStore = require('../../stores/photo_store.js'),
+    PhotoItem = require('./photo_item.jsx'),
     CommentStore = require('../../stores/comment_store.js'),
     PhotoComment = require('./photo_comment.jsx'),
     PhotoCommentForm = require('./photo_comment_form.jsx'),
@@ -27,6 +28,7 @@ var PhotoDetail = React.createClass({
     this.commentListener = CommentStore.addListener(this._onCommentsChange);
     this.sessionListener = SessionStore.addListener(this._onSessionChange);
     this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+
     this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
 
     ApiUtil.fetchAllPhotos();
@@ -55,6 +57,18 @@ var PhotoDetail = React.createClass({
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
   },
+  handleThumbnailClick: function (e) {
+    var userId = e.target.dataset.userid;
+    var photoId = e.target.dataset.photoid;
+
+    this.history.pushState(null, "/users/" + userId + "/photos/" + photoId, {});
+  },
+  componentWillReceiveProps: function (nextProps) {
+    ApiUtil.fetchPhotoComments(nextProps.params.photoId);
+    this.setState({ currentPhoto: PhotoStore.find(nextProps.params.photoId) });
+    this.setState({ favorited: FavoriteStore.isFavorited(nextProps.params.photoId) });
+    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId )});
+  },
   decrementFavoriteCount: function () {
     this.setState({ favoriteCount: this.state.favoriteCount - 1 });
   },
@@ -62,9 +76,12 @@ var PhotoDetail = React.createClass({
     this.setState({ favoriteCount: this.state.favoriteCount + 1 });
   },
   render: function () {
+    var that = this;
     var currentPhoto = this.state.currentPhoto;
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
     var photo_options = "w_1200,h_650,c_fill/";
+    var thumbnail_options = "w_50,h_50,c_fill/";
+    var thumbnails = PhotoStore.all();
     var commentForm;
 
     if (Object.keys(this.state.currentUser).length === 0) {
@@ -106,6 +123,18 @@ var PhotoDetail = React.createClass({
           <div>
             <div className="photo-detail-photo">
               <img src={url + photo_options + currentPhotoUrl}></img>
+              <div className="scroller">
+                {thumbnails.map(function (photo) {
+                  return <img key={photo.id}
+                              data-userid={photo.user_id}
+                              data-photoid={photo.id}
+                              className={photo.id === currentPhoto.id ? "scroller-thumbnail-active" : "scroller-thumbnail"}
+                              onClick={that.handleThumbnailClick}
+                              src={url + thumbnail_options + photo.photo_url}></img>
+                })}
+              </div>
+              <span className="previous"><i className="fa fa-angle-left"></i></span>
+              <span className="next"><i className="fa fa-angle-right"></i></span>
               { button }
               <span className="favorite-count">{this.state.favoriteCount}</span>
             </div>

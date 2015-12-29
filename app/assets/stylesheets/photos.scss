@@ -23,7 +23,6 @@
        -o-transition: all .1s ease-out;
       -ms-transition: all .1s ease-out;
           transition: all .1s ease-out;
-
 }
 
 .photo-thumb img {
@@ -36,6 +35,7 @@
   z-index: 100;
   opacity: 0.4;
   transform: scale(.8);
+  cursor: pointer;
 
   -webkit-transition: all .5s ease;
      -moz-transition: all .5s ease;
@@ -118,6 +118,10 @@
   font-size: 2em;
 }
 
+.photo-thumb span.favorite-count:hover {
+  cursor: pointer;
+}
+
 #photo-delete-button {
   margin-right: 10px;
   margin-bottom: 6px;
@@ -189,7 +193,7 @@
   text-align: center;
   background: #202020;
   padding-top: 40px;
-  padding-bottom: 40px;
+  padding-bottom: 0px;
   overflow: hidden;
   position: relative;
 }
@@ -216,4 +220,40 @@
   margin-right: 10px;
   margin-bottom: 3px;
   font-size: 2em;
+}
+
+.photo-detail-photo span.previous {
+  bottom: 47%;
+  left: 2%;
+  color: #f3f5f6;
+  font-size: 4em;
+
+  -webkit-transition: all .1s ease-out;
+     -moz-transition: all .1s ease-out;
+       -o-transition: all .1s ease-out;
+      -ms-transition: all .1s ease-out;
+          transition: all .1s ease-out;
+}
+
+.photo-detail-photo span.next {
+  bottom: 47%;
+  right: 2%;
+  color: #f3f5f6;
+  font-size: 4em;
+
+  -webkit-transition: all .1s ease-out;
+     -moz-transition: all .1s ease-out;
+       -o-transition: all .1s ease-out;
+      -ms-transition: all .1s ease-out;
+          transition: all .1s ease-out;
+}
+
+.photo-detail-photo span.previous:hover {
+  color: #006dac;
+  cursor: pointer;
+}
+
+.photo-detail-photo span.next:hover {
+  color: #006dac;
+  cursor: pointer;
 }

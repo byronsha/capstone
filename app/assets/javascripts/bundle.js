@@ -53,12 +53,12 @@
 	    FeedMain = __webpack_require__(263),
 	    Splash = __webpack_require__(269),
 	    PhotoDetail = __webpack_require__(270),
-	    UploadPhotoForm = __webpack_require__(276),
-	    Summary = __webpack_require__(278),
-	    PhotoIndex = __webpack_require__(280),
-	    Favorites = __webpack_require__(282),
-	    Following = __webpack_require__(283),
-	    UserProfile = __webpack_require__(284);
+	    UploadPhotoForm = __webpack_require__(279),
+	    Summary = __webpack_require__(281),
+	    PhotoIndex = __webpack_require__(289),
+	    Favorites = __webpack_require__(291),
+	    Following = __webpack_require__(292),
+	    UserProfile = __webpack_require__(293);
 
 	var routes = React.createElement(
 	  Route,
@@ -32955,6 +32955,7 @@
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
 	    PhotoStore = __webpack_require__(268),
+	    PhotoItem = __webpack_require__(264),
 	    CommentStore = __webpack_require__(271),
 	    PhotoComment = __webpack_require__(272),
 	    PhotoCommentForm = __webpack_require__(275),
@@ -32962,7 +32963,7 @@
 	    FavoriteStore = __webpack_require__(265),
 	    FavoriteButton = __webpack_require__(266),
 	    UnfavoriteButton = __webpack_require__(267),
-	    FollowButton = __webpack_require__(285),
+	    FollowButton = __webpack_require__(276),
 	    History = __webpack_require__(159).History;
 
 	var PhotoDetail = React.createClass({
@@ -32983,6 +32984,7 @@
 	    this.commentListener = CommentStore.addListener(this._onCommentsChange);
 	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
 	    this.favoriteListener = FavoriteStore.addListener(this._onFavoritesChange);
+
 	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
 
 	    ApiUtil.fetchAllPhotos();
@@ -33011,6 +33013,18 @@
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
 	  },
+	  handleThumbnailClick: function (e) {
+	    var userId = e.target.dataset.userid;
+	    var photoId = e.target.dataset.photoid;
+
+	    this.history.pushState(null, "/users/" + userId + "/photos/" + photoId, {});
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    ApiUtil.fetchPhotoComments(nextProps.params.photoId);
+	    this.setState({ currentPhoto: PhotoStore.find(nextProps.params.photoId) });
+	    this.setState({ favorited: FavoriteStore.isFavorited(nextProps.params.photoId) });
+	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId) });
+	  },
 	  decrementFavoriteCount: function () {
 	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
 	  },
@@ -33018,9 +33032,12 @@
 	    this.setState({ favoriteCount: this.state.favoriteCount + 1 });
 	  },
 	  render: function () {
+	    var that = this;
 	    var currentPhoto = this.state.currentPhoto;
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
 	    var photo_options = "w_1200,h_650,c_fill/";
+	    var thumbnail_options = "w_50,h_50,c_fill/";
+	    var thumbnails = PhotoStore.all();
 	    var commentForm;
 
 	    if (Object.keys(this.state.currentUser).length === 0) {
@@ -33073,6 +33090,28 @@
 	            'div',
 	            { className: 'photo-detail-photo' },
 	            React.createElement('img', { src: url + photo_options + currentPhotoUrl }),
+	            React.createElement(
+	              'div',
+	              { className: 'scroller' },
+	              thumbnails.map(function (photo) {
+	                return React.createElement('img', { key: photo.id,
+	                  'data-userid': photo.user_id,
+	                  'data-photoid': photo.id,
+	                  className: photo.id === currentPhoto.id ? "scroller-thumbnail-active" : "scroller-thumbnail",
+	                  onClick: that.handleThumbnailClick,
+	                  src: url + thumbnail_options + photo.photo_url });
+	              })
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'previous' },
+	              React.createElement('i', { className: 'fa fa-angle-left' })
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'next' },
+	              React.createElement('i', { className: 'fa fa-angle-right' })
+	            ),
 	            button,
 	            React.createElement(
 	              'span',
@@ -33431,10 +33470,223 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
+	    ApiUtil = __webpack_require__(209),
+	    UserStore = __webpack_require__(277),
+	    SessionStore = __webpack_require__(246),
+	    FollowingStore = __webpack_require__(278);
+
+	var FollowButton = React.createClass({
+	  displayName: 'FollowButton',
+
+	  getStateFromStore: function () {
+	    var user = UserStore.user();
+	    var currentUser = SessionStore.currentUser();
+	    var following = FollowingStore.isFollowing(user.id);
+
+	    return {
+	      user: user,
+	      currentUser: currentUser,
+	      following: following
+	    };
+	  },
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._onChange);
+	    this.sessionListener = SessionStore.addListener(this._onChange);
+	    this.followingListener = FollowingStore.addListener(this._onChange);
+	  },
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	    this.sessionListener.remove();
+	    this.followingListener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
+	  },
+	  addFollowing: function () {
+	    var followingParams = {
+	      following: {
+	        follower_id: this.state.currentUser.id,
+	        followed_id: this.state.user.id
+	      }
+	    };
+
+	    ApiUtil.addFollowing(followingParams);
+	  },
+	  removeFollowing: function () {
+	    var followingId = FollowingStore.findFollowingId(this.state.currentUser.id, this.state.user.id);
+
+	    ApiUtil.removeFollowing(followingId);
+	  },
+	  render: function () {
+	    if (Object.keys(this.state.currentUser).length > 0 && Object.keys(this.state.currentUser).length > 0) {
+	      if (this.state.user.id !== this.state.currentUser.id) {
+	        if (this.state.following) {
+	          return React.createElement(
+	            'span',
+	            { className: 'btn btn-success btn-sm',
+	              id: 'following-button' },
+	            React.createElement('i', { className: 'fa fa-check' }),
+	            ' Following',
+	            React.createElement(
+	              'span',
+	              { id: 'unfollow-button',
+	                onClick: this.removeFollowing },
+	              React.createElement('i', { className: 'fa fa-close faa-pulse animated-hover' })
+	            )
+	          );
+	        } else {
+	          return React.createElement(
+	            'span',
+	            { className: 'btn btn-success btn-sm',
+	              onClick: this.addFollowing,
+	              id: 'follow-button' },
+	            React.createElement('i', { className: 'fa fa-plus' }),
+	            ' Follow'
+	          );
+	        }
+	      } else if (this.state.user.id === this.state.currentUser.id) {
+	        return React.createElement('div', null);
+	      }
+	    } else {
+	      return React.createElement(
+	        'span',
+	        { className: 'btn btn-success btn-sm',
+	          id: 'follow-button-ghost' },
+	        React.createElement(
+	          'i',
+	          { className: 'fa fa-plus' },
+	          React.createElement(
+	            'span',
+	            { className: 'follow-tooltip' },
+	            'Login to follow'
+	          )
+	        ),
+	        ' Follow'
+	      );
+	    }
+	  }
+	});
+
+	module.exports = FollowButton;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(227).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    UserConstants = __webpack_require__(219),
+	    UserStore = new Store(AppDispatcher);
+
+	var _user = {};
+
+	var resetUser = function (user) {
+	  _user = user;
+	};
+
+	UserStore.user = function () {
+	  return _user;
+	};
+
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case UserConstants.RECEIVE_SINGLE_USER:
+	      resetUser(payload.user);
+	      UserStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = UserStore;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(227).Store,
+	    AppDispatcher = __webpack_require__(211),
+	    FollowingConstants = __webpack_require__(218),
+	    FollowingStore = new Store(AppDispatcher);
+
+	var _followings = [];
+
+	var resetFollowings = function (followings) {
+	  _followings = followings;
+	};
+
+	var clearFollowings = function () {
+	  _followings = [];
+	};
+
+	var addFollowing = function (following) {
+	  _followings.push(following);
+	};
+
+	var removeFollowing = function (following) {
+	  for (var i = 0; i < _followings.length; i++) {
+	    if (_followings[i].id == following.id) {
+	      _followings.splice(i, 1);
+	    }
+	  }
+	};
+
+	FollowingStore.all = function () {
+	  return _followings;
+	};
+
+	FollowingStore.isFollowing = function (followedId) {
+	  var followed = false;
+	  for (var i = 0; i < _followings.length; i++) {
+	    if (_followings[i].followed_id == followedId) {
+	      followed = true;
+	    }
+	  }
+	  return followed;
+	};
+
+	FollowingStore.findFollowingId = function (followerId, followedId) {
+	  for (var i = 0; i < _followings.length; i++) {
+	    if (_followings[i].follower_id == followerId && _followings[i].followed_id == followedId) {
+	      return _followings[i].id;
+	    }
+	  }
+	};
+
+	FollowingStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FollowingConstants.USER_FOLLOWINGS_RECEIVED:
+	      resetFollowings(payload.followings);
+	      FollowingStore.__emitChange();
+	      break;
+	    case FollowingConstants.CLEAR_FOLLOWINGS:
+	      clearFollowings();
+	      FollowingStore.__emitChange();
+	      break;
+	    case FollowingConstants.ADD_FOLLOWING:
+	      addFollowing(payload.following);
+	      FollowingStore.__emitChange();
+	      break;
+	    case FollowingConstants.REMOVE_FOLLOWING:
+	      removeFollowing(payload.following);
+	      FollowingStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = FollowingStore;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1),
 	    LinkedStateMixin = __webpack_require__(253),
 	    SessionStore = __webpack_require__(246),
 	    ApiUtil = __webpack_require__(209),
-	    UploadPhotoButton = __webpack_require__(277),
+	    UploadPhotoButton = __webpack_require__(280),
 	    History = __webpack_require__(159).History;
 
 	var UploadPhotoForm = React.createClass({
@@ -33582,7 +33834,7 @@
 	module.exports = UploadPhotoForm;
 
 /***/ },
-/* 277 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33618,12 +33870,12 @@
 	module.exports = UploadPhotoButton;
 
 /***/ },
-/* 278 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    UserStore = __webpack_require__(279);
+	    UserStore = __webpack_require__(277);
 
 	var Summary = React.createClass({
 	  displayName: 'Summary',
@@ -33672,45 +33924,22 @@
 	module.exports = Summary;
 
 /***/ },
-/* 279 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(227).Store,
-	    AppDispatcher = __webpack_require__(211),
-	    UserConstants = __webpack_require__(219),
-	    UserStore = new Store(AppDispatcher);
-
-	var _user = {};
-
-	var resetUser = function (user) {
-	  _user = user;
-	};
-
-	UserStore.user = function () {
-	  return _user;
-	};
-
-	UserStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case UserConstants.RECEIVE_SINGLE_USER:
-	      resetUser(payload.user);
-	      UserStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = UserStore;
-
-/***/ },
-/* 280 */
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    UserStore = __webpack_require__(279),
+	    UserStore = __webpack_require__(277),
 	    PhotoStore = __webpack_require__(268),
 	    SessionStore = __webpack_require__(246),
-	    PhotoIndexItem = __webpack_require__(281),
+	    PhotoIndexItem = __webpack_require__(290),
 	    PhotoItem = __webpack_require__(264);
 
 	var PhotoIndex = React.createClass({
@@ -33779,7 +34008,7 @@
 	module.exports = PhotoIndex;
 
 /***/ },
-/* 281 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
@@ -33877,13 +34106,13 @@
 	module.exports = PhotoIndexItem;
 
 /***/ },
-/* 282 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
 	    PhotoItem = __webpack_require__(264),
-	    UserStore = __webpack_require__(279);
+	    UserStore = __webpack_require__(277);
 
 	var Favorites = React.createClass({
 	  displayName: 'Favorites',
@@ -33925,12 +34154,12 @@
 	module.exports = Favorites;
 
 /***/ },
-/* 283 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    UserStore = __webpack_require__(279),
+	    UserStore = __webpack_require__(277),
 	    History = __webpack_require__(159).History;
 
 	var Following = React.createClass({
@@ -33988,17 +34217,17 @@
 	module.exports = Following;
 
 /***/ },
-/* 284 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
-	    UserStore = __webpack_require__(279),
-	    Summary = __webpack_require__(278),
-	    PhotoIndex = __webpack_require__(280),
-	    Favorites = __webpack_require__(282),
-	    Following = __webpack_require__(283),
-	    FollowButton = __webpack_require__(285),
+	    UserStore = __webpack_require__(277),
+	    Summary = __webpack_require__(281),
+	    PhotoIndex = __webpack_require__(289),
+	    Favorites = __webpack_require__(291),
+	    Following = __webpack_require__(292),
+	    FollowButton = __webpack_require__(276),
 	    History = __webpack_require__(159).History;
 
 	var UserProfile = React.createClass({
@@ -34240,189 +34469,6 @@
 	// });
 	//
 	// module.exports = UserProfile;
-
-/***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1),
-	    ApiUtil = __webpack_require__(209),
-	    UserStore = __webpack_require__(279),
-	    SessionStore = __webpack_require__(246),
-	    FollowingStore = __webpack_require__(286);
-
-	var FollowButton = React.createClass({
-	  displayName: 'FollowButton',
-
-	  getStateFromStore: function () {
-	    var user = UserStore.user();
-	    var currentUser = SessionStore.currentUser();
-	    var following = FollowingStore.isFollowing(user.id);
-
-	    return {
-	      user: user,
-	      currentUser: currentUser,
-	      following: following
-	    };
-	  },
-	  getInitialState: function () {
-	    return this.getStateFromStore();
-	  },
-	  componentDidMount: function () {
-	    this.userListener = UserStore.addListener(this._onChange);
-	    this.sessionListener = SessionStore.addListener(this._onChange);
-	    this.followingListener = FollowingStore.addListener(this._onChange);
-	  },
-	  componentWillUnmount: function () {
-	    this.userListener.remove();
-	    this.sessionListener.remove();
-	    this.followingListener.remove();
-	  },
-	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
-	  },
-	  addFollowing: function () {
-	    var followingParams = {
-	      following: {
-	        follower_id: this.state.currentUser.id,
-	        followed_id: this.state.user.id
-	      }
-	    };
-
-	    ApiUtil.addFollowing(followingParams);
-	  },
-	  removeFollowing: function () {
-	    var followingId = FollowingStore.findFollowingId(this.state.currentUser.id, this.state.user.id);
-
-	    ApiUtil.removeFollowing(followingId);
-	  },
-	  render: function () {
-	    if (Object.keys(this.state.currentUser).length > 0 && Object.keys(this.state.currentUser).length > 0) {
-	      if (this.state.user.id !== this.state.currentUser.id) {
-	        if (this.state.following) {
-	          return React.createElement(
-	            'span',
-	            { className: 'btn btn-success btn-sm',
-	              id: 'following-button' },
-	            React.createElement('i', { className: 'fa fa-check' }),
-	            ' Following',
-	            React.createElement(
-	              'span',
-	              { id: 'unfollow-button',
-	                onClick: this.removeFollowing },
-	              React.createElement('i', { className: 'fa fa-close faa-pulse animated-hover' })
-	            )
-	          );
-	        } else {
-	          return React.createElement(
-	            'span',
-	            { className: 'btn btn-success btn-sm',
-	              onClick: this.addFollowing,
-	              id: 'follow-button' },
-	            React.createElement('i', { className: 'fa fa-plus' }),
-	            ' Follow'
-	          );
-	        }
-	      } else if (this.state.user.id === this.state.currentUser.id) {
-	        return React.createElement('div', null);
-	      }
-	    } else {
-	      return React.createElement(
-	        'span',
-	        { className: 'btn btn-success btn-sm',
-	          id: 'follow-button-ghost' },
-	        React.createElement(
-	          'i',
-	          { className: 'fa fa-plus' },
-	          React.createElement(
-	            'span',
-	            { className: 'follow-tooltip' },
-	            'Login to follow'
-	          )
-	        ),
-	        ' Follow'
-	      );
-	    }
-	  }
-	});
-
-	module.exports = FollowButton;
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(227).Store,
-	    AppDispatcher = __webpack_require__(211),
-	    FollowingConstants = __webpack_require__(218),
-	    FollowingStore = new Store(AppDispatcher);
-
-	var _followings = [];
-
-	var resetFollowings = function (followings) {
-	  _followings = followings;
-	};
-
-	var clearFollowings = function () {
-	  _followings = [];
-	};
-
-	var addFollowing = function (following) {
-	  _followings.push(following);
-	};
-
-	var removeFollowing = function (following) {
-	  for (var i = 0; i < _followings.length; i++) {
-	    if (_followings[i].id == following.id) {
-	      _followings.splice(i, 1);
-	    }
-	  }
-	};
-
-	FollowingStore.all = function () {
-	  return _followings;
-	};
-
-	FollowingStore.isFollowing = function (followedId) {
-	  var followed = false;
-	  for (var i = 0; i < _followings.length; i++) {
-	    if (_followings[i].followed_id == followedId) {
-	      followed = true;
-	    }
-	  }
-	  return followed;
-	};
-
-	FollowingStore.findFollowingId = function (followerId, followedId) {
-	  for (var i = 0; i < _followings.length; i++) {
-	    if (_followings[i].follower_id == followerId && _followings[i].followed_id == followedId) {
-	      return _followings[i].id;
-	    }
-	  }
-	};
-
-	FollowingStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case FollowingConstants.USER_FOLLOWINGS_RECEIVED:
-	      resetFollowings(payload.followings);
-	      FollowingStore.__emitChange();
-	      break;
-	    case FollowingConstants.CLEAR_FOLLOWINGS:
-	      clearFollowings();
-	      FollowingStore.__emitChange();
-	      break;
-	    case FollowingConstants.ADD_FOLLOWING:
-	      addFollowing(payload.following);
-	      FollowingStore.__emitChange();
-	      break;
-	    case FollowingConstants.REMOVE_FOLLOWING:
-	      removeFollowing(payload.following);
-	      FollowingStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = FollowingStore;
 
 /***/ }
 /******/ ]);
