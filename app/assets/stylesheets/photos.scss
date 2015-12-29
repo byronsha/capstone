@@ -199,7 +199,7 @@
 }
 
 .photo-detail-info {
-  width: 700px;
+  // width: 700px;
 }
 
 .photo-detail-photo span {
@@ -256,4 +256,8 @@
 .photo-detail-photo span.next:hover {
   color: #006dac;
   cursor: pointer;
+}
+
+.about-the-photographer {
+  padding-top: 14px;
 }

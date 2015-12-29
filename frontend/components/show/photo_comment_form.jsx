@@ -30,12 +30,12 @@ var PhotoCommentForm = React.createClass({
         <form onSubmit={this.handleSubmit}>
 
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-5">
               <div>
                 <textarea form="photo-form"
                           rows="3"
                           valueLink={this.linkState("body")}
-                          placeholder="Add comment"
+                          placeholder="Add a comment"
                           className="form-control input-sm" />
               </div>
             </div>
@@ -48,7 +48,6 @@ var PhotoCommentForm = React.createClass({
               <div>
                 <button type="submit"
                         className="btn btn-success btn-sm">Submit</button>
-
                 <span className="flash-error">{this.state.flash}</span>
               </div>
             </div>

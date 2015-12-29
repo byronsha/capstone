@@ -35,6 +35,30 @@ PhotoStore.fetchFavoriteCount = function (photoId) {
   }
 };
 
+PhotoStore.fetchPrevious = function(photoId) {
+  for (var i = 0; i < _photos.length; i++) {
+    if (_photos[i].id == photoId) {
+      if (i === 0) {
+        return _photos[_photos.length - 1]
+      } else {
+        return _photos[i - 1]
+      }
+    }
+  }
+};
+
+PhotoStore.fetchNext = function(photoId) {
+  for (var i = 0; i < _photos.length; i++) {
+    if (_photos[i].id == photoId) {
+      if (i === _photos.length - 1) {
+        return _photos[0]
+      } else {
+        return _photos[i + 1]
+      }
+    }
+  }
+};
+
 PhotoStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case PhotoConstants.ALL_PHOTOS_RECEIVED:

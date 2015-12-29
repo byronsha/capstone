@@ -54,20 +54,27 @@ var PhotoDetail = React.createClass({
   _onFavoritesChange: function () {
     this.setState({ favorited: FavoriteStore.isFavorited(this.props.params.photoId) });
   },
+  componentWillReceiveProps: function (nextProps) {
+    ApiUtil.fetchPhotoComments(nextProps.params.photoId);
+    this.setState({ currentPhoto: PhotoStore.find(nextProps.params.photoId) });
+    this.setState({ favorited: FavoriteStore.isFavorited(nextProps.params.photoId) });
+    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId )});
+  },
   handleClick: function () {
     this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
   },
   handleThumbnailClick: function (e) {
     var userId = e.target.dataset.userid;
     var photoId = e.target.dataset.photoid;
-
     this.history.pushState(null, "/users/" + userId + "/photos/" + photoId, {});
   },
-  componentWillReceiveProps: function (nextProps) {
-    ApiUtil.fetchPhotoComments(nextProps.params.photoId);
-    this.setState({ currentPhoto: PhotoStore.find(nextProps.params.photoId) });
-    this.setState({ favorited: FavoriteStore.isFavorited(nextProps.params.photoId) });
-    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId )});
+  handlePreviousClick: function () {
+    var previousPhoto = PhotoStore.fetchPrevious(this.state.currentPhoto.id);
+    this.history.pushState(null, "/users/" + previousPhoto.user_id + "/photos/" + previousPhoto.id, {});
+  },
+  handleNextClick: function () {
+    var nextPhoto = PhotoStore.fetchNext(this.state.currentPhoto.id);
+    this.history.pushState(null, "/users/" + nextPhoto.user_id + "/photos/" + nextPhoto.id, {});
   },
   decrementFavoriteCount: function () {
     this.setState({ favoriteCount: this.state.favoriteCount - 1 });
@@ -133,21 +140,49 @@ var PhotoDetail = React.createClass({
                               src={url + thumbnail_options + photo.photo_url}></img>
                 })}
               </div>
-              <span className="previous"><i className="fa fa-angle-left"></i></span>
-              <span className="next"><i className="fa fa-angle-right"></i></span>
+              <span className="previous" onClick={this.handlePreviousClick}><i className="fa fa-angle-left"></i></span>
+              <span className="next" onClick={this.handleNextClick}><i className="fa fa-angle-right"></i></span>
               { button }
               <span className="favorite-count">{this.state.favoriteCount}</span>
             </div>
           </div>
           <br/>
+
           <div className="container">
-            <div className="photo-detail-info">
-              <div>
-                <h3 className="photo-title">{currentPhoto.title}</h3>
-                {currentPhoto.description}
+            <div className="row">
+
+            <div className="col-md-1" />
+
+            <div className="col-md-5">
+              <div className="photo-detail-info">
+                <div>
+                  <h3 className="photo-title">{currentPhoto.title}</h3>
+                  {currentPhoto.description}
+                </div>
+                <br/>
+                <div>
+                  <h4>Comments</h4>
+                  <ul className="photo-comment-list">
+                    {this.state.comments.map(function (comment) {
+                      return <PhotoComment key={comment.id}
+                                           commentId={comment.id}
+                                           author={comment.username}
+                                           authorId={comment.user_id}
+                                           body={comment.body}
+                                           createdAt={comment.created_at} />;
+                    })}
+                  </ul>
+                </div>
+                <br/>
+                { commentForm }
+                <br/><br/>
               </div>
-              <br/>
-              <div>
+            </div>
+
+            <div className="col-md-1" />
+
+            <div className="col-md-4">
+              <div className="about-the-photographer">
                 <h4>About the photographer</h4>
                 <span onClick={this.handleClick}
                       className="comment-author">{currentPhoto.user.username}
@@ -155,23 +190,10 @@ var PhotoDetail = React.createClass({
                 <br/>
                 {currentPhoto.user.summary}
               </div>
-              <br/>
-              <div>
-                <h4>Comments</h4>
-                <ul className="photo-comment-list">
-                  {this.state.comments.map(function (comment) {
-                    return <PhotoComment key={comment.id}
-                                         commentId={comment.id}
-                                         author={comment.username}
-                                         authorId={comment.user_id}
-                                         body={comment.body}
-                                         createdAt={comment.created_at} />;
-                  })}
-                </ul>
-              </div>
-              <br/>
-              { commentForm }
-              <br/><br/>
+            </div>
+
+            <div className="col-md-1" />
+            
             </div>
           </div>
         </div>

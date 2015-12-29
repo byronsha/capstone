@@ -15,6 +15,9 @@
   display: block;
   overflow: hidden;
   opacity: 0;
+
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .dropdown.open .dropdown-menu#collections-dropdown {
@@ -42,6 +45,9 @@
 .dropdown.open .dropdown-menu#you-dropdown {
   max-height: 220px;
   opacity: 1;
+
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .you-dropdown-item {
@@ -78,6 +84,9 @@
   display: block;
   overflow: hidden;
   opacity: 0;
+
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .dropdown.open .dropdown-menu#login-dropdown {
@@ -100,6 +109,9 @@
   display: block;
   overflow: hidden;
   opacity: 0;
+
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .dropdown.open .dropdown-menu#signup-dropdown {

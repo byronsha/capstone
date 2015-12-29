@@ -32887,6 +32887,30 @@
 	  }
 	};
 
+	PhotoStore.fetchPrevious = function (photoId) {
+	  for (var i = 0; i < _photos.length; i++) {
+	    if (_photos[i].id == photoId) {
+	      if (i === 0) {
+	        return _photos[_photos.length - 1];
+	      } else {
+	        return _photos[i - 1];
+	      }
+	    }
+	  }
+	};
+
+	PhotoStore.fetchNext = function (photoId) {
+	  for (var i = 0; i < _photos.length; i++) {
+	    if (_photos[i].id == photoId) {
+	      if (i === _photos.length - 1) {
+	        return _photos[0];
+	      } else {
+	        return _photos[i + 1];
+	      }
+	    }
+	  }
+	};
+
 	PhotoStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case PhotoConstants.ALL_PHOTOS_RECEIVED:
@@ -33010,20 +33034,27 @@
 	  _onFavoritesChange: function () {
 	    this.setState({ favorited: FavoriteStore.isFavorited(this.props.params.photoId) });
 	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    ApiUtil.fetchPhotoComments(nextProps.params.photoId);
+	    this.setState({ currentPhoto: PhotoStore.find(nextProps.params.photoId) });
+	    this.setState({ favorited: FavoriteStore.isFavorited(nextProps.params.photoId) });
+	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId) });
+	  },
 	  handleClick: function () {
 	    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
 	  },
 	  handleThumbnailClick: function (e) {
 	    var userId = e.target.dataset.userid;
 	    var photoId = e.target.dataset.photoid;
-
 	    this.history.pushState(null, "/users/" + userId + "/photos/" + photoId, {});
 	  },
-	  componentWillReceiveProps: function (nextProps) {
-	    ApiUtil.fetchPhotoComments(nextProps.params.photoId);
-	    this.setState({ currentPhoto: PhotoStore.find(nextProps.params.photoId) });
-	    this.setState({ favorited: FavoriteStore.isFavorited(nextProps.params.photoId) });
-	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId) });
+	  handlePreviousClick: function () {
+	    var previousPhoto = PhotoStore.fetchPrevious(this.state.currentPhoto.id);
+	    this.history.pushState(null, "/users/" + previousPhoto.user_id + "/photos/" + previousPhoto.id, {});
+	  },
+	  handleNextClick: function () {
+	    var nextPhoto = PhotoStore.fetchNext(this.state.currentPhoto.id);
+	    this.history.pushState(null, "/users/" + nextPhoto.user_id + "/photos/" + nextPhoto.id, {});
 	  },
 	  decrementFavoriteCount: function () {
 	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
@@ -33104,12 +33135,12 @@
 	            ),
 	            React.createElement(
 	              'span',
-	              { className: 'previous' },
+	              { className: 'previous', onClick: this.handlePreviousClick },
 	              React.createElement('i', { className: 'fa fa-angle-left' })
 	            ),
 	            React.createElement(
 	              'span',
-	              { className: 'next' },
+	              { className: 'next', onClick: this.handleNextClick },
 	              React.createElement('i', { className: 'fa fa-angle-right' })
 	            ),
 	            button,
@@ -33126,63 +33157,77 @@
 	          { className: 'container' },
 	          React.createElement(
 	            'div',
-	            { className: 'photo-detail-info' },
+	            { className: 'row' },
+	            React.createElement('div', { className: 'col-md-1' }),
 	            React.createElement(
 	              'div',
-	              null,
+	              { className: 'col-md-5' },
 	              React.createElement(
-	                'h3',
-	                { className: 'photo-title' },
-	                currentPhoto.title
-	              ),
-	              currentPhoto.description
-	            ),
-	            React.createElement('br', null),
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement(
-	                'h4',
-	                null,
-	                'About the photographer'
-	              ),
-	              React.createElement(
-	                'span',
-	                { onClick: this.handleClick,
-	                  className: 'comment-author' },
-	                currentPhoto.user.username
-	              ),
-	              ' - ',
-	              currentPhoto.user.full_name,
-	              React.createElement('br', null),
-	              currentPhoto.user.summary
-	            ),
-	            React.createElement('br', null),
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement(
-	                'h4',
-	                null,
-	                'Comments'
-	              ),
-	              React.createElement(
-	                'ul',
-	                { className: 'photo-comment-list' },
-	                this.state.comments.map(function (comment) {
-	                  return React.createElement(PhotoComment, { key: comment.id,
-	                    commentId: comment.id,
-	                    author: comment.username,
-	                    authorId: comment.user_id,
-	                    body: comment.body,
-	                    createdAt: comment.created_at });
-	                })
+	                'div',
+	                { className: 'photo-detail-info' },
+	                React.createElement(
+	                  'div',
+	                  null,
+	                  React.createElement(
+	                    'h3',
+	                    { className: 'photo-title' },
+	                    currentPhoto.title
+	                  ),
+	                  currentPhoto.description
+	                ),
+	                React.createElement('br', null),
+	                React.createElement(
+	                  'div',
+	                  null,
+	                  React.createElement(
+	                    'h4',
+	                    null,
+	                    'Comments'
+	                  ),
+	                  React.createElement(
+	                    'ul',
+	                    { className: 'photo-comment-list' },
+	                    this.state.comments.map(function (comment) {
+	                      return React.createElement(PhotoComment, { key: comment.id,
+	                        commentId: comment.id,
+	                        author: comment.username,
+	                        authorId: comment.user_id,
+	                        body: comment.body,
+	                        createdAt: comment.created_at });
+	                    })
+	                  )
+	                ),
+	                React.createElement('br', null),
+	                commentForm,
+	                React.createElement('br', null),
+	                React.createElement('br', null)
 	              )
 	            ),
-	            React.createElement('br', null),
-	            commentForm,
-	            React.createElement('br', null),
-	            React.createElement('br', null)
+	            React.createElement('div', { className: 'col-md-1' }),
+	            React.createElement(
+	              'div',
+	              { className: 'col-md-4' },
+	              React.createElement(
+	                'div',
+	                { className: 'about-the-photographer' },
+	                React.createElement(
+	                  'h4',
+	                  null,
+	                  'About the photographer'
+	                ),
+	                React.createElement(
+	                  'span',
+	                  { onClick: this.handleClick,
+	                    className: 'comment-author' },
+	                  currentPhoto.user.username
+	                ),
+	                ' - ',
+	                currentPhoto.user.full_name,
+	                React.createElement('br', null),
+	                currentPhoto.user.summary
+	              )
+	            ),
+	            React.createElement('div', { className: 'col-md-1' })
 	          )
 	        )
 	      );
@@ -33422,14 +33467,14 @@
 	          { className: 'row' },
 	          React.createElement(
 	            'div',
-	            { className: 'col-md-6' },
+	            { className: 'col-md-5' },
 	            React.createElement(
 	              'div',
 	              null,
 	              React.createElement('textarea', { form: 'photo-form',
 	                rows: '3',
 	                valueLink: this.linkState("body"),
-	                placeholder: 'Add comment',
+	                placeholder: 'Add a comment',
 	                className: 'form-control input-sm' })
 	            )
 	          )
