@@ -64,7 +64,7 @@ user_ids = User.pluck(:id)
 
 image_urls.each do |image_url|
   if image_url[0..-5] =~ /^\d+$/
-    Photo.create(id: image_url[0..-5].to_i, user_id: user_ids.sample, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: image_url)
+    Photo.create(id: image_url[0..-5].to_i, user_id: user_ids.sample, title: Faker::Lorem.word.capitalize, description: Faker::Hipster.paragraph(2, false, 2), photo_url: image_url, created_at: Faker::Time.backward(350))
   else
     uploaded_image_urls << image_url[0..-5]
   end
@@ -79,7 +79,7 @@ ActiveRecord::Base.connection.reset_pk_sequence!('photos')
 photo_ids = Photo.pluck(:id)
 
 200.times do
-  PhotoComment.create(photo_id: photo_ids.sample, user_id: user_ids.sample, body: Faker::Hipster.paragraph(2, false, 4))
+  PhotoComment.create(photo_id: photo_ids.sample, user_id: user_ids.sample, body: Faker::Hipster.paragraph(2, false, 4), created_at: Faker::Time.backward(300))
 end
 
 collection_titles = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black", "People", "Technology", "Nature", "Places", "Brown"]

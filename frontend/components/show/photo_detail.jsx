@@ -16,7 +16,7 @@ var PhotoDetail = React.createClass({
   mixins: [History],
   getInitialState: function () {
     return {
-      currentUser: {},
+      currentUser: SessionStore.currentUser(),
       currentPhoto: {},
       comments: [],
       favorited: FavoriteStore.isFavorited(this.props.params.photoId),
@@ -32,8 +32,11 @@ var PhotoDetail = React.createClass({
     this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
 
     ApiUtil.fetchAllPhotos();
-    ApiUtil.fetchCurrentUser(window.currentUserId);
     ApiUtil.fetchPhotoComments(this.props.params.photoId);
+
+    if (window.currentUserId !== null) {
+      ApiUtil.fetchCurrentUser(window.currentUserId)
+    };
   },
   componentWillUnmount: function () {
     this.photoListener.remove();
@@ -86,10 +89,20 @@ var PhotoDetail = React.createClass({
     var that = this;
     var currentPhoto = this.state.currentPhoto;
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
-    var photo_options = "w_1200,h_650,c_fill/";
+    var photo_options = "w_1200,h_750,c_fill/";
     var thumbnail_options = "w_50,h_50,c_fill/";
     var thumbnails = PhotoStore.all();
     var commentForm;
+
+    this.state.comments.sort(function (a, b) {
+      if (new Date(a.created_at) < new Date(b.created_at)) {
+        return - 1;
+      } else if (new Date(a.created_at) > new Date(b.created_at)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
     if (Object.keys(this.state.currentUser).length === 0) {
       commentForm = (
@@ -193,7 +206,7 @@ var PhotoDetail = React.createClass({
             </div>
 
             <div className="col-md-1" />
-            
+
             </div>
           </div>
         </div>

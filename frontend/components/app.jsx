@@ -15,9 +15,8 @@ var App = React.createClass({
     return (
       <div>
         <Sidebar />
-        <div className="spacing-object-50">
-          { this.props.children }
-        </div>
+        <div className="sidebar-background" />
+        { this.props.children }
       </div>
     );
   }

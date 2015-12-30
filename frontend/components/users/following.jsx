@@ -38,7 +38,7 @@ var Following = React.createClass({
                     onClick={this.handleClick}
                     id={user.id}
                     key={user.id}>
-                    {user.username}
+                    {user.full_name}
                 </li>
               )
             }.bind(this))}

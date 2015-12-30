@@ -28,7 +28,6 @@ SessionStore.__onDispatch = function (payload) {
       SessionStore.__emitChange();
       break;
   }
-  // SessionStore.__emitChange();
-}
+};
 
 module.exports = SessionStore;

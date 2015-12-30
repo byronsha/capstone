@@ -12,6 +12,7 @@ var SessionsUtil = {
       success: function (currentUser) {
         SessionActions.receiveCurrentUser(currentUser);
         UiActions.removeFlash();
+        window.currentUserId = currentUser.id;
       },
       error: function (data) {
         UiActions.setFlash($.parseJSON(data.responseText).errors);
@@ -29,6 +30,7 @@ var SessionsUtil = {
         UiActions.removeFlash();
         ApiUtil.fetchUserFavorites(currentUser.id);
         ApiUtil.fetchUserFollowings(currentUser.id);
+        window.currentUserId = currentUser.id;
       },
       error: function (data) {
         UiActions.setFlash($.parseJSON(data.responseText).errors);

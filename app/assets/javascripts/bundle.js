@@ -24337,11 +24337,8 @@
 	      'div',
 	      null,
 	      React.createElement(Sidebar, null),
-	      React.createElement(
-	        'div',
-	        { className: 'spacing-object-50' },
-	        this.props.children
-	      )
+	      React.createElement('div', { className: 'sidebar-background' }),
+	      this.props.children
 	    );
 	  }
 	});
@@ -31663,7 +31660,6 @@
 	      SessionStore.__emitChange();
 	      break;
 	  }
-	  // SessionStore.__emitChange();
 	};
 
 	module.exports = SessionStore;
@@ -32210,6 +32206,7 @@
 	      success: function (currentUser) {
 	        SessionActions.receiveCurrentUser(currentUser);
 	        UiActions.removeFlash();
+	        window.currentUserId = currentUser.id;
 	      },
 	      error: function (data) {
 	        UiActions.setFlash($.parseJSON(data.responseText).errors);
@@ -32227,6 +32224,7 @@
 	        UiActions.removeFlash();
 	        ApiUtil.fetchUserFavorites(currentUser.id);
 	        ApiUtil.fetchUserFollowings(currentUser.id);
+	        window.currentUserId = currentUser.id;
 	      },
 	      error: function (data) {
 	        UiActions.setFlash($.parseJSON(data.responseText).errors);
@@ -32996,7 +32994,7 @@
 	  mixins: [History],
 	  getInitialState: function () {
 	    return {
-	      currentUser: {},
+	      currentUser: SessionStore.currentUser(),
 	      currentPhoto: {},
 	      comments: [],
 	      favorited: FavoriteStore.isFavorited(this.props.params.photoId),
@@ -33012,8 +33010,11 @@
 	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId) });
 
 	    ApiUtil.fetchAllPhotos();
-	    ApiUtil.fetchCurrentUser(window.currentUserId);
 	    ApiUtil.fetchPhotoComments(this.props.params.photoId);
+
+	    if (window.currentUserId !== null) {
+	      ApiUtil.fetchCurrentUser(window.currentUserId);
+	    };
 	  },
 	  componentWillUnmount: function () {
 	    this.photoListener.remove();
@@ -33066,10 +33067,20 @@
 	    var that = this;
 	    var currentPhoto = this.state.currentPhoto;
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
-	    var photo_options = "w_1200,h_650,c_fill/";
+	    var photo_options = "w_1200,h_750,c_fill/";
 	    var thumbnail_options = "w_50,h_50,c_fill/";
 	    var thumbnails = PhotoStore.all();
 	    var commentForm;
+
+	    this.state.comments.sort(function (a, b) {
+	      if (new Date(a.created_at) < new Date(b.created_at)) {
+	        return -1;
+	      } else if (new Date(a.created_at) > new Date(b.created_at)) {
+	        return 1;
+	      } else {
+	        return 0;
+	      }
+	    });
 
 	    if (Object.keys(this.state.currentUser).length === 0) {
 	      commentForm = React.createElement(
@@ -34248,7 +34259,7 @@
 	                onClick: this.handleClick,
 	                id: user.id,
 	                key: user.id },
-	              user.username
+	              user.full_name
 	            );
 	          }).bind(this))
 	        )
@@ -34330,11 +34341,11 @@
 	            React.createElement(
 	              'span',
 	              { className: 'profile-username' },
-	              this.state.user.username
+	              this.state.user.full_name
 	            ),
 	            React.createElement(FollowButton, { userId: this.state.user.id })
 	          ),
-	          this.state.user.full_name,
+	          this.state.user.username,
 	          ' ',
 	          React.createElement('i', { className: 'fa fa-bolt',
 	            id: 'user-info-bullet' }),

@@ -1,23 +1,21 @@
 .dropdown .dropdown-menu#collections-dropdown {
-  min-width: 129px;
-  width: 129px;
-  margin-left: 5px;
-  border: none;
-  padding: 0 0 0 0;
-
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease;
-
+  width: 187px;
+  min-width: 187px;
   max-height: 0;
   display: block;
-  overflow: hidden;
+  border: none;
+  padding: 0 0 0 0;
+  margin-left: 5px;
   opacity: 0;
-
+  overflow: hidden;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+          transition: all .3s ease;
 }
 
 .dropdown.open .dropdown-menu#collections-dropdown {
@@ -29,17 +27,16 @@
   margin-right: 5px;
   border: none;
   padding: 0 0 0 0;
-
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease;
-
   max-height: 0;
   display: block;
   overflow: hidden;
   opacity: 0;
+
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+          transition: all .3s ease;
 }
 
 .dropdown.open .dropdown-menu#you-dropdown {
@@ -53,40 +50,40 @@
 .you-dropdown-item {
   padding: 8px 0px 8px 15px;
   color: #505050;
+
   -webkit-transition: all .3s ease-out;
-  -moz-transition: all .3s ease-out;
-  -o-transition: all .3s ease-out;
-  -ms-transition: all .3s ease-out;
-  transition: all .3s ease-out;
+     -moz-transition: all .3s ease-out;
+       -o-transition: all .3s ease-out;
+      -ms-transition: all .3s ease-out;
+          transition: all .3s ease-out;
 }
 
 .you-dropdown-item:hover {
   background: #D0D0D0;
+
   -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  transition: all .3s ease;
+     -moz-transition: all .3s ease;
+       -o-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+          transition: all .3s ease;
 }
 
 .dropdown .dropdown-menu#login-dropdown {
   margin-right: 5px;
   border: none;
   padding: 8 0 0 0;
-
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease;
-
   max-height: 0;
   display: block;
   overflow: hidden;
   opacity: 0;
-
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+          transition: all .3s ease;
 }
 
 .dropdown.open .dropdown-menu#login-dropdown {
@@ -98,20 +95,18 @@
   margin-right: 5px;
   border: none;
   padding: 8 0 0 0;
-
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease;
-
   max-height: 0;
   display: block;
   overflow: hidden;
   opacity: 0;
-
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+          transition: all .3s ease;
 }
 
 .dropdown.open .dropdown-menu#signup-dropdown {

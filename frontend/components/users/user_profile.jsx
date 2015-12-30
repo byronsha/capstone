@@ -52,10 +52,10 @@ var UserProfile = React.createClass({
       userInfo = (
         <div className="user-banner" style={backgroundImage}>
           <div className="user-info">
-            <h1><span className="profile-username">{this.state.user.username}</span>
+            <h1><span className="profile-username">{this.state.user.full_name}</span>
               <FollowButton userId={this.state.user.id}/>
             </h1>
-            {this.state.user.full_name} <i className="fa fa-bolt"
+            {this.state.user.username} <i className="fa fa-bolt"
                                            id="user-info-bullet"></i><span> </span>
             {this.state.user.photos.length} Photos <i className="fa fa-bolt"
                                                       id="user-info-bullet"></i><span> </span>
