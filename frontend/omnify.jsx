@@ -19,7 +19,6 @@ var routes = (
 
     <IndexRoute component={Splash} />
     <Route path="/photos" component={FeedMain} />
-    <Route path="/users/:userId/photos/new" component={UploadPhotoForm} />
     <Route path="/users/:userId/photos/:photoId" component={PhotoDetail} />
 
     <Route path="/users/:userId" component={UserProfile}>
@@ -27,6 +26,7 @@ var routes = (
       <Route path="photoIndex" component={PhotoIndex} />
       <Route path="favorites" component={Favorites} />
       <Route path="following" component={Following} />
+      <Route path="create" component={UploadPhotoForm} />
     </Route>
 
   </Route>

@@ -15,6 +15,10 @@
  */
 
  @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+ @import url("https://fonts.googleapis.com/css?family=PT+Sans:400,700");
+ @import url("https://fonts.googleapis.com/css?family=Nunito:400,300,700");
+ @import url("https://fonts.googleapis.com/css?family=Droid+Serif:400,700");
+ @import url("https://fonts.googleapis.com/css?family=Candal");
 
  @import "bootstrap-sprockets";
  @import "bootstrap";
@@ -4291,8 +4295,9 @@
  }
  .navbar-fixed-top,
  .navbar-fixed-bottom {
-  //  background: #303030;
-   opacity: .85;
+   font-family: "PT Sans";
+   font-weight: bold;
+  //  opacity: .85;
    background: #101010;
    position: fixed;
    right: 0;
@@ -4559,9 +4564,11 @@
  @media (min-width: 768px) {
    .navbar-left {
      float: left !important;
+     margin-left: 100px;
    }
    .navbar-right {
      float: right !important;
+     margin-right: 100px;
    }
    .navbar-right ~ .navbar-right {
      margin-right: 0;
@@ -4571,8 +4578,6 @@
  .navbar-default {
    background: #ffffff;
    color: #808080;
-   padding-left: 80px;
-  //  margin-bottom: 5px;
  }
  .navbar-default .navbar-brand {
    color: #ffffff;

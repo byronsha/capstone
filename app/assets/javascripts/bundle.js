@@ -65,7 +65,6 @@
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: Splash }),
 	  React.createElement(Route, { path: '/photos', component: FeedMain }),
-	  React.createElement(Route, { path: '/users/:userId/photos/new', component: UploadPhotoForm }),
 	  React.createElement(Route, { path: '/users/:userId/photos/:photoId', component: PhotoDetail }),
 	  React.createElement(
 	    Route,
@@ -73,7 +72,8 @@
 	    React.createElement(Route, { path: 'summary', component: Summary }),
 	    React.createElement(Route, { path: 'photoIndex', component: PhotoIndex }),
 	    React.createElement(Route, { path: 'favorites', component: Favorites }),
-	    React.createElement(Route, { path: 'following', component: Following })
+	    React.createElement(Route, { path: 'following', component: Following }),
+	    React.createElement(Route, { path: 'create', component: UploadPhotoForm })
 	  )
 	);
 
@@ -31575,7 +31575,6 @@
 	      sessionButtons = React.createElement(
 	        'ul',
 	        { className: 'nav navbar-nav navbar-right' },
-	        React.createElement(CreateButton, { currentUser: this.state.currentUser }),
 	        React.createElement(YouButton, { currentUser: this.state.currentUser }),
 	        React.createElement(LogoutButton, null)
 	      );
@@ -31684,7 +31683,7 @@
 	      null,
 	      React.createElement(
 	        'a',
-	        { onClick: this.onClick },
+	        { className: 'logo', onClick: this.onClick },
 	        'omnify'
 	      )
 	    );
@@ -32430,17 +32429,58 @@
 	  componentDidMount: function () {
 	    this.currentUser = SessionStore.currentUser();
 	  },
-	  handleClick: function () {
-	    this.history.pushState(null, "/users/" + this.currentUser.id + "/summary", {});
+	  handleCreateClick: function () {
+	    this.history.pushState(null, "/users/" + this.currentUser.id + "/create", {});
+	  },
+	  handlePhotosClick: function () {
+	    this.history.pushState(null, "/users/" + this.currentUser.id + "/photoIndex", {});
+	  },
+	  handleFavoritesClick: function () {
+	    this.history.pushState(null, "/users/" + this.currentUser.id + "/favorites", {});
+	  },
+	  handleFollowingClick: function () {
+	    this.history.pushState(null, "/users/" + this.currentUser.id + "/following", {});
 	  },
 	  render: function () {
 	    return React.createElement(
 	      'li',
-	      null,
+	      { className: 'dropdown' },
 	      React.createElement(
 	        'a',
-	        { onClick: this.handleClick },
-	        'You'
+	        { className: 'dropdown-toggle',
+	          'data-toggle': 'dropdown',
+	          role: 'button',
+	          'aria-haspopup': 'true',
+	          'aria-expanded': 'false' },
+	        'You ',
+	        React.createElement('i', { className: 'fa fa-angle-down' })
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'dropdown-menu', id: 'you-dropdown' },
+	        React.createElement(
+	          'li',
+	          { onClick: this.handleCreateClick, className: 'you-dropdown-item' },
+	          'Create'
+	        ),
+	        React.createElement('li', { role: 'separator', className: 'divider' }),
+	        React.createElement(
+	          'li',
+	          { onClick: this.handlePhotosClick, className: 'you-dropdown-item' },
+	          'Photos'
+	        ),
+	        React.createElement('li', { role: 'separator', className: 'divider' }),
+	        React.createElement(
+	          'li',
+	          { onClick: this.handleFavoritesClick, className: 'you-dropdown-item' },
+	          'Favorites'
+	        ),
+	        React.createElement('li', { role: 'separator', className: 'divider' }),
+	        React.createElement(
+	          'li',
+	          { onClick: this.handleFollowingClick, className: 'you-dropdown-item' },
+	          'Following'
+	        )
 	      )
 	    );
 	  }
@@ -32448,17 +32488,17 @@
 
 	module.exports = YouButton;
 
-	// handleProfileClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id, {});
+	// handleSummaryClick: function () {
+	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/summary", {});
 	// },
 	// handlePhotosClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id, { currentTab: "photoIndex" });
+	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/photoIndex", {});
 	// },
 	// handleFavoritesClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id, { currentTab: "favorites" });
+	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/favorites", {});
 	// },
 	// handleFollowingClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id, { currentTab: "following" });
+	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/following", {});
 	// },
 
 	// <li className="dropdown">
@@ -32466,10 +32506,10 @@
 	//      data-toggle="dropdown"
 	//      role="button"
 	//      aria-haspopup="true"
-	//      aria-expanded="false">YOU <span className="caret"></span>
+	//      aria-expanded="false">You <span className="caret"></span>
 	//   </a>
 	//   <ul className="dropdown-menu" id="you-dropdown">
-	//     <li onClick={this.handleProfileClick} className="you-dropdown-item">Profile</li>
+	//     <li onClick={this.handleSummaryClick} className="you-dropdown-item">Profile</li>
 	//     <li role="separator" className="divider"></li>
 	//     <li onClick={this.handlePhotosClick} className="you-dropdown-item">Photos</li>
 	//     <li role="separator" className="divider"></li>
@@ -32627,7 +32667,7 @@
 	  },
 	  handleAuthorClick: function (e) {
 	    e.stopPropagation();
-	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
+	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photoIndex", {});
 	  },
 	  decrementFavoriteCount: function () {
 	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
@@ -32930,38 +32970,154 @@
 
 	var React = __webpack_require__(1);
 
-	var Splash = React.createClass({
-	  displayName: "Splash",
+	var ReactCSSTransitionGroup = __webpack_require__(282);
 
+	var Splash = React.createClass({
+	  displayName: 'Splash',
+
+	  getInitialState: function () {
+	    return { transitionImage: 0 };
+	  },
+	  componentDidMount: function () {
+	    this.transitionInterval = setInterval(this.cycleImage, 4000);
+	  },
+	  componentWillUnmount: function () {
+	    clearInterval(this.transitionInterval);
+	  },
+	  cycleImage: function () {
+	    if (this.state.transitionImage === 4) {
+	      this.setState({ transitionImage: 0 });
+	    } else {
+	      this.setState({ transitionImage: this.state.transitionImage + 1 });
+	    }
+	  },
 	  render: function () {
+	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
+	    var photo_options = "c_scale,w_2500/";
+	    var currentTransitionImage;
+
+	    switch (this.state.transitionImage) {
+	      case 0:
+	        currentTransitionImage = React.createElement(
+	          'div',
+	          { key: 'a', className: 'splash-image' },
+	          React.createElement('img', { id: 'photo-85', src: url + photo_options + "85.jpg" }),
+	          React.createElement(
+	            'span',
+	            { className: 'introduction' },
+	            'The home for all your photos'
+	          )
+	        );
+	        break;
+	      case 1:
+	        currentTransitionImage = React.createElement(
+	          'div',
+	          { key: 'b', className: 'splash-image' },
+	          React.createElement('img', { id: 'photo-9', src: url + photo_options + "9.jpg" }),
+	          React.createElement(
+	            'span',
+	            { className: 'introduction' },
+	            'The home for all your photos'
+	          )
+	        );
+	        break;
+	      case 2:
+	        currentTransitionImage = React.createElement(
+	          'div',
+	          { key: 'c', className: 'splash-image' },
+	          React.createElement('img', { id: 'photo-5', src: url + photo_options + "5.jpg" }),
+	          React.createElement(
+	            'span',
+	            { className: 'introduction' },
+	            'The home for all your photos'
+	          )
+	        );
+	        break;
+	      case 3:
+	        currentTransitionImage = React.createElement(
+	          'div',
+	          { key: 'd', className: 'splash-image' },
+	          React.createElement('img', { id: 'photo-22', src: url + photo_options + "22.jpg" }),
+	          React.createElement(
+	            'span',
+	            { className: 'introduction' },
+	            'The home for all your photos'
+	          )
+	        );
+	        break;
+	      case 4:
+	        currentTransitionImage = React.createElement(
+	          'div',
+	          { key: 'e', className: 'splash-image' },
+	          React.createElement('img', { id: 'photo-36', src: url + photo_options + "36.jpg" }),
+	          React.createElement(
+	            'span',
+	            { className: 'introduction' },
+	            'The home for all your photos'
+	          )
+	        );
+	        break;
+	    };
+
 	    return React.createElement(
-	      "div",
+	      'div',
 	      null,
 	      React.createElement(
-	        "div",
-	        { className: "splash-main" },
+	        'div',
+	        { className: 'transition-container' },
 	        React.createElement(
-	          "span",
-	          { className: "introduction" },
-	          "The home for all your photos."
+	          ReactCSSTransitionGroup,
+	          { transitionName: 'example', transitionEnterTimeout: 0, transitionLeaveTimeout: 0 },
+	          currentTransitionImage
 	        )
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "splash-main-2" },
+	        'div',
+	        { className: 'splash-main-2' },
 	        React.createElement(
-	          "span",
-	          { className: "introduction-2" },
-	          "Inspire others with your creativity..."
+	          'span',
+	          { className: 'introduction-2' },
+	          'Inspire others with your creativity...'
 	        )
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "splash-main-3" },
+	        'div',
+	        { className: 'splash-main-3' },
 	        React.createElement(
-	          "span",
-	          { className: "introduction-3" },
-	          "...and discover breathtaking sights from around the world."
+	          'span',
+	          { className: 'introduction-3' },
+	          '...and discover breathtaking sights from around the world'
+	        )
+	      ),
+	      React.createElement(
+	        'nav',
+	        { className: 'navbar navbar-fixed-bottom',
+	          id: 'external-links-bar' },
+	        React.createElement(
+	          'div',
+	          { className: 'container-fluid' },
+	          React.createElement(
+	            'ul',
+	            { className: 'nav navbar-nav navbar-right' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: 'https://github.com/byronsha' },
+	                React.createElement('i', { className: 'fa fa-github' })
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: 'https://www.linkedin.com/profile/view?id=AAMAAA9RSn0BbUxs23pprebxpFncMxZzJgotagw&trk=hp-identity-name' },
+	                React.createElement('i', { className: 'fa fa-linkedin' })
+	              )
+	            )
+	          )
 	        )
 	      )
 	    );
@@ -33042,7 +33198,7 @@
 	    this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId) });
 	  },
 	  handleClick: function () {
-	    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
+	    this.history.pushState(null, "/users/" + this.props.params.userId + "/photoIndex", {});
 	  },
 	  handleThumbnailClick: function (e) {
 	    var userId = e.target.dataset.userid;
@@ -33316,7 +33472,7 @@
 
 	  mixins: [History],
 	  handleClick: function () {
-	    this.history.pushState(null, "/users/" + this.props.authorId + "/summary", {});
+	    this.history.pushState(null, "/users/" + this.props.authorId + "/photoIndex", {});
 	  },
 	  render: function () {
 	    var currentUser = SessionStore.currentUser();
@@ -33774,7 +33930,7 @@
 	    };
 
 	    ApiUtil.createPhoto(photoParams);
-	    this.history.pushState(null, "/users/" + currentUser.id, {});
+	    this.history.pushState(null, "/users/" + currentUser.id + "/photoIndex", {});
 	  },
 	  render: function () {
 	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
@@ -33782,7 +33938,7 @@
 
 	    var uploadForm = React.createElement(
 	      'div',
-	      { className: 'container' },
+	      { className: 'upload-form-container' },
 	      React.createElement(
 	        'form',
 	        { onSubmit: this.handleSubmit, id: 'photo-form' },
@@ -33869,7 +34025,7 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'container' },
+	          { className: 'upload-form-container' },
 	          React.createElement(
 	            'div',
 	            { className: 'row' },
@@ -33980,13 +34136,800 @@
 	module.exports = Summary;
 
 /***/ },
-/* 282 */,
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(283);
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks
+	 * @providesModule ReactCSSTransitionGroup
+	 */
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+
+	var assign = __webpack_require__(39);
+
+	var ReactTransitionGroup = __webpack_require__(284);
+	var ReactCSSTransitionGroupChild = __webpack_require__(286);
+
+	function createTransitionTimeoutPropValidator(transitionType) {
+	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
+	  var enabledPropName = 'transition' + transitionType;
+
+	  return function (props) {
+	    // If the transition is enabled
+	    if (props[enabledPropName]) {
+	      // If no timeout duration is provided
+	      if (props[timeoutPropName] == null) {
+	        return new Error(timeoutPropName + ' wasn\'t supplied to ReactCSSTransitionGroup: ' + 'this can cause unreliable animations and won\'t be supported in ' + 'a future version of React. See ' + 'https://fb.me/react-animation-transition-group-timeout for more ' + 'information.');
+
+	        // If the duration isn't a number
+	      } else if (typeof props[timeoutPropName] !== 'number') {
+	          return new Error(timeoutPropName + ' must be a number (in milliseconds)');
+	        }
+	    }
+	  };
+	}
+
+	var ReactCSSTransitionGroup = React.createClass({
+	  displayName: 'ReactCSSTransitionGroup',
+
+	  propTypes: {
+	    transitionName: ReactCSSTransitionGroupChild.propTypes.name,
+
+	    transitionAppear: React.PropTypes.bool,
+	    transitionEnter: React.PropTypes.bool,
+	    transitionLeave: React.PropTypes.bool,
+	    transitionAppearTimeout: createTransitionTimeoutPropValidator('Appear'),
+	    transitionEnterTimeout: createTransitionTimeoutPropValidator('Enter'),
+	    transitionLeaveTimeout: createTransitionTimeoutPropValidator('Leave')
+	  },
+
+	  getDefaultProps: function () {
+	    return {
+	      transitionAppear: false,
+	      transitionEnter: true,
+	      transitionLeave: true
+	    };
+	  },
+
+	  _wrapChild: function (child) {
+	    // We need to provide this childFactory so that
+	    // ReactCSSTransitionGroupChild can receive updates to name, enter, and
+	    // leave while it is leaving.
+	    return React.createElement(ReactCSSTransitionGroupChild, {
+	      name: this.props.transitionName,
+	      appear: this.props.transitionAppear,
+	      enter: this.props.transitionEnter,
+	      leave: this.props.transitionLeave,
+	      appearTimeout: this.props.transitionAppearTimeout,
+	      enterTimeout: this.props.transitionEnterTimeout,
+	      leaveTimeout: this.props.transitionLeaveTimeout
+	    }, child);
+	  },
+
+	  render: function () {
+	    return React.createElement(ReactTransitionGroup, assign({}, this.props, { childFactory: this._wrapChild }));
+	  }
+	});
+
+	module.exports = ReactCSSTransitionGroup;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionGroup
+	 */
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+	var ReactTransitionChildMapping = __webpack_require__(285);
+
+	var assign = __webpack_require__(39);
+	var emptyFunction = __webpack_require__(15);
+
+	var ReactTransitionGroup = React.createClass({
+	  displayName: 'ReactTransitionGroup',
+
+	  propTypes: {
+	    component: React.PropTypes.any,
+	    childFactory: React.PropTypes.func
+	  },
+
+	  getDefaultProps: function () {
+	    return {
+	      component: 'span',
+	      childFactory: emptyFunction.thatReturnsArgument
+	    };
+	  },
+
+	  getInitialState: function () {
+	    return {
+	      children: ReactTransitionChildMapping.getChildMapping(this.props.children)
+	    };
+	  },
+
+	  componentWillMount: function () {
+	    this.currentlyTransitioningKeys = {};
+	    this.keysToEnter = [];
+	    this.keysToLeave = [];
+	  },
+
+	  componentDidMount: function () {
+	    var initialChildMapping = this.state.children;
+	    for (var key in initialChildMapping) {
+	      if (initialChildMapping[key]) {
+	        this.performAppear(key);
+	      }
+	    }
+	  },
+
+	  componentWillReceiveProps: function (nextProps) {
+	    var nextChildMapping = ReactTransitionChildMapping.getChildMapping(nextProps.children);
+	    var prevChildMapping = this.state.children;
+
+	    this.setState({
+	      children: ReactTransitionChildMapping.mergeChildMappings(prevChildMapping, nextChildMapping)
+	    });
+
+	    var key;
+
+	    for (key in nextChildMapping) {
+	      var hasPrev = prevChildMapping && prevChildMapping.hasOwnProperty(key);
+	      if (nextChildMapping[key] && !hasPrev && !this.currentlyTransitioningKeys[key]) {
+	        this.keysToEnter.push(key);
+	      }
+	    }
+
+	    for (key in prevChildMapping) {
+	      var hasNext = nextChildMapping && nextChildMapping.hasOwnProperty(key);
+	      if (prevChildMapping[key] && !hasNext && !this.currentlyTransitioningKeys[key]) {
+	        this.keysToLeave.push(key);
+	      }
+	    }
+
+	    // If we want to someday check for reordering, we could do it here.
+	  },
+
+	  componentDidUpdate: function () {
+	    var keysToEnter = this.keysToEnter;
+	    this.keysToEnter = [];
+	    keysToEnter.forEach(this.performEnter);
+
+	    var keysToLeave = this.keysToLeave;
+	    this.keysToLeave = [];
+	    keysToLeave.forEach(this.performLeave);
+	  },
+
+	  performAppear: function (key) {
+	    this.currentlyTransitioningKeys[key] = true;
+
+	    var component = this.refs[key];
+
+	    if (component.componentWillAppear) {
+	      component.componentWillAppear(this._handleDoneAppearing.bind(this, key));
+	    } else {
+	      this._handleDoneAppearing(key);
+	    }
+	  },
+
+	  _handleDoneAppearing: function (key) {
+	    var component = this.refs[key];
+	    if (component.componentDidAppear) {
+	      component.componentDidAppear();
+	    }
+
+	    delete this.currentlyTransitioningKeys[key];
+
+	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+
+	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
+	      // This was removed before it had fully appeared. Remove it.
+	      this.performLeave(key);
+	    }
+	  },
+
+	  performEnter: function (key) {
+	    this.currentlyTransitioningKeys[key] = true;
+
+	    var component = this.refs[key];
+
+	    if (component.componentWillEnter) {
+	      component.componentWillEnter(this._handleDoneEntering.bind(this, key));
+	    } else {
+	      this._handleDoneEntering(key);
+	    }
+	  },
+
+	  _handleDoneEntering: function (key) {
+	    var component = this.refs[key];
+	    if (component.componentDidEnter) {
+	      component.componentDidEnter();
+	    }
+
+	    delete this.currentlyTransitioningKeys[key];
+
+	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+
+	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
+	      // This was removed before it had fully entered. Remove it.
+	      this.performLeave(key);
+	    }
+	  },
+
+	  performLeave: function (key) {
+	    this.currentlyTransitioningKeys[key] = true;
+
+	    var component = this.refs[key];
+	    if (component.componentWillLeave) {
+	      component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
+	    } else {
+	      // Note that this is somewhat dangerous b/c it calls setState()
+	      // again, effectively mutating the component before all the work
+	      // is done.
+	      this._handleDoneLeaving(key);
+	    }
+	  },
+
+	  _handleDoneLeaving: function (key) {
+	    var component = this.refs[key];
+
+	    if (component.componentDidLeave) {
+	      component.componentDidLeave();
+	    }
+
+	    delete this.currentlyTransitioningKeys[key];
+
+	    var currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+
+	    if (currentChildMapping && currentChildMapping.hasOwnProperty(key)) {
+	      // This entered again before it fully left. Add it again.
+	      this.performEnter(key);
+	    } else {
+	      this.setState(function (state) {
+	        var newChildren = assign({}, state.children);
+	        delete newChildren[key];
+	        return { children: newChildren };
+	      });
+	    }
+	  },
+
+	  render: function () {
+	    // TODO: we could get rid of the need for the wrapper node
+	    // by cloning a single child
+	    var childrenToRender = [];
+	    for (var key in this.state.children) {
+	      var child = this.state.children[key];
+	      if (child) {
+	        // You may need to apply reactive updates to a child as it is leaving.
+	        // The normal React way to do it won't work since the child will have
+	        // already been removed. In case you need this behavior you can provide
+	        // a childFactory function to wrap every child, even the ones that are
+	        // leaving.
+	        childrenToRender.push(React.cloneElement(this.props.childFactory(child), { ref: key, key: key }));
+	      }
+	    }
+	    return React.createElement(this.props.component, this.props, childrenToRender);
+	  }
+	});
+
+	module.exports = ReactTransitionGroup;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks static-only
+	 * @providesModule ReactTransitionChildMapping
+	 */
+
+	'use strict';
+
+	var flattenChildren = __webpack_require__(116);
+
+	var ReactTransitionChildMapping = {
+	  /**
+	   * Given `this.props.children`, return an object mapping key to child. Just
+	   * simple syntactic sugar around flattenChildren().
+	   *
+	   * @param {*} children `this.props.children`
+	   * @return {object} Mapping of key to child
+	   */
+	  getChildMapping: function (children) {
+	    if (!children) {
+	      return children;
+	    }
+	    return flattenChildren(children);
+	  },
+
+	  /**
+	   * When you're adding or removing children some may be added or removed in the
+	   * same render pass. We want to show *both* since we want to simultaneously
+	   * animate elements in and out. This function takes a previous set of keys
+	   * and a new set of keys and merges them with its best guess of the correct
+	   * ordering. In the future we may expose some of the utilities in
+	   * ReactMultiChild to make this easy, but for now React itself does not
+	   * directly have this concept of the union of prevChildren and nextChildren
+	   * so we implement it here.
+	   *
+	   * @param {object} prev prev children as returned from
+	   * `ReactTransitionChildMapping.getChildMapping()`.
+	   * @param {object} next next children as returned from
+	   * `ReactTransitionChildMapping.getChildMapping()`.
+	   * @return {object} a key set that contains all keys in `prev` and all keys
+	   * in `next` in a reasonable order.
+	   */
+	  mergeChildMappings: function (prev, next) {
+	    prev = prev || {};
+	    next = next || {};
+
+	    function getValueForKey(key) {
+	      if (next.hasOwnProperty(key)) {
+	        return next[key];
+	      } else {
+	        return prev[key];
+	      }
+	    }
+
+	    // For each key of `next`, the list of keys to insert before that key in
+	    // the combined list
+	    var nextKeysPending = {};
+
+	    var pendingKeys = [];
+	    for (var prevKey in prev) {
+	      if (next.hasOwnProperty(prevKey)) {
+	        if (pendingKeys.length) {
+	          nextKeysPending[prevKey] = pendingKeys;
+	          pendingKeys = [];
+	        }
+	      } else {
+	        pendingKeys.push(prevKey);
+	      }
+	    }
+
+	    var i;
+	    var childMapping = {};
+	    for (var nextKey in next) {
+	      if (nextKeysPending.hasOwnProperty(nextKey)) {
+	        for (i = 0; i < nextKeysPending[nextKey].length; i++) {
+	          var pendingNextKey = nextKeysPending[nextKey][i];
+	          childMapping[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
+	        }
+	      }
+	      childMapping[nextKey] = getValueForKey(nextKey);
+	    }
+
+	    // Finally, add the keys which didn't appear before any key in `next`
+	    for (i = 0; i < pendingKeys.length; i++) {
+	      childMapping[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
+	    }
+
+	    return childMapping;
+	  }
+	};
+
+	module.exports = ReactTransitionChildMapping;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks
+	 * @providesModule ReactCSSTransitionGroupChild
+	 */
+
+	'use strict';
+
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(3);
+
+	var CSSCore = __webpack_require__(287);
+	var ReactTransitionEvents = __webpack_require__(288);
+
+	var onlyChild = __webpack_require__(156);
+
+	// We don't remove the element from the DOM until we receive an animationend or
+	// transitionend event. If the user screws up and forgets to add an animation
+	// their node will be stuck in the DOM forever, so we detect if an animation
+	// does not start and if it doesn't, we just call the end listener immediately.
+	var TICK = 17;
+
+	var ReactCSSTransitionGroupChild = React.createClass({
+	  displayName: 'ReactCSSTransitionGroupChild',
+
+	  propTypes: {
+	    name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.shape({
+	      enter: React.PropTypes.string,
+	      leave: React.PropTypes.string,
+	      active: React.PropTypes.string
+	    }), React.PropTypes.shape({
+	      enter: React.PropTypes.string,
+	      enterActive: React.PropTypes.string,
+	      leave: React.PropTypes.string,
+	      leaveActive: React.PropTypes.string,
+	      appear: React.PropTypes.string,
+	      appearActive: React.PropTypes.string
+	    })]).isRequired,
+
+	    // Once we require timeouts to be specified, we can remove the
+	    // boolean flags (appear etc.) and just accept a number
+	    // or a bool for the timeout flags (appearTimeout etc.)
+	    appear: React.PropTypes.bool,
+	    enter: React.PropTypes.bool,
+	    leave: React.PropTypes.bool,
+	    appearTimeout: React.PropTypes.number,
+	    enterTimeout: React.PropTypes.number,
+	    leaveTimeout: React.PropTypes.number
+	  },
+
+	  transition: function (animationType, finishCallback, userSpecifiedDelay) {
+	    var node = ReactDOM.findDOMNode(this);
+
+	    if (!node) {
+	      if (finishCallback) {
+	        finishCallback();
+	      }
+	      return;
+	    }
+
+	    var className = this.props.name[animationType] || this.props.name + '-' + animationType;
+	    var activeClassName = this.props.name[animationType + 'Active'] || className + '-active';
+	    var timeout = null;
+
+	    var endListener = function (e) {
+	      if (e && e.target !== node) {
+	        return;
+	      }
+
+	      clearTimeout(timeout);
+
+	      CSSCore.removeClass(node, className);
+	      CSSCore.removeClass(node, activeClassName);
+
+	      ReactTransitionEvents.removeEndEventListener(node, endListener);
+
+	      // Usually this optional callback is used for informing an owner of
+	      // a leave animation and telling it to remove the child.
+	      if (finishCallback) {
+	        finishCallback();
+	      }
+	    };
+
+	    CSSCore.addClass(node, className);
+
+	    // Need to do this to actually trigger a transition.
+	    this.queueClass(activeClassName);
+
+	    // If the user specified a timeout delay.
+	    if (userSpecifiedDelay) {
+	      // Clean-up the animation after the specified delay
+	      timeout = setTimeout(endListener, userSpecifiedDelay);
+	      this.transitionTimeouts.push(timeout);
+	    } else {
+	      // DEPRECATED: this listener will be removed in a future version of react
+	      ReactTransitionEvents.addEndEventListener(node, endListener);
+	    }
+	  },
+
+	  queueClass: function (className) {
+	    this.classNameQueue.push(className);
+
+	    if (!this.timeout) {
+	      this.timeout = setTimeout(this.flushClassNameQueue, TICK);
+	    }
+	  },
+
+	  flushClassNameQueue: function () {
+	    if (this.isMounted()) {
+	      this.classNameQueue.forEach(CSSCore.addClass.bind(CSSCore, ReactDOM.findDOMNode(this)));
+	    }
+	    this.classNameQueue.length = 0;
+	    this.timeout = null;
+	  },
+
+	  componentWillMount: function () {
+	    this.classNameQueue = [];
+	    this.transitionTimeouts = [];
+	  },
+
+	  componentWillUnmount: function () {
+	    if (this.timeout) {
+	      clearTimeout(this.timeout);
+	    }
+	    this.transitionTimeouts.forEach(function (timeout) {
+	      clearTimeout(timeout);
+	    });
+	  },
+
+	  componentWillAppear: function (done) {
+	    if (this.props.appear) {
+	      this.transition('appear', done, this.props.appearTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+
+	  componentWillEnter: function (done) {
+	    if (this.props.enter) {
+	      this.transition('enter', done, this.props.enterTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+
+	  componentWillLeave: function (done) {
+	    if (this.props.leave) {
+	      this.transition('leave', done, this.props.leaveTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+
+	  render: function () {
+	    return onlyChild(this.props.children);
+	  }
+	});
+
+	module.exports = ReactCSSTransitionGroupChild;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule CSSCore
+	 * @typechecks
+	 */
+
+	'use strict';
+
+	var invariant = __webpack_require__(13);
+
+	/**
+	 * The CSSCore module specifies the API (and implements most of the methods)
+	 * that should be used when dealing with the display of elements (via their
+	 * CSS classes and visibility on screen. It is an API focused on mutating the
+	 * display and not reading it as no logical state should be encoded in the
+	 * display of elements.
+	 */
+
+	var CSSCore = {
+
+	  /**
+	   * Adds the class passed in to the element if it doesn't already have it.
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {DOMElement} the element passed in
+	   */
+	  addClass: function (element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.addClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : undefined;
+
+	    if (className) {
+	      if (element.classList) {
+	        element.classList.add(className);
+	      } else if (!CSSCore.hasClass(element, className)) {
+	        element.className = element.className + ' ' + className;
+	      }
+	    }
+	    return element;
+	  },
+
+	  /**
+	   * Removes the class passed in from the element
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {DOMElement} the element passed in
+	   */
+	  removeClass: function (element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.removeClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : undefined;
+
+	    if (className) {
+	      if (element.classList) {
+	        element.classList.remove(className);
+	      } else if (CSSCore.hasClass(element, className)) {
+	        element.className = element.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)', 'g'), '$1').replace(/\s+/g, ' ') // multiple spaces to one
+	        .replace(/^\s*|\s*$/g, ''); // trim the ends
+	      }
+	    }
+	    return element;
+	  },
+
+	  /**
+	   * Helper to add or remove a class from an element based on a condition.
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @param {*} bool condition to whether to add or remove the class
+	   * @return {DOMElement} the element passed in
+	   */
+	  conditionClass: function (element, className, bool) {
+	    return (bool ? CSSCore.addClass : CSSCore.removeClass)(element, className);
+	  },
+
+	  /**
+	   * Tests whether the element has the class specified.
+	   *
+	   * @param {DOMNode|DOMWindow} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {boolean} true if the element has the class, false if not
+	   */
+	  hasClass: function (element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSS.hasClass takes only a single class name.') : invariant(false) : undefined;
+	    if (element.classList) {
+	      return !!className && element.classList.contains(className);
+	    }
+	    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+	  }
+
+	};
+
+	module.exports = CSSCore;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionEvents
+	 */
+
+	'use strict';
+
+	var ExecutionEnvironment = __webpack_require__(9);
+
+	/**
+	 * EVENT_NAME_MAP is used to determine which event fired when a
+	 * transition/animation ends, based on the style property used to
+	 * define that event.
+	 */
+	var EVENT_NAME_MAP = {
+	  transitionend: {
+	    'transition': 'transitionend',
+	    'WebkitTransition': 'webkitTransitionEnd',
+	    'MozTransition': 'mozTransitionEnd',
+	    'OTransition': 'oTransitionEnd',
+	    'msTransition': 'MSTransitionEnd'
+	  },
+
+	  animationend: {
+	    'animation': 'animationend',
+	    'WebkitAnimation': 'webkitAnimationEnd',
+	    'MozAnimation': 'mozAnimationEnd',
+	    'OAnimation': 'oAnimationEnd',
+	    'msAnimation': 'MSAnimationEnd'
+	  }
+	};
+
+	var endEvents = [];
+
+	function detectEvents() {
+	  var testEl = document.createElement('div');
+	  var style = testEl.style;
+
+	  // On some platforms, in particular some releases of Android 4.x,
+	  // the un-prefixed "animation" and "transition" properties are defined on the
+	  // style object but the events that fire will still be prefixed, so we need
+	  // to check if the un-prefixed events are useable, and if not remove them
+	  // from the map
+	  if (!('AnimationEvent' in window)) {
+	    delete EVENT_NAME_MAP.animationend.animation;
+	  }
+
+	  if (!('TransitionEvent' in window)) {
+	    delete EVENT_NAME_MAP.transitionend.transition;
+	  }
+
+	  for (var baseEventName in EVENT_NAME_MAP) {
+	    var baseEvents = EVENT_NAME_MAP[baseEventName];
+	    for (var styleName in baseEvents) {
+	      if (styleName in style) {
+	        endEvents.push(baseEvents[styleName]);
+	        break;
+	      }
+	    }
+	  }
+	}
+
+	if (ExecutionEnvironment.canUseDOM) {
+	  detectEvents();
+	}
+
+	// We use the raw {add|remove}EventListener() call because EventListener
+	// does not know how to remove event listeners and we really should
+	// clean up. Also, these events are not triggered in older browsers
+	// so we should be A-OK here.
+
+	function addEventListener(node, eventName, eventListener) {
+	  node.addEventListener(eventName, eventListener, false);
+	}
+
+	function removeEventListener(node, eventName, eventListener) {
+	  node.removeEventListener(eventName, eventListener, false);
+	}
+
+	var ReactTransitionEvents = {
+	  addEndEventListener: function (node, eventListener) {
+	    if (endEvents.length === 0) {
+	      // If CSS transitions are not supported, trigger an "end animation"
+	      // event immediately.
+	      window.setTimeout(eventListener, 0);
+	      return;
+	    }
+	    endEvents.forEach(function (endEvent) {
+	      addEventListener(node, endEvent, eventListener);
+	    });
+	  },
+
+	  removeEndEventListener: function (node, eventListener) {
+	    if (endEvents.length === 0) {
+	      return;
+	    }
+	    endEvents.forEach(function (endEvent) {
+	      removeEventListener(node, endEvent, eventListener);
+	    });
+	  }
+	};
+
+	module.exports = ReactTransitionEvents;
+
+/***/ },
 /* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -34093,7 +35036,7 @@
 	  },
 	  handleAuthorClick: function (e) {
 	    e.stopPropagation();
-	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
+	    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photoIndex", {});
 	  },
 	  deletePhoto: function (e) {
 	    e.stopPropagation();
@@ -34237,7 +35180,7 @@
 	  },
 	  handleClick: function (e) {
 	    e.preventDefault();
-	    this.history.pushState(null, "/users/" + e.target.id + "/summary", {});
+	    this.history.pushState(null, "/users/" + e.target.id + "/photoIndex", {});
 	  },
 	  preventClick: function (e) {
 	    e.stopPropagation();
@@ -34279,6 +35222,7 @@
 	var React = __webpack_require__(1),
 	    ApiUtil = __webpack_require__(209),
 	    UserStore = __webpack_require__(277),
+	    SessionStore = __webpack_require__(246),
 	    Summary = __webpack_require__(281),
 	    PhotoIndex = __webpack_require__(289),
 	    Favorites = __webpack_require__(291),
@@ -34291,10 +35235,11 @@
 
 	  mixins: [History],
 	  getInitialState: function () {
-	    return { user: {}, currentTab: this.props.routes[2].path };
+	    return { user: {}, currentUser: SessionStore.currentUser(), currentTab: this.props.routes[2].path };
 	  },
 	  componentDidMount: function () {
 	    this.userListener = UserStore.addListener(this._onUserChange);
+	    this.sessionListener = SessionStore.addListener(this._onSessionChange);
 	    ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
 	  },
 	  componentWillReceiveProps: function (nextProps) {
@@ -34303,13 +35248,21 @@
 	  },
 	  componentWillUnmount: function () {
 	    this.userListener.remove();
+	    this.sessionListener.remove();
 	  },
 	  _onUserChange: function () {
 	    this.setState({ user: UserStore.user() });
 	  },
-	  handleSummaryClick: function () {
-	    this.setState({ currentTab: "summary" });
-	    this.history.pushState(null, "/users/" + this.state.user.id + "/summary", {});
+	  _onSessionChange: function () {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+
+	    if (this.props.routes[2].path === "create") {
+	      this.history.pushState(null, "/users/" + this.state.user.id + "/photoIndex", {});
+	    }
+	  },
+	  handleCreateClick: function () {
+	    this.setState({ currentTab: "create" });
+	    this.history.pushState(null, "/users/" + this.state.user.id + "/create", {});
 	  },
 	  handlePhotoIndexClick: function () {
 	    this.setState({ currentTab: "photoIndex" });
@@ -34325,6 +35278,7 @@
 	  },
 	  render: function () {
 	    var userInfo;
+	    var createTab;
 
 	    if (Object.keys(this.state.user).length > 0) {
 	      var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_2000,h_350,c_fill/" + this.state.user.background_url + "')" };
@@ -34371,6 +35325,21 @@
 	      userInfo = React.createElement('div', { className: 'user-banner' });
 	    };
 
+	    if (this.state.user.id === this.state.currentUser.id) {
+	      createTab = React.createElement(
+	        'li',
+	        null,
+	        React.createElement(
+	          'a',
+	          { id: this.state.currentTab === "create" ? "selected-profile-tab" : "",
+	            onClick: this.handleCreateClick },
+	          'Create'
+	        )
+	      );
+	    } else {
+	      createTab = React.createElement('div', null);
+	    };
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -34384,16 +35353,6 @@
 	          React.createElement(
 	            'ul',
 	            { className: 'nav navbar-nav navbar-left' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { id: this.state.currentTab === "summary" ? "selected-profile-tab" : "",
-	                  onClick: this.handleSummaryClick },
-	                'Summary'
-	              )
-	            ),
 	            React.createElement(
 	              'li',
 	              null,
@@ -34423,7 +35382,8 @@
 	                  onClick: this.handleFollowingClick },
 	                'Following'
 	              )
-	            )
+	            ),
+	            createTab
 	          )
 	        )
 	      ),

@@ -32,14 +32,14 @@ var UploadPhotoForm = React.createClass({
     };
 
     ApiUtil.createPhoto(photoParams);
-    this.history.pushState(null, "/users/" + currentUser.id, {});
+    this.history.pushState(null, "/users/" + currentUser.id + "/photoIndex", {});
   },
   render: function () {
     var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
         photoOptions = "w_500,h_282,c_fit/";
 
     var uploadForm = (
-      <div className="container">
+      <div className="upload-form-container">
 
         <form onSubmit={this.handleSubmit} id="photo-form">
 
@@ -101,7 +101,7 @@ var UploadPhotoForm = React.createClass({
           { uploadForm }
           <br/><br/><br/>
 
-          <div className="container">
+          <div className="upload-form-container">
             <div className="row">
               <img src={url + photoOptions + this.state.photoUrl}></img>
             </div>

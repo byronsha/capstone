@@ -20,7 +20,7 @@ var Following = React.createClass({
   },
   handleClick: function (e) {
     e.preventDefault();
-    this.history.pushState(null, "/users/" + e.target.id + "/summary", {});
+    this.history.pushState(null, "/users/" + e.target.id + "/photoIndex", {});
   },
   preventClick: function (e) {
     e.stopPropagation();

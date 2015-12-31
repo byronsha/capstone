@@ -35,7 +35,6 @@ var Sidebar = React.createClass({
     } else {
       sessionButtons = (
         <ul className="nav navbar-nav navbar-right">
-          <CreateButton currentUser={this.state.currentUser} />
           <YouButton currentUser={this.state.currentUser} />
           <LogoutButton />
         </ul>

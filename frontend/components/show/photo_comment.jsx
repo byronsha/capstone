@@ -8,7 +8,7 @@ var React = require('react'),
 var PhotoComment = React.createClass({
   mixins: [History],
   handleClick: function () {
-    this.history.pushState(null, "/users/" + this.props.authorId + "/summary", {});
+    this.history.pushState(null, "/users/" + this.props.authorId + "/photoIndex", {});
   },
   render: function () {
     var currentUser = SessionStore.currentUser();

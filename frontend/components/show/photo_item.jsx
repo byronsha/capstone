@@ -34,7 +34,7 @@ var PhotoItem = React.createClass({
   },
   handleAuthorClick: function (e) {
     e.stopPropagation();
-    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
+    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photoIndex", {});
   },
   decrementFavoriteCount: function () {
     this.setState({ favoriteCount: this.state.favoriteCount - 1 });

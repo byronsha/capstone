@@ -1,6 +1,7 @@
 var React = require('react'),
     ApiUtil = require('../../util/api_util.js'),
     UserStore = require('../../stores/user_store.js'),
+    SessionStore = require('../../stores/session_store.js'),
     Summary = require('./summary.jsx'),
     PhotoIndex = require('./photo_index.jsx'),
     Favorites = require('./favorites.jsx'),
@@ -11,10 +12,11 @@ var React = require('react'),
 var UserProfile = React.createClass({
   mixins: [History],
   getInitialState: function () {
-    return { user: {}, currentTab: this.props.routes[2].path };
+    return { user: {}, currentUser: SessionStore.currentUser(), currentTab: this.props.routes[2].path };
   },
   componentDidMount: function () {
     this.userListener = UserStore.addListener(this._onUserChange);
+    this.sessionListener = SessionStore.addListener(this._onSessionChange);
     ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
   },
   componentWillReceiveProps: function (nextProps) {
@@ -23,13 +25,21 @@ var UserProfile = React.createClass({
   },
   componentWillUnmount: function () {
     this.userListener.remove();
+    this.sessionListener.remove();
   },
   _onUserChange: function () {
     this.setState({ user: UserStore.user() });
   },
-  handleSummaryClick: function () {
-    this.setState({ currentTab: "summary" });
-    this.history.pushState(null, "/users/" + this.state.user.id + "/summary", {});
+  _onSessionChange: function () {
+    this.setState({ currentUser: SessionStore.currentUser() });
+
+    if (this.props.routes[2].path === "create") {
+      this.history.pushState(null, "/users/" + this.state.user.id + "/photoIndex", {});
+    }
+  },
+  handleCreateClick: function () {
+    this.setState({ currentTab: "create" });
+    this.history.pushState(null, "/users/" + this.state.user.id + "/create", {});
   },
   handlePhotoIndexClick: function () {
     this.setState({ currentTab: "photoIndex" });
@@ -45,6 +55,7 @@ var UserProfile = React.createClass({
   },
   render: function () {
     var userInfo;
+    var createTab;
 
     if (Object.keys(this.state.user).length > 0) {
       var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_2000,h_350,c_fill/" + this.state.user.background_url + "')" };
@@ -69,20 +80,28 @@ var UserProfile = React.createClass({
       )
     };
 
+    if (this.state.user.id === this.state.currentUser.id) {
+      createTab = (
+        <li><a id={this.state.currentTab === "create" ? "selected-profile-tab" : ""}
+               onClick={this.handleCreateClick}>Create</a></li>
+      )
+    } else {
+      createTab = (<div></div>)
+    };
+
     return (
       <div>
         { userInfo }
         <nav className="navbar navbar-default">
           <div className="container-fluid">
             <ul className="nav navbar-nav navbar-left">
-              <li><a id={this.state.currentTab === "summary" ? "selected-profile-tab" : ""}
-                     onClick={this.handleSummaryClick}>Summary</a></li>
               <li><a id={this.state.currentTab === "photoIndex" ? "selected-profile-tab" : ""}
                      onClick={this.handlePhotoIndexClick}>Photos</a></li>
               <li><a id={this.state.currentTab === "favorites" ? "selected-profile-tab" : ""}
                      onClick={this.handleFavoritesClick}>Favorites</a></li>
               <li><a id={this.state.currentTab === "following" ? "selected-profile-tab" : ""}
                      onClick={this.handleFollowingClick}>Following</a></li>
+              { createTab }
             </ul>
           </div>
         </nav>

@@ -1,3 +1,9 @@
+.logo {
+  font-family: "Arial";
+  font-weight: bolder;
+  font-size: 26px;
+}
+
 .sidebar-background {
   background: black;
   height: 50px;
@@ -5,11 +11,16 @@
 
 .introduction {
   text-align: center;
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   position: absolute;
-  color: #F0F0F0;
+  color: white;
   top: 45%;
-  left: 10%;
+  left: 12%;
+}
+
+.navbar-fixed-bottom#external-links-bar {
+  background: black;
+  position: relative;
 }
 
 .introduction-2 {
@@ -17,16 +28,16 @@
   font-size: 3.5rem;
   position: absolute;
   color: #505050;
-  top: 50%;
-  right: 10%;
+  top: 45%;
+  right: 20%;
 }
 
 .introduction-3 {
   text-align: center;
   font-size: 3.5rem;
   position: absolute;
-  color: #F0F0F0;
-  top: 50%;
+  color: white;
+  top: 45%;
   right: 10%;
 }
 
@@ -36,8 +47,8 @@
   margin-left: 0;
   margin-right: 0;
   max-width: 1920px;
-  height: 80vh;
-  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164622/35.jpg") no-repeat center center;
+  height: 90vh;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2500/v1450164622/49.jpg") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -50,8 +61,8 @@
   margin-left: 0;
   margin-right: 0;
   max-width: 1920px;
-  height: 80vh;
-  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164670/29.jpg") no-repeat center center;
+  height: 90vh;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2500/v1450164670/29.jpg") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -64,8 +75,8 @@
   margin-left: 0;
   margin-right: 0;
   max-width: 1920px;
-  height: 80vh;
-  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2000/v1450164669/30.jpg") no-repeat center center;
+  height: 90vh;
+  background: url("http://res.cloudinary.com/dwx2ctajn/image/upload/c_scale,w_2500/v1450164669/30.jpg") no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

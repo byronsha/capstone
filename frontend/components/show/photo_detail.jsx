@@ -64,7 +64,7 @@ var PhotoDetail = React.createClass({
     this.setState({ favoriteCount: PhotoStore.fetchFavoriteCount(nextProps.params.photoId )});
   },
   handleClick: function () {
-    this.history.pushState(null, "/users/" + this.props.params.userId + "/summary", {});
+    this.history.pushState(null, "/users/" + this.props.params.userId + "/photoIndex", {});
   },
   handleThumbnailClick: function (e) {
     var userId = e.target.dataset.userid;

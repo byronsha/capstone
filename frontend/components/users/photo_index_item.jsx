@@ -22,7 +22,7 @@ var PhotoIndexItem = React.createClass({
   },
   handleAuthorClick: function (e) {
     e.stopPropagation();
-    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/summary", {});
+    this.history.pushState(null, "/users/" + this.props.photo.user_id + "/photoIndex", {});
   },
   deletePhoto: function (e) {
     e.stopPropagation();

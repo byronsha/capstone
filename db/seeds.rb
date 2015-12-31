@@ -339,6 +339,15 @@ end
   PhotoCollection.create(photo_id: i, collection_id: 2)
 end
 
+PhotoCollection.create(photo_id: 85, collection_id: 5)
+PhotoCollection.create(photo_id: 85, collection_id: 9)
+
+PhotoCollection.create(photo_id: 86, collection_id: 9)
+PhotoCollection.create(photo_id: 86, collection_id: 13)
+
+PhotoCollection.create(photo_id: 87, collection_id: 8)
+PhotoCollection.create(photo_id: 87, collection_id: 9)
+
 120.times do
   Favorite.create(photo_id: photo_ids.sample, user_id: user_ids.sample)
 end
