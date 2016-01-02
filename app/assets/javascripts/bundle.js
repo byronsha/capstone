@@ -33340,6 +33340,7 @@
 	                    { className: 'photo-title' },
 	                    currentPhoto.title
 	                  ),
+	                  React.createElement('div', { role: 'separator', className: 'divider-line' }),
 	                  currentPhoto.description
 	                ),
 	                React.createElement('br', null),
@@ -33351,6 +33352,7 @@
 	                    null,
 	                    'Comments'
 	                  ),
+	                  React.createElement('div', { role: 'separator', className: 'divider-line' }),
 	                  React.createElement(
 	                    'ul',
 	                    { className: 'photo-comment-list' },
@@ -33382,6 +33384,7 @@
 	                  null,
 	                  'About the photographer'
 	                ),
+	                React.createElement('div', { role: 'separator', className: 'divider-line' }),
 	                React.createElement(
 	                  'span',
 	                  { onClick: this.handleClick,

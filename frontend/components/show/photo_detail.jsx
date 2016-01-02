@@ -170,11 +170,13 @@ var PhotoDetail = React.createClass({
               <div className="photo-detail-info">
                 <div>
                   <h3 className="photo-title">{currentPhoto.title}</h3>
+                  <div role="separator" className="divider-line"></div>
                   {currentPhoto.description}
                 </div>
                 <br/>
                 <div>
                   <h4>Comments</h4>
+                  <div role="separator" className="divider-line"></div>
                   <ul className="photo-comment-list">
                     {this.state.comments.map(function (comment) {
                       return <PhotoComment key={comment.id}
@@ -197,6 +199,7 @@ var PhotoDetail = React.createClass({
             <div className="col-md-4">
               <div className="about-the-photographer">
                 <h4>About the photographer</h4>
+                <div role="separator" className="divider-line"></div>
                 <span onClick={this.handleClick}
                       className="comment-author">{currentPhoto.user.username}
                       </span> - {currentPhoto.user.full_name}
