@@ -1,3 +1,58 @@
+html,body {
+  height: 100%
+}
+
+#holder {
+  min-height: 100%;
+  position:relative;
+}
+
+#body {
+  padding-bottom: 100px;
+}
+
+#footer {
+  height: 100px;
+  width:100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 50000;
+  background: #101010;
+  text-align: center;
+}
+
+#footer ul {
+  padding-top: 40px;
+  list-style-type: none;
+}
+
+#footer ul li {
+  display: inline;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+#footer a {
+  color: white;
+}
+
+#footer i {
+  margin-right: 5px;
+}
+
+#footer a:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: #808080;
+
+  -webkit-transition: all .3s ease;
+     -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+       -o-transition: all .3s ease;
+          transition: all .3s ease;
+}
+
 .logo {
   font-family: "Montserrat";
   font-weight: bolder;
@@ -5,7 +60,7 @@
 }
 
 .sidebar-background {
-  background: black;
+  background: #080808;
   height: 50px;
 }
 
@@ -16,11 +71,6 @@
   color: white;
   top: 45%;
   left: 12%;
-}
-
-.navbar-fixed-bottom#external-links-bar {
-  background: black;
-  position: relative;
 }
 
 .introduction-2 {

@@ -80,17 +80,6 @@ var Splash = React.createClass({
         <div className="splash-main-3">
           <span className="introduction-3">...and discover breathtaking sights from around the world</span>
         </div>
-
-        <nav className="navbar navbar-fixed-bottom"
-             id="external-links-bar">
-          <div className="container-fluid">
-            <ul className="nav navbar-nav navbar-right">
-              <li><a href="https://github.com/byronsha"><i className="fa fa-github"></i></a></li>
-              <li><a href="https://www.linkedin.com/profile/view?id=AAMAAA9RSn0BbUxs23pprebxpFncMxZzJgotagw&trk=hp-identity-name"><i className="fa fa-linkedin"></i></a></li>
-            </ul>
-          </div>
-        </nav>
-
       </div>
     );
   }
