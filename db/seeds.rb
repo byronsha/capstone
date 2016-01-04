@@ -80,7 +80,8 @@ photo_title_samples = [
   "Memories",
   "Abstraction of Dreams",
   "Shimmering Creation",
-  "Singularity and Dimensionality",
+  "Singularity",
+  "Dimensionality",
   "Contrast and Babble",
   "Contrast of Dreams",
   "Modern Significance",
@@ -88,8 +89,8 @@ photo_title_samples = [
   "Metamorphosis",
   "Creation",
   "Vision",
-  "Uplifting Abstraction of Sorrow",
-  "Perception and Analysis",
+  "Abstraction of Sorrow",
+  "Perception & Analysis",
   "The Conceptual Eye"
 ]
 
