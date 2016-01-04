@@ -31890,7 +31890,7 @@
 
 	    var loginParams = {
 	      user: {
-	        username: "demouser123",
+	        username: "joe_schmoe724",
 	        password: "demodemodemo"
 	      }
 	    };
