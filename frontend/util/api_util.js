@@ -39,13 +39,6 @@ var ApiUtil = {
       data: photoParams,
       success: function (photo) {
         ApiActions.receiveAllPhotos([photo]);
-        // ApiActions.createPhoto(photo);
-        // UiActions.removeFlash();
-      },
-      error: function (data) {
-        console.log(data);
-        console.log("create photo error");
-        // UiActions.setFlash($.parseJSON(data.responseText).errors);
       }
     })
   },

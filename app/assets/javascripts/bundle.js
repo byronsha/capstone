@@ -24390,13 +24390,6 @@
 	      data: photoParams,
 	      success: function (photo) {
 	        ApiActions.receiveAllPhotos([photo]);
-	        // ApiActions.createPhoto(photo);
-	        // UiActions.removeFlash();
-	      },
-	      error: function (data) {
-	        console.log(data);
-	        console.log("create photo error");
-	        // UiActions.setFlash($.parseJSON(data.responseText).errors);
 	      }
 	    });
 	  },
@@ -24966,9 +24959,15 @@
 	    UiConstants = __webpack_require__(221);
 
 	var UiActions = {
-	  setFlash: function (messages) {
+	  setLoginFlash: function (messages) {
 	    Dispatcher.dispatch({
-	      actionType: UiConstants.SET_FLASH,
+	      actionType: UiConstants.SET_LOGIN_FLASH,
+	      messages: messages
+	    });
+	  },
+	  setSignupFlash: function (messages) {
+	    Dispatcher.dispatch({
+	      actionType: UiConstants.SET_SIGNUP_FLASH,
 	      messages: messages
 	    });
 	  },
@@ -24986,7 +24985,8 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  SET_FLASH: "SET_FLASH",
+	  SET_LOGIN_FLASH: "SET_LOGIN_FLASH",
+	  SET_SIGNUP_FLASH: "SET_SIGNUP_FLASH",
 	  REMOVE_FLASH: "REMOVE_FLASH"
 	};
 
@@ -31867,7 +31867,7 @@
 	    this.uiListener = UiStore.addListener(this._onUiChange);
 	  },
 	  _onUiChange: function () {
-	    var newFlash = UiStore.flash();
+	    var newFlash = UiStore.loginFlash();
 	    if (newFlash !== this.state.flash) {
 	      this.setState({ flash: newFlash });
 	    }
@@ -31910,7 +31910,7 @@
 	            { className: 'col-md-12' },
 	            React.createElement(
 	              'div',
-	              { className: 'login-username-input' },
+	              { className: 'login-input' },
 	              React.createElement('input', { type: 'text',
 	                valueLink: this.linkState("username"),
 	                placeholder: 'Username',
@@ -31922,7 +31922,7 @@
 	            { className: 'col-md-12' },
 	            React.createElement(
 	              'div',
-	              { className: 'login-password-input' },
+	              { className: 'login-input' },
 	              React.createElement('input', { type: 'password',
 	                valueLink: this.linkState("password"),
 	                placeholder: 'Password',
@@ -31945,6 +31945,7 @@
 	              React.createElement(
 	                'span',
 	                { className: 'flash-error' },
+	                React.createElement('br', null),
 	                this.state.flash
 	              )
 	            )
@@ -32208,7 +32209,7 @@
 	        window.currentUserId = currentUser.id;
 	      },
 	      error: function (data) {
-	        UiActions.setFlash($.parseJSON(data.responseText).errors);
+	        UiActions.setSignupFlash($.parseJSON(data.responseText).errors);
 	      }
 	    });
 	  },
@@ -32226,7 +32227,7 @@
 	        window.currentUserId = currentUser.id;
 	      },
 	      error: function (data) {
-	        UiActions.setFlash($.parseJSON(data.responseText).errors);
+	        UiActions.setLoginFlash($.parseJSON(data.responseText).errors);
 	      }
 	    });
 	  },
@@ -32255,24 +32256,38 @@
 	    UiConstants = __webpack_require__(221),
 	    UiStore = new Store(AppDispatcher);
 
-	var _flash = "";
+	var _loginFlash = "";
+	var _signupFlash = "";
 
-	var setFlash = function (messages) {
-	  _flash = messages;
+	var setLoginFlash = function (messages) {
+	  _loginFlash = messages;
+	};
+
+	var setSignupFlash = function (messages) {
+	  _signupFlash = messages;
 	};
 
 	var removeFlash = function () {
-	  _flash = "";
+	  _loginFlash = "";
+	  _signupFlash = "";
 	};
 
-	UiStore.flash = function () {
-	  return _flash;
+	UiStore.loginFlash = function () {
+	  return _loginFlash;
+	};
+
+	UiStore.signupFlash = function () {
+	  return _signupFlash;
 	};
 
 	UiStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
-	    case UiConstants.SET_FLASH:
-	      setFlash(payload.messages);
+	    case UiConstants.SET_LOGIN_FLASH:
+	      setLoginFlash(payload.messages);
+	      UiStore.__emitChange();
+	      break;
+	    case UiConstants.SET_SIGNUP_FLASH:
+	      setSignupFlash(payload.messages);
 	      UiStore.__emitChange();
 	      break;
 	    case UiConstants.REMOVE_FLASH:
@@ -32280,7 +32295,6 @@
 	      UiStore.__emitChange();
 	      break;
 	  }
-	  // UiStore.__emitChange();
 	};
 
 	module.exports = UiStore;
@@ -32318,34 +32332,52 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1),
-	    SessionsUtil = __webpack_require__(257);
+	    LinkedStateMixin = __webpack_require__(253),
+	    SessionsUtil = __webpack_require__(257),
+	    UiStore = __webpack_require__(258),
+	    UiActions = __webpack_require__(220);
 
 	var Signup = React.createClass({
 	  displayName: 'Signup',
 
+	  mixins: [LinkedStateMixin],
 	  getInitialState: function () {
 	    return {
 	      username: "",
-	      password: ""
+	      full_name: "",
+	      password: "",
+	      confirmation: "",
+	      flash: ""
 	    };
+	  },
+	  componentDidMount: function () {
+	    this.uiListener = UiStore.addListener(this._onUiChange);
+	  },
+	  _onUiChange: function () {
+	    var newFlash = UiStore.signupFlash();
+	    if (newFlash !== this.state.flash) {
+	      this.setState({ flash: newFlash });
+	    }
 	  },
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 
-	    var signupParams = {
-	      user: {
-	        username: this.state.username,
-	        password: this.state.password
-	      }
-	    };
+	    if (this.state.password !== this.state.confirmation) {
+	      UiActions.setSignupFlash("Passwords did not match");
+	      this.setState({ password: "", confirmation: "" });
+	    } else {
+	      var signupParams = {
+	        user: {
+	          username: this.state.username,
+	          full_name: this.state.full_name,
+	          password: this.state.password,
+	          confirmation: this.state.confirmation
+	        }
+	      };
 
-	    SessionsUtil.signup(signupParams);
-	  },
-	  usernameChange: function (e) {
-	    this.setState({ username: e.target.value });
-	  },
-	  passwordChange: function (e) {
-	    this.setState({ password: e.target.value });
+	      this.setState({ password: "", confirmation: "" });
+	      SessionsUtil.signup(signupParams);
+	    };
 	  },
 	  render: function () {
 	    return React.createElement(
@@ -32372,11 +32404,11 @@
 	            { className: 'col-md-12' },
 	            React.createElement(
 	              'div',
-	              { className: 'login-username-input' },
+	              { className: 'login-input' },
 	              React.createElement('input', { type: 'text',
 	                placeholder: 'Username',
 	                className: 'form-control input-sm',
-	                onChange: this.usernameChange })
+	                valueLink: this.linkState("username") })
 	            )
 	          ),
 	          React.createElement(
@@ -32384,11 +32416,35 @@
 	            { className: 'col-md-12' },
 	            React.createElement(
 	              'div',
-	              { className: 'login-password-input' },
+	              { className: 'login-input' },
+	              React.createElement('input', { type: 'text',
+	                placeholder: 'Full name',
+	                className: 'form-control input-sm',
+	                valueLink: this.linkState("full_name") })
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-md-12' },
+	            React.createElement(
+	              'div',
+	              { className: 'login-input' },
 	              React.createElement('input', { type: 'password',
 	                placeholder: 'Password',
 	                className: 'form-control input-sm',
-	                onChange: this.passwordChange })
+	                valueLink: this.linkState("password") })
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-md-12' },
+	            React.createElement(
+	              'div',
+	              { className: 'login-input' },
+	              React.createElement('input', { type: 'password',
+	                placeholder: 'Confirm password',
+	                className: 'form-control input-sm',
+	                valueLink: this.linkState("confirmation") })
 	            )
 	          ),
 	          React.createElement(
@@ -32403,6 +32459,12 @@
 	                  className: 'btn btn-success btn-sm',
 	                  onClick: this.handleSubmit },
 	                'Sign up'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'flash-error' },
+	                React.createElement('br', null),
+	                this.state.flash
 	              )
 	            )
 	          )
@@ -32460,12 +32522,6 @@
 	        { className: 'dropdown-menu', id: 'you-dropdown' },
 	        React.createElement(
 	          'li',
-	          { onClick: this.handleCreateClick, className: 'you-dropdown-item' },
-	          'Create'
-	        ),
-	        React.createElement('li', { role: 'separator', className: 'divider' }),
-	        React.createElement(
-	          'li',
 	          { onClick: this.handlePhotosClick, className: 'you-dropdown-item' },
 	          'Photos'
 	        ),
@@ -32480,6 +32536,12 @@
 	          'li',
 	          { onClick: this.handleFollowingClick, className: 'you-dropdown-item' },
 	          'Following'
+	        ),
+	        React.createElement('li', { role: 'separator', className: 'divider' }),
+	        React.createElement(
+	          'li',
+	          { onClick: this.handleCreateClick, className: 'you-dropdown-item' },
+	          'Create'
 	        )
 	      )
 	    );
@@ -32487,37 +32549,6 @@
 	});
 
 	module.exports = YouButton;
-
-	// handleSummaryClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/summary", {});
-	// },
-	// handlePhotosClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/photoIndex", {});
-	// },
-	// handleFavoritesClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/favorites", {});
-	// },
-	// handleFollowingClick: function () {
-	//   this.history.pushState(null, "/users/" + this.currentUser.id + "/following", {});
-	// },
-
-	// <li className="dropdown">
-	//   <a className="dropdown-toggle"
-	//      data-toggle="dropdown"
-	//      role="button"
-	//      aria-haspopup="true"
-	//      aria-expanded="false">You <span className="caret"></span>
-	//   </a>
-	//   <ul className="dropdown-menu" id="you-dropdown">
-	//     <li onClick={this.handleSummaryClick} className="you-dropdown-item">Profile</li>
-	//     <li role="separator" className="divider"></li>
-	//     <li onClick={this.handlePhotosClick} className="you-dropdown-item">Photos</li>
-	//     <li role="separator" className="divider"></li>
-	//     <li onClick={this.handleFavoritesClick} className="you-dropdown-item">Favorites</li>
-	//     <li role="separator" className="divider"></li>
-	//     <li onClick={this.handleFollowingClick} className="you-dropdown-item">Following</li>
-	//   </ul>
-	// </li>
 
 /***/ },
 /* 262 */
@@ -34699,10 +34730,24 @@
 	    this.history.pushState(null, "/users/" + currentUser.id + "/photoIndex", {});
 	  },
 	  render: function () {
-	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
-	        photoOptions = "w_500,h_282,c_fit/";
+	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
+	    var photoOptions = "w_560,c_scale/";
+	    var uploadedPhoto;
 
-	    var uploadForm = React.createElement(
+	    if (this.state.photoUrl.length > 1) {
+	      uploadedPhoto = React.createElement(
+	        'div',
+	        null,
+	        'Preview:',
+	        React.createElement('br', null),
+	        React.createElement('img', { src: url + photoOptions + this.state.photoUrl })
+	      );
+	    } else {
+	      uploadedPhoto = React.createElement(UploadPhotoButton, { savePhotoUrl: this.savePhotoUrl,
+	        showUploadedThumbnail: this.showUploadedThumbnail });
+	    };
+
+	    return uploadForm = React.createElement(
 	      'div',
 	      { className: 'upload-form-container' },
 	      React.createElement(
@@ -34712,104 +34757,68 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'row' },
-	          React.createElement(
-	            'div',
-	            { className: 'col-md-3' },
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement('input', { type: 'text',
-	                valueLink: this.linkState("title"),
-	                placeholder: 'Title',
-	                className: 'form-control input-sm' })
-	            )
-	          )
+	          { className: 'create-photo-title' },
+	          React.createElement('input', { type: 'text',
+	            valueLink: this.linkState("title"),
+	            placeholder: 'Title',
+	            className: 'form-control input-sm' })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'row' },
-	          React.createElement(
-	            'div',
-	            { className: 'col-md-5' },
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement('textarea', { form: 'photo-form',
-	                rows: '5',
-	                valueLink: this.linkState("description"),
-	                placeholder: 'Description',
-	                className: 'form-control input-sm' })
-	            )
-	          )
+	          { className: 'create-photo-description' },
+	          React.createElement('textarea', { form: 'photo-form',
+	            rows: '5',
+	            valueLink: this.linkState("description"),
+	            placeholder: 'Description',
+	            className: 'form-control input-sm' })
 	        ),
+	        React.createElement('br', null),
+	        React.createElement('br', null),
+	        uploadedPhoto,
 	        React.createElement('br', null),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'row' },
-	          React.createElement(UploadPhotoButton, { savePhotoUrl: this.savePhotoUrl,
-	            showUploadedThumbnail: this.showUploadedThumbnail })
-	        ),
-	        React.createElement('br', null),
-	        React.createElement('br', null),
-	        React.createElement(
-	          'div',
-	          { className: 'row' },
+	          null,
 	          React.createElement(
-	            'div',
-	            { className: 'col-md-12' },
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement(
-	                'button',
-	                { type: 'submit',
-	                  className: 'btn btn-success btn-sm' },
-	                'Submit'
-	              ),
-	              React.createElement(
-	                'span',
-	                { className: 'flash-error' },
-	                this.state.flash
-	              )
-	            )
+	            'button',
+	            { type: 'submit',
+	              className: 'btn btn-success btn-sm' },
+	            'Submit'
+	          ),
+	          React.createElement(
+	            'span',
+	            { className: 'flash-error' },
+	            this.state.flash
 	          )
 	        )
 	      )
 	    );
-
-	    if (this.state.photoUrl.length > 1) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        uploadForm,
-	        React.createElement('br', null),
-	        React.createElement('br', null),
-	        React.createElement('br', null),
-	        React.createElement(
-	          'div',
-	          { className: 'upload-form-container' },
-	          React.createElement(
-	            'div',
-	            { className: 'row' },
-	            React.createElement('img', { src: url + photoOptions + this.state.photoUrl })
-	          )
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        null,
-	        uploadForm
-	      );
-	    };
 	  }
 	});
 
 	module.exports = UploadPhotoForm;
+
+	// if (this.state.photoUrl.length > 1) {
+	//   return (
+	//     <div>
+	//       { uploadForm }
+	//       <div className="photo-preview">
+	//         Preview:
+	//         <br/>
+	//         <img src={url + photoOptions + this.state.photoUrl}></img>
+	//       </div>
+	//     </div>
+	//   )
+	// } else {
+	//   return (
+	//     <div>
+	//       { uploadForm }
+	//     </div>
+	//   )
+	// };
 
 /***/ },
 /* 287 */
@@ -34930,6 +34939,10 @@
 	    this.userListener.remove();
 	    this.photoListener.remove();
 	    this.sessionListener.remove();
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
+	    ApiUtil.fetchUserPhotos(parseInt(nextProps.params.userId));
 	  },
 	  _onUserChange: function () {
 	    this.setState({ user: UserStore.user() });
@@ -35228,7 +35241,7 @@
 	  _onSessionChange: function () {
 	    this.setState({ currentUser: SessionStore.currentUser() });
 
-	    if (this.props.routes[2].path === "create") {
+	    if (this.props.routes[2].path === "create" && Object.keys(this.state.currentUser).length === 0) {
 	      this.history.pushState(null, "/users/" + this.state.user.id + "/photoIndex", {});
 	    }
 	  },

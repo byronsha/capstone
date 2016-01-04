@@ -22,6 +22,10 @@ var PhotoIndex = React.createClass({
     this.photoListener.remove();
     this.sessionListener.remove();
   },
+  componentWillReceiveProps: function (nextProps) {
+    ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
+    ApiUtil.fetchUserPhotos(parseInt(nextProps.params.userId));
+  },
   _onUserChange: function () {
     this.setState({ user: UserStore.user() });
   },

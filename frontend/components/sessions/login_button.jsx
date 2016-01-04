@@ -16,7 +16,7 @@ var LoginButton = React.createClass({
     this.uiListener = UiStore.addListener(this._onUiChange);
   },
   _onUiChange: function () {
-    var newFlash = UiStore.flash();
+    var newFlash = UiStore.loginFlash();
     if (newFlash !== this.state.flash) {
       this.setState({ flash: newFlash });
     }
@@ -48,7 +48,7 @@ var LoginButton = React.createClass({
 
           <form>
             <div className="col-md-12">
-              <div className="login-username-input">
+              <div className="login-input">
                 <input type="text"
                        valueLink={this.linkState("username")}
                        placeholder="Username"
@@ -57,7 +57,7 @@ var LoginButton = React.createClass({
             </div>
 
             <div className="col-md-12">
-              <div className="login-password-input">
+              <div className="login-input">
                 <input type="password"
                        valueLink={this.linkState("password")}
                        placeholder="Password"
@@ -71,7 +71,7 @@ var LoginButton = React.createClass({
                         className="btn btn-success btn-sm"
                         onClick={this.handleSubmit}>Log in</button>
 
-                <span className="flash-error">{this.state.flash}</span>
+                      <span className="flash-error"><br/>{this.state.flash}</span>
               </div>
             </div>
           </form>

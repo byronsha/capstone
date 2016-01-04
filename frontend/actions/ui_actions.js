@@ -2,9 +2,15 @@ var Dispatcher = require('../dispatcher/dispatcher.js'),
     UiConstants = require('../constants/ui_constants.js');
 
 var UiActions = {
-  setFlash: function (messages) {
+  setLoginFlash: function (messages) {
     Dispatcher.dispatch({
-      actionType: UiConstants.SET_FLASH,
+      actionType: UiConstants.SET_LOGIN_FLASH,
+      messages: messages
+    });
+  },
+  setSignupFlash: function (messages) {
+    Dispatcher.dispatch({
+      actionType: UiConstants.SET_SIGNUP_FLASH,
       messages: messages
     });
   },

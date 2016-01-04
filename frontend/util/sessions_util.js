@@ -15,7 +15,7 @@ var SessionsUtil = {
         window.currentUserId = currentUser.id;
       },
       error: function (data) {
-        UiActions.setFlash($.parseJSON(data.responseText).errors);
+        UiActions.setSignupFlash($.parseJSON(data.responseText).errors);
       }
     });
   },
@@ -33,7 +33,7 @@ var SessionsUtil = {
         window.currentUserId = currentUser.id;
       },
       error: function (data) {
-        UiActions.setFlash($.parseJSON(data.responseText).errors);
+        UiActions.setLoginFlash($.parseJSON(data.responseText).errors);
       }
     });
   },

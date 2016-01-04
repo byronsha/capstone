@@ -35,87 +35,80 @@ var UploadPhotoForm = React.createClass({
     this.history.pushState(null, "/users/" + currentUser.id + "/photoIndex", {});
   },
   render: function () {
-    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/",
-        photoOptions = "w_500,h_282,c_fit/";
+    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
+    var photoOptions = "w_560,c_scale/";
+    var uploadedPhoto;
 
-    var uploadForm = (
+    if (this.state.photoUrl.length > 1) {
+      uploadedPhoto = (
+        <div>
+          Preview:
+          <br/>
+          <img src={url + photoOptions + this.state.photoUrl}></img>
+        </div>
+      )
+    } else {
+      uploadedPhoto = (
+        <UploadPhotoButton savePhotoUrl={this.savePhotoUrl}
+                           showUploadedThumbnail={this.showUploadedThumbnail} />
+      )
+    };
+
+    return uploadForm = (
       <div className="upload-form-container">
-
         <form onSubmit={this.handleSubmit} id="photo-form">
 
           <br/><br/>
 
-          <div className="row">
-            <div className="col-md-3">
-              <div>
-                <input type="text"
-                       valueLink={this.linkState("title")}
-                       placeholder="Title"
-                       className="form-control input-sm" />
-              </div>
-            </div>
+          <div className="create-photo-title">
+            <input type="text"
+                   valueLink={this.linkState("title")}
+                   placeholder="Title"
+                   className="form-control input-sm" />
           </div>
 
           <br/><br/>
 
-          <div className="row">
-            <div className="col-md-5">
-              <div>
-                <textarea form="photo-form"
-                          rows="5"
-                          valueLink={this.linkState("description")}
-                          placeholder="Description"
-                          className="form-control input-sm" />
-              </div>
-            </div>
+          <div className="create-photo-description">
+            <textarea form="photo-form"
+                      rows="5"
+                      valueLink={this.linkState("description")}
+                      placeholder="Description"
+                      className="form-control input-sm" />
           </div>
 
-          <br/><br/>
+          <br/><br/>{ uploadedPhoto }<br/><br/>
 
-          <div className="row">
-            <UploadPhotoButton savePhotoUrl={this.savePhotoUrl}
-                               showUploadedThumbnail={this.showUploadedThumbnail} />
+          <div>
+            <button type="submit"
+                    className="btn btn-success btn-sm">Submit</button>
+
+            <span className="flash-error">{this.state.flash}</span>
           </div>
-
-          <br/><br/>
-
-          <div className="row">
-            <div className="col-md-12">
-              <div>
-                <button type="submit"
-                        className="btn btn-success btn-sm">Submit</button>
-
-                <span className="flash-error">{this.state.flash}</span>
-              </div>
-            </div>
-          </div>
-
+          
         </form>
-
       </div>
     );
-
-    if (this.state.photoUrl.length > 1) {
-      return (
-        <div>
-          { uploadForm }
-          <br/><br/><br/>
-
-          <div className="upload-form-container">
-            <div className="row">
-              <img src={url + photoOptions + this.state.photoUrl}></img>
-            </div>
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          { uploadForm }
-        </div>
-      )
-    };
   }
 });
 
 module.exports = UploadPhotoForm;
+
+// if (this.state.photoUrl.length > 1) {
+//   return (
+//     <div>
+//       { uploadForm }
+//       <div className="photo-preview">
+//         Preview:
+//         <br/>
+//         <img src={url + photoOptions + this.state.photoUrl}></img>
+//       </div>
+//     </div>
+//   )
+// } else {
+//   return (
+//     <div>
+//       { uploadForm }
+//     </div>
+//   )
+// };

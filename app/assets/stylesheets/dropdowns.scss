@@ -5,13 +5,14 @@
   display: block;
   border: none;
   padding: 0 0 0 0;
-  margin-left: 5px;
+  margin-left: 4px;
   opacity: 0;
   overflow: hidden;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   font-weight: normal;
   font-family: "Source Sans Pro";
+  border: 1px solid #909090;
 
   -webkit-transition: all .3s ease;
      -moz-transition: all .3s ease;
@@ -26,7 +27,7 @@
 }
 
 .dropdown .dropdown-menu#you-dropdown {
-  margin-right: 5px;
+  margin-right: 4px;
   border: none;
   padding: 0 0 0 0;
   max-height: 0;
@@ -35,6 +36,7 @@
   opacity: 0;
   font-weight: normal;
   font-family: "Source Sans Pro";
+  border: 1px solid #909090;
 
   -webkit-transition: all .3s ease;
      -moz-transition: all .3s ease;
@@ -74,7 +76,7 @@
 }
 
 .dropdown .dropdown-menu#login-dropdown {
-  margin-right: 5px;
+  margin-right: 4px;
   border: none;
   padding: 8 0 0 0;
   max-height: 0;
@@ -85,6 +87,7 @@
   border-bottom-right-radius: 3px;
   font-weight: normal;
   font-family: "Source Sans Pro";
+  border: 1px solid #909090;
 
   -webkit-transition: all .3s ease;
      -moz-transition: all .3s ease;
@@ -94,12 +97,12 @@
 }
 
 .dropdown.open .dropdown-menu#login-dropdown {
-  max-height: 200px;
+  max-height: 170px;
   opacity: 1;
 }
 
 .dropdown .dropdown-menu#signup-dropdown {
-  margin-right: 5px;
+  margin-right: 4px;
   border: none;
   padding: 8 0 0 0;
   max-height: 0;
@@ -110,6 +113,7 @@
   border-bottom-right-radius: 3px;
   font-weight: normal;
   font-family: "Source Sans Pro";
+  border: 1px solid #909090;
 
   -webkit-transition: all .3s ease;
      -moz-transition: all .3s ease;
@@ -119,6 +123,6 @@
 }
 
 .dropdown.open .dropdown-menu#signup-dropdown {
-  max-height: 200px;
+  max-height: 280px;
   opacity: 1;
 }

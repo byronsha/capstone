@@ -33,7 +33,7 @@ var UserProfile = React.createClass({
   _onSessionChange: function () {
     this.setState({ currentUser: SessionStore.currentUser() });
 
-    if (this.props.routes[2].path === "create") {
+    if (this.props.routes[2].path === "create" && Object.keys(this.state.currentUser).length === 0) {
       this.history.pushState(null, "/users/" + this.state.user.id + "/photoIndex", {});
     }
   },

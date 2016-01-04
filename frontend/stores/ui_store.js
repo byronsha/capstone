@@ -3,24 +3,38 @@ var Store = require('flux/utils').Store,
     UiConstants = require('../constants/ui_constants.js'),
     UiStore = new Store(AppDispatcher);
 
-var _flash = "";
+var _loginFlash = "";
+var _signupFlash = "";
 
-var setFlash = function (messages) {
-  _flash = messages;
+var setLoginFlash = function (messages) {
+  _loginFlash = messages;
+};
+
+var setSignupFlash = function (messages) {
+  _signupFlash = messages;
 };
 
 var removeFlash = function () {
-  _flash = "";
+  _loginFlash = "";
+  _signupFlash = "";
 };
 
-UiStore.flash = function () {
-  return _flash;
+UiStore.loginFlash = function () {
+  return _loginFlash;
+};
+
+UiStore.signupFlash = function () {
+  return _signupFlash;
 };
 
 UiStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
-    case UiConstants.SET_FLASH:
-      setFlash(payload.messages);
+    case UiConstants.SET_LOGIN_FLASH:
+      setLoginFlash(payload.messages);
+      UiStore.__emitChange();
+      break;
+    case UiConstants.SET_SIGNUP_FLASH:
+      setSignupFlash(payload.messages);
       UiStore.__emitChange();
       break;
     case UiConstants.REMOVE_FLASH:
@@ -28,7 +42,6 @@ UiStore.__onDispatch = function (payload) {
       UiStore.__emitChange();
       break;
   }
-  // UiStore.__emitChange();
 }
 
 module.exports = UiStore;
