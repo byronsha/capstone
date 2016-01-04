@@ -43,5 +43,6 @@ json.favorited_photos @user.favorited_photos do |favorited_photo|
 
   json.user do
     json.username favorited_photo.user.username
+    json.full_name favorited_photo.user.full_name
   end
 end

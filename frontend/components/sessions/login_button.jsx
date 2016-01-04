@@ -85,7 +85,7 @@ var LoginButton = React.createClass({
                         onClick={this.handleSubmit}>Log in</button>
 
                 <button className="btn btn-success btn-sm"
-                        onClick={this.demoUser}>Demo user</button>
+                        onClick={this.demoUser}>login as demo user</button>
 
                 <span className="flash-error"><br/>{this.state.flash}</span>
               </div>

@@ -14,8 +14,8 @@
   margin-top: 1px;
   margin-bottom: -4px;
   background: black;
-  width: 250px;
-  height: 250px;
+  width: 13vw;
+  height: 13vw;
   overflow: hidden;
 
   -webkit-transition: all .1s ease-out;
@@ -183,6 +183,7 @@
   text-align: center;
   margin-left: 0px auto;
   margin-right: 0px auto;
+  padding-bottom: 25px;
 }
 
 .photo-title {
@@ -260,6 +261,7 @@
 
 .about-the-photographer {
   padding-top: 18px;
+  margin-bottom: 50px;
 }
 
 .divider-line {

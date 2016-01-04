@@ -31959,7 +31959,7 @@
 	                'button',
 	                { className: 'btn btn-success btn-sm',
 	                  onClick: this.demoUser },
-	                'Demo user'
+	                'login as demo user'
 	              ),
 	              React.createElement(
 	                'span',
@@ -35001,8 +35001,32 @@
 	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
 	        'div',
-	        { className: 'feed-main' },
-	        photoItem
+	        null,
+	        React.createElement(
+	          'div',
+	          { className: 'user-summary' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Bio'
+	          ),
+	          this.state.user.summary,
+	          React.createElement('br', null),
+	          React.createElement('br', null),
+	          'Favorites: ',
+	          this.state.user.favorited_photos.length,
+	          React.createElement('br', null),
+	          'Following: ',
+	          this.state.user.followed_users.length,
+	          React.createElement('br', null),
+	          'Followers: ',
+	          this.state.user.followers.length
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'feed-main' },
+	          photoItem
+	        )
 	      );
 	    } else {
 	      return React.createElement('div', null);

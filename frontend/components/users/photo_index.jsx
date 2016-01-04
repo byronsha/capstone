@@ -60,8 +60,20 @@ var PhotoIndex = React.createClass({
 
     if (Object.keys(this.state.user).length > 0) {
       return (
+        <div>
+        <div className="user-summary">
+          <h3>Bio</h3>
+          {this.state.user.summary}
+          <br/><br/>
+          Favorites: {this.state.user.favorited_photos.length}
+          <br/>
+          Following: {this.state.user.followed_users.length}
+          <br/>
+          Followers: {this.state.user.followers.length}
+        </div>
         <div className="feed-main">
           { photoItem }
+        </div>
         </div>
       );
     } else {

@@ -107,7 +107,7 @@ photo_description_samples = [
   "So glad we got a chance to admire this sight again this year. It feels like forever, but it's totally worth the wait. Hoping to be more regular with posting. We'll see what happens!"
 ]
 
-User.create(username: "demouser123", full_name: "Joe Schmoe", password: "demodemodemo", summary: Faker::Hipster.paragraph(2, false, 4), background_url: "7.jpg")
+User.create(username: "joe_schmoe724", full_name: "Joe Schmoe", password: "demodemodemo", summary: user_bio_samples.sample, background_url: "7.jpg")
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: user_bio_samples.sample, background_url: "4.jpg")
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: user_bio_samples.sample, background_url: "5.jpg")
 User.create(username: Faker::Internet.user_name, full_name: Faker::Name.name, password: "password", summary: user_bio_samples.sample, background_url: "17.jpg")
