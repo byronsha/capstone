@@ -66,7 +66,7 @@ var PhotoItem = React.createClass({
         <span className="favorite-count">{this.state.favoriteCount}</span>
         <span className="title">{this.props.photo.title}</span>
         <span className="author">by </span><span className="author-two"
-                                                 onClick={this.handleAuthorClick}>{this.props.photo.user.username}</span>
+                                                 onClick={this.handleAuthorClick}>{this.props.photo.user.full_name}</span>
       </div>
     );
   }

@@ -34,6 +34,19 @@ var LoginButton = React.createClass({
     this.setState({ username: "", password: "" });
     SessionsUtil.login(loginParams);
   },
+  demoUser: function (e) {
+    e.preventDefault();
+
+    var loginParams = {
+      user: {
+        username: "demouser123",
+        password: "demodemodemo"
+      }
+    };
+
+    this.setState({ username: "", password: "" });
+    SessionsUtil.login(loginParams);
+  },
   render: function () {
     return (
       <li className="dropdown">
@@ -71,7 +84,10 @@ var LoginButton = React.createClass({
                         className="btn btn-success btn-sm"
                         onClick={this.handleSubmit}>Log in</button>
 
-                      <span className="flash-error"><br/>{this.state.flash}</span>
+                <button className="btn btn-success btn-sm"
+                        onClick={this.demoUser}>Demo user</button>
+
+                <span className="flash-error"><br/>{this.state.flash}</span>
               </div>
             </div>
           </form>

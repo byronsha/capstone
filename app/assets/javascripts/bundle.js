@@ -31885,6 +31885,19 @@
 	    this.setState({ username: "", password: "" });
 	    SessionsUtil.login(loginParams);
 	  },
+	  demoUser: function (e) {
+	    e.preventDefault();
+
+	    var loginParams = {
+	      user: {
+	        username: "demouser123",
+	        password: "demodemodemo"
+	      }
+	    };
+
+	    this.setState({ username: "", password: "" });
+	    SessionsUtil.login(loginParams);
+	  },
 	  render: function () {
 	    return React.createElement(
 	      'li',
@@ -31941,6 +31954,12 @@
 	                  className: 'btn btn-success btn-sm',
 	                  onClick: this.handleSubmit },
 	                'Log in'
+	              ),
+	              React.createElement(
+	                'button',
+	                { className: 'btn btn-success btn-sm',
+	                  onClick: this.demoUser },
+	                'Demo user'
 	              ),
 	              React.createElement(
 	                'span',
@@ -32504,6 +32523,8 @@
 	    this.history.pushState(null, "/users/" + this.currentUser.id + "/following", {});
 	  },
 	  render: function () {
+	    this.currentUser = SessionStore.currentUser();
+
 	    return React.createElement(
 	      'li',
 	      { className: 'dropdown' },
@@ -32514,7 +32535,8 @@
 	          role: 'button',
 	          'aria-haspopup': 'true',
 	          'aria-expanded': 'false' },
-	        'You ',
+	        this.currentUser.username,
+	        ' ',
 	        React.createElement('i', { className: 'fa fa-angle-down' })
 	      ),
 	      React.createElement(
@@ -32743,7 +32765,7 @@
 	        'span',
 	        { className: 'author-two',
 	          onClick: this.handleAuthorClick },
-	        this.props.photo.user.username
+	        this.props.photo.user.full_name
 	      )
 	    );
 	  }

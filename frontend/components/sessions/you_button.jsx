@@ -20,13 +20,15 @@ var YouButton = React.createClass({
     this.history.pushState(null, "/users/" + this.currentUser.id + "/following", {});
   },
   render: function () {
+    this.currentUser = SessionStore.currentUser();
+
     return (
       <li className="dropdown">
         <a className="dropdown-toggle"
            data-toggle="dropdown"
            role="button"
            aria-haspopup="true"
-           aria-expanded="false">You <i className="fa fa-angle-down"></i>
+           aria-expanded="false">{this.currentUser.username} <i className="fa fa-angle-down"></i>
         </a>
         <ul className="dropdown-menu" id="you-dropdown">
           <li onClick={this.handlePhotosClick} className="you-dropdown-item">Photos</li>

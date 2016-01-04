@@ -99,7 +99,7 @@ var Signup = React.createClass({
                         className="btn btn-success btn-sm"
                         onClick={this.handleSubmit}>Sign up</button>
 
-                      <span className="flash-error"><br/>{this.state.flash}</span>
+                <span className="flash-error"><br/>{this.state.flash}</span>
               </div>
             </div>
           </form>
