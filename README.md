@@ -2,7 +2,7 @@
 
 [omnify.xyz][omnify]
 
-[omnify]: http://omnify.xyz
+[omnify]: http://www.omnify.xyz
 
 Omnify is a web application inspired by Flickr for managing photos. Omnify was
 built using Ruby on Rails and React.js.
