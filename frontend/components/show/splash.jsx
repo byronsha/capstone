@@ -1,6 +1,5 @@
-var React = require('react');
-
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+var React = require('react'),
+    ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var Splash = React.createClass({
   getInitialState: function () {

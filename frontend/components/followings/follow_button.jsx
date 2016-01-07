@@ -71,7 +71,9 @@ var FollowButton = React.createClass({
           )
         }
       } else if (this.state.user.id === this.state.currentUser.id) {
-        return(<div></div>)
+        return (
+          <span className="you-text"> (You)</span>
+        )
       }
     } else {
       return (

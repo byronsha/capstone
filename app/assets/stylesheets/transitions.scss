@@ -59,3 +59,33 @@
   position: relative;
   height: 85vh;
 }
+
+.usertab-enter {
+  background-color: #EEE;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translate3d(-100%, 0, 0);
+  position: fixed;
+}
+
+.usertab-enter.usertab-enter-active {
+  background-color: #EEE;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: all 600ms;
+  position: fixed;
+}
+
+.usertab-leave {
+  transform: translate3d(0, 0, 0);
+  position: fixed;
+}
+
+.usertab-leave.usertab-leave-active {
+  transform: translate3d(100%, 0, 0);
+  transition: all 600ms;
+  position: fixed;
+}

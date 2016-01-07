@@ -13,6 +13,12 @@
   font-weight: 400;
 }
 
+.you-text {
+  margin-left: 10px;
+  font-size: 28px;
+  font-weight: 400;
+}
+
 #selected-profile-tab {
   height: 50px;
   border-bottom: 5px solid #006dac;
@@ -26,6 +32,7 @@
 
 #user-info-bullet {
   margin: 5px;
+  font-size: .75em;
 }
 
 .follow-button-profile {
@@ -46,9 +53,11 @@
   background: white;
   padding-left: 0;
   margin-bottom: 0px;
+  width: 100vw;
 }
 
 .followed-user-banner {
+  border-top: 1px solid white;
   color: white;
   list-style-type: none;
   height: 150px;
@@ -76,8 +85,9 @@
 }
 
 .upload-form-container {
-  margin-left: 140px;
+  padding-left: 140px;
   margin-bottom: 50px;
+  width: 100vw;
 }
 
 .create-photo-title {

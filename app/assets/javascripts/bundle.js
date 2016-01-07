@@ -33021,9 +33021,8 @@
 /* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-
-	var ReactCSSTransitionGroup = __webpack_require__(270);
+	var React = __webpack_require__(1),
+	    ReactCSSTransitionGroup = __webpack_require__(270);
 
 	var Splash = React.createClass({
 	  displayName: 'Splash',
@@ -34579,7 +34578,11 @@
 	          );
 	        }
 	      } else if (this.state.user.id === this.state.currentUser.id) {
-	        return React.createElement('div', null);
+	        return React.createElement(
+	          'span',
+	          { className: 'you-text' },
+	          ' (You)'
+	        );
 	      }
 	    } else {
 	      return React.createElement(
@@ -35015,11 +35018,9 @@
 	          React.createElement('br', null),
 	          'Favorites: ',
 	          this.state.user.favorited_photos.length,
-	          React.createElement('br', null),
-	          'Following: ',
+	          ' · Following: ',
 	          this.state.user.followed_users.length,
-	          React.createElement('br', null),
-	          'Followers: ',
+	          ' · Followers: ',
 	          this.state.user.followers.length
 	        ),
 	        React.createElement(
@@ -35164,15 +35165,19 @@
 	    if (Object.keys(this.state.user).length > 0) {
 	      return React.createElement(
 	        'div',
-	        { className: 'feed-main' },
+	        null,
 	        React.createElement(
 	          'div',
-	          null,
-	          this.state.user.favorited_photos.map(function (photo) {
-	            return React.createElement(PhotoItem, { key: photo.id,
-	              photo: photo,
-	              size: 315 });
-	          })
+	          { className: 'feed-main' },
+	          React.createElement(
+	            'div',
+	            null,
+	            this.state.user.favorited_photos.map(function (photo) {
+	              return React.createElement(PhotoItem, { key: photo.id,
+	                photo: photo,
+	                size: 315 });
+	            })
+	          )
 	        )
 	      );
 	    } else {
@@ -35259,6 +35264,7 @@
 	    Favorites = __webpack_require__(291),
 	    Following = __webpack_require__(292),
 	    FollowButton = __webpack_require__(283),
+	    ReactCSSTransitionGroup = __webpack_require__(270),
 	    History = __webpack_require__(159).History;
 
 	var UserProfile = React.createClass({
@@ -35418,104 +35424,18 @@
 	          )
 	        )
 	      ),
-	      this.props.children
+	      React.createElement(
+	        ReactCSSTransitionGroup,
+	        { transitionName: 'usertab', transitionEnterTimeout: 0, transitionLeaveTimeout: 0 },
+	        React.cloneElement(this.props.children, {
+	          key: this.state.currentTab
+	        })
+	      )
 	    );
 	  }
 	});
 
 	module.exports = UserProfile;
-
-	// var UserProfile = React.createClass({
-	//   getInitialState: function () {
-	//     return { user: {}, currentTab: "summary" };
-	//   },
-	//   componentDidMount: function () {
-	//     this.userListener = UserStore.addListener(this._onUserChange);
-	//     ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
-	//   },
-	//   componentWillReceiveProps: function (nextProps) {
-	//     ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
-	//     this.setState({ currentTab: "summary" })
-	//   },
-	//   componentWillUnmount: function () {
-	//     this.userListener.remove();
-	//   },
-	//   _onUserChange: function () {
-	//     this.setState({ user: UserStore.user() });
-	//   },
-	//   handleSummaryClick: function () {
-	//     this.setState({ currentTab: "summary" });
-	//   },
-	//   handlePhotoIndexClick: function () {
-	//     this.setState({ currentTab: "photoIndex" });
-	//   },
-	//   handleFavoritesClick: function () {
-	//     this.setState({ currentTab: "favorites" });
-	//   },
-	//   handleFollowingClick: function () {
-	//     this.setState({ currentTab: "following" });
-	//   },
-	//   render: function () {
-	//     var userInfo;
-	//     if (Object.keys(this.state.user).length > 0) {
-	//       userInfo = (
-	//         <div className="user-banner">
-	//           <div className="container user-info">
-	//             <h1>{this.state.user.username}</h1>
-	//             {this.state.user.full_name} <i className="fa fa-bolt"
-	//                                            id="user-info-bullet"></i><span> </span>
-	//             {this.state.user.photos.length} Photos <i className="fa fa-bolt"
-	//                                                       id="user-info-bullet"></i><span> </span>
-	//             Joined {this.state.user.created_at}
-	//           </div>
-	//         </div>
-	//       )
-	//     } else {
-	//       userInfo = (
-	//         <div className="user-banner"></div>
-	//       )
-	//     };
-	//
-	//     var currentTab;
-	//     switch(this.state.currentTab) {
-	//       case "summary":
-	//         currentTab = (<div><Summary user={this.state.user} /></div>)
-	//         break;
-	//       case "photoIndex":
-	//         currentTab = (<div><PhotoIndex user={this.state.user} /></div>)
-	//         break;
-	//       case "favorites":
-	//         currentTab = (<div><Favorites user={this.state.user} /></div>)
-	//         break;
-	//       case "following":
-	//         currentTab = (<div><Following user={this.state.user} /></div>)
-	//         break;
-	//     };
-	//
-	//     return (
-	//       <div>
-	//         { userInfo }
-	//         <nav className="navbar navbar-default">
-	//           <div className="container-fluid">
-	//             <ul className="nav navbar-nav navbar-left">
-	//               <li><a id={this.state.currentTab === "summary" ? "selected-profile-tab" : ""}
-	//                      onClick={this.handleSummaryClick}>Summary</a></li>
-	//               <li><a id={this.state.currentTab === "photoIndex" ? "selected-profile-tab" : ""}
-	//                      onClick={this.handlePhotoIndexClick}>Photos</a></li>
-	//               <li><a id={this.state.currentTab === "favorites" ? "selected-profile-tab" : ""}
-	//                      onClick={this.handleFavoritesClick}>Favorites</a></li>
-	//               <li><a id={this.state.currentTab === "following" ? "selected-profile-tab" : ""}
-	//                      onClick={this.handleFollowingClick}>Following</a></li>
-	//             </ul>
-	//           </div>
-	//         </nav>
-	//         { currentTab }
-	//       </div>
-	//     )
-	//   }
-	// });
-	//
-	// module.exports = UserProfile;
 
 /***/ }
 /******/ ]);

@@ -7,6 +7,7 @@ var React = require('react'),
     Favorites = require('./favorites.jsx'),
     Following = require('./following.jsx'),
     FollowButton = require('../followings/follow_button.jsx'),
+    ReactCSSTransitionGroup = require('react-addons-css-transition-group'),
     History = require('react-router').History;
 
 var UserProfile = React.createClass({
@@ -105,102 +106,15 @@ var UserProfile = React.createClass({
             </ul>
           </div>
         </nav>
-        { this.props.children }
+
+        <ReactCSSTransitionGroup transitionName="usertab" transitionEnterTimeout={0} transitionLeaveTimeout={0}>
+          {React.cloneElement(this.props.children, {
+            key: this.state.currentTab,
+          })}
+        </ReactCSSTransitionGroup>
       </div>
     )
   }
 });
 
 module.exports = UserProfile;
-
-// var UserProfile = React.createClass({
-//   getInitialState: function () {
-//     return { user: {}, currentTab: "summary" };
-//   },
-//   componentDidMount: function () {
-//     this.userListener = UserStore.addListener(this._onUserChange);
-//     ApiUtil.fetchSingleUser(parseInt(this.props.params.userId));
-//   },
-//   componentWillReceiveProps: function (nextProps) {
-//     ApiUtil.fetchSingleUser(parseInt(nextProps.params.userId));
-//     this.setState({ currentTab: "summary" })
-//   },
-//   componentWillUnmount: function () {
-//     this.userListener.remove();
-//   },
-//   _onUserChange: function () {
-//     this.setState({ user: UserStore.user() });
-//   },
-//   handleSummaryClick: function () {
-//     this.setState({ currentTab: "summary" });
-//   },
-//   handlePhotoIndexClick: function () {
-//     this.setState({ currentTab: "photoIndex" });
-//   },
-//   handleFavoritesClick: function () {
-//     this.setState({ currentTab: "favorites" });
-//   },
-//   handleFollowingClick: function () {
-//     this.setState({ currentTab: "following" });
-//   },
-//   render: function () {
-//     var userInfo;
-//     if (Object.keys(this.state.user).length > 0) {
-//       userInfo = (
-//         <div className="user-banner">
-//           <div className="container user-info">
-//             <h1>{this.state.user.username}</h1>
-//             {this.state.user.full_name} <i className="fa fa-bolt"
-//                                            id="user-info-bullet"></i><span> </span>
-//             {this.state.user.photos.length} Photos <i className="fa fa-bolt"
-//                                                       id="user-info-bullet"></i><span> </span>
-//             Joined {this.state.user.created_at}
-//           </div>
-//         </div>
-//       )
-//     } else {
-//       userInfo = (
-//         <div className="user-banner"></div>
-//       )
-//     };
-//
-//     var currentTab;
-//     switch(this.state.currentTab) {
-//       case "summary":
-//         currentTab = (<div><Summary user={this.state.user} /></div>)
-//         break;
-//       case "photoIndex":
-//         currentTab = (<div><PhotoIndex user={this.state.user} /></div>)
-//         break;
-//       case "favorites":
-//         currentTab = (<div><Favorites user={this.state.user} /></div>)
-//         break;
-//       case "following":
-//         currentTab = (<div><Following user={this.state.user} /></div>)
-//         break;
-//     };
-//
-//     return (
-//       <div>
-//         { userInfo }
-//         <nav className="navbar navbar-default">
-//           <div className="container-fluid">
-//             <ul className="nav navbar-nav navbar-left">
-//               <li><a id={this.state.currentTab === "summary" ? "selected-profile-tab" : ""}
-//                      onClick={this.handleSummaryClick}>Summary</a></li>
-//               <li><a id={this.state.currentTab === "photoIndex" ? "selected-profile-tab" : ""}
-//                      onClick={this.handlePhotoIndexClick}>Photos</a></li>
-//               <li><a id={this.state.currentTab === "favorites" ? "selected-profile-tab" : ""}
-//                      onClick={this.handleFavoritesClick}>Favorites</a></li>
-//               <li><a id={this.state.currentTab === "following" ? "selected-profile-tab" : ""}
-//                      onClick={this.handleFollowingClick}>Following</a></li>
-//             </ul>
-//           </div>
-//         </nav>
-//         { currentTab }
-//       </div>
-//     )
-//   }
-// });
-//
-// module.exports = UserProfile;

@@ -20,13 +20,15 @@ var Favorites = React.createClass({
   render: function () {
     if (Object.keys(this.state.user).length > 0) {
       return (
-        <div className="feed-main">
-          <div>
-            {this.state.user.favorited_photos.map(function (photo) {
-              return <PhotoItem key={photo.id}
-                                photo={photo}
-                                size={315} />
-            })}
+        <div>
+          <div className="feed-main">
+            <div>
+              {this.state.user.favorited_photos.map(function (photo) {
+                return <PhotoItem key={photo.id}
+                                  photo={photo}
+                                  size={315} />
+              })}
+            </div>
           </div>
         </div>
       );
