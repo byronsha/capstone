@@ -35424,18 +35424,18 @@
 	          )
 	        )
 	      ),
-	      React.createElement(
-	        ReactCSSTransitionGroup,
-	        { transitionName: 'usertab', transitionEnterTimeout: 0, transitionLeaveTimeout: 0 },
-	        React.cloneElement(this.props.children, {
-	          key: this.state.currentTab
-	        })
-	      )
+	      this.props.children
 	    );
 	  }
 	});
 
 	module.exports = UserProfile;
+
+	// <ReactCSSTransitionGroup transitionName="usertab" transitionEnterTimeout={0} transitionLeaveTimeout={0}>
+	//   {React.cloneElement(this.props.children, {
+	//     key: this.state.currentTab,
+	//   })}
+	// </ReactCSSTransitionGroup>
 
 /***/ }
 /******/ ]);

@@ -106,15 +106,16 @@ var UserProfile = React.createClass({
             </ul>
           </div>
         </nav>
-
-        <ReactCSSTransitionGroup transitionName="usertab" transitionEnterTimeout={0} transitionLeaveTimeout={0}>
-          {React.cloneElement(this.props.children, {
-            key: this.state.currentTab,
-          })}
-        </ReactCSSTransitionGroup>
+        {this.props.children}
       </div>
     )
   }
 });
 
 module.exports = UserProfile;
+
+// <ReactCSSTransitionGroup transitionName="usertab" transitionEnterTimeout={0} transitionLeaveTimeout={0}>
+//   {React.cloneElement(this.props.children, {
+//     key: this.state.currentTab,
+//   })}
+// </ReactCSSTransitionGroup>
