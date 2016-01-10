@@ -13,13 +13,7 @@ var CollectionsDropdown = React.createClass({
     var that = this;
     var collections = ["All", "People", "Technology", "Nature",
                        "Places", "Red", "Orange", "Yellow", "Green",
-                       "Blue", "Purple", "Brown", "White", "Black"];
-
-    for (var i = 0; i < collections.length; i++) {
-      if (collections[i] === this.state.collection) {
-        collections.splice(i, 1);
-      }
-    };
+                       "Blue", "Purple", "White", "Black"];
 
     return (
       <li className="dropdown">

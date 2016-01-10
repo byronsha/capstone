@@ -31740,13 +31740,7 @@
 	  },
 	  render: function () {
 	    var that = this;
-	    var collections = ["All", "People", "Technology", "Nature", "Places", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Brown", "White", "Black"];
-
-	    for (var i = 0; i < collections.length; i++) {
-	      if (collections[i] === this.state.collection) {
-	        collections.splice(i, 1);
-	      }
-	    };
+	    var collections = ["All", "People", "Technology", "Nature", "Places", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White", "Black"];
 
 	    return React.createElement(
 	      'li',
@@ -31959,7 +31953,7 @@
 	                'button',
 	                { className: 'btn btn-success btn-sm',
 	                  onClick: this.demoUser },
-	                'login as demo user'
+	                'Login as demo user'
 	              ),
 	              React.createElement(
 	                'span',
@@ -32642,6 +32636,8 @@
 	  render: function () {
 	    var currentCollectionPhotos = [];
 
+	    console.log(this.state.photos.length);
+
 	    if (this.state.collection === "All") {
 	      for (var i = 0; i < this.state.photos.length; i++) {
 	        currentCollectionPhotos.push(this.state.photos[i]);
@@ -32738,7 +32734,8 @@
 	        decrementFavoriteCount: this.decrementFavoriteCount });
 	    } else {
 	      button = React.createElement(FavoriteButton, { photoId: this.props.photo.id,
-	        incrementFavoriteCount: this.incrementFavoriteCount });
+	        incrementFavoriteCount: this.incrementFavoriteCount,
+	        tooltip: '' });
 	    };
 
 	    return React.createElement(
@@ -32891,11 +32888,16 @@
 	          onClick: this.preventClick },
 	        React.createElement(
 	          'i',
-	          { className: 'fa fa-heart-o', id: 'photo-favorite-button-ghost' },
+	          { className: 'fa fa-heart-o',
+	            id: 'photo-favorite-button-ghost' },
 	          React.createElement(
-	            'span',
-	            { className: 'favorite-tooltip' },
-	            'Login to favorite'
+	            'div',
+	            { className: this.props.tooltip },
+	            React.createElement(
+	              'span',
+	              { className: 'favorite-tooltip' },
+	              'Log in to favorite'
+	            )
 	          )
 	        )
 	      );
@@ -33031,114 +33033,36 @@
 	    return { transitionImage: 0 };
 	  },
 	  componentDidMount: function () {
-	    this.transitionInterval = setInterval(this.cycleImage, 4000);
-	  },
-	  componentWillUnmount: function () {
-	    clearInterval(this.transitionInterval);
-	  },
-	  cycleImage: function () {
-	    if (this.state.transitionImage === 4) {
-	      this.setState({ transitionImage: 0 });
-	    } else {
-	      this.setState({ transitionImage: this.state.transitionImage + 1 });
-	    }
+	    window.scrollTo(0, 0);
 	  },
 	  render: function () {
-	    var url = "http://res.cloudinary.com/dwx2ctajn/image/upload/";
-	    var photo_options = "c_scale,w_2500/";
-	    var currentTransitionImage;
-
-	    switch (this.state.transitionImage) {
-	      case 0:
-	        currentTransitionImage = React.createElement(
-	          'div',
-	          { key: 'a', className: 'splash-image' },
-	          React.createElement('img', { id: 'photo-85', src: url + photo_options + "85.jpg" }),
-	          React.createElement(
-	            'span',
-	            { className: 'introduction' },
-	            'The home for all your photos'
-	          )
-	        );
-	        break;
-	      case 1:
-	        currentTransitionImage = React.createElement(
-	          'div',
-	          { key: 'b', className: 'splash-image' },
-	          React.createElement('img', { id: 'photo-9', src: url + photo_options + "9.jpg" }),
-	          React.createElement(
-	            'span',
-	            { className: 'introduction' },
-	            'The home for all your photos'
-	          )
-	        );
-	        break;
-	      case 2:
-	        currentTransitionImage = React.createElement(
-	          'div',
-	          { key: 'c', className: 'splash-image' },
-	          React.createElement('img', { id: 'photo-5', src: url + photo_options + "5.jpg" }),
-	          React.createElement(
-	            'span',
-	            { className: 'introduction' },
-	            'The home for all your photos'
-	          )
-	        );
-	        break;
-	      case 3:
-	        currentTransitionImage = React.createElement(
-	          'div',
-	          { key: 'd', className: 'splash-image' },
-	          React.createElement('img', { id: 'photo-22', src: url + photo_options + "22.jpg" }),
-	          React.createElement(
-	            'span',
-	            { className: 'introduction' },
-	            'The home for all your photos'
-	          )
-	        );
-	        break;
-	      case 4:
-	        currentTransitionImage = React.createElement(
-	          'div',
-	          { key: 'e', className: 'splash-image' },
-	          React.createElement('img', { id: 'photo-36', src: url + photo_options + "36.jpg" }),
-	          React.createElement(
-	            'span',
-	            { className: 'introduction' },
-	            'The home for all your photos'
-	          )
-	        );
-	        break;
-	    };
+	    var w = window.innerWidth;
+	    var h = window.innerHeight;
+	    var backgroundImageMain = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_" + w + ",h_" + h + ",c_fill/" + "101.jpg" + "')" };
+	    var backgroundImageSmallOne = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_" + w + ",h_" + h + ",c_fill/" + "104.jpg" + "')" };
+	    var backgroundImageSmallTwo = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_" + w + ",h_" + h + ",c_fill/" + "119.jpg" + "')" };
+	    var backgroundImageSmallThree = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_" + w + ",h_" + h + ",c_fill/" + "120.jpg" + "')" };
 
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'div',
-	        { className: 'transition-container' },
+	        { className: 'splash-container', style: backgroundImageMain },
 	        React.createElement(
-	          ReactCSSTransitionGroup,
-	          { transitionName: 'example', transitionEnterTimeout: 0, transitionLeaveTimeout: 0 },
-	          currentTransitionImage
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'splash-main-2' },
-	        React.createElement(
-	          'span',
-	          { className: 'introduction-2' },
-	          'Inspire others with your creativity...'
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'splash-main-3' },
-	        React.createElement(
-	          'span',
-	          { className: 'introduction-3' },
-	          '...and discover breathtaking sights from around the world'
+	          'div',
+	          { className: 'splash-text-container' },
+	          React.createElement(
+	            'span',
+	            { className: 'splash-text-major' },
+	            'Your online photo collection'
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'span',
+	            { className: 'splash-text-minor' },
+	            'Share your favorite memories. Showcase your photos. Access anytime, from anywhere.'
+	          )
 	        )
 	      )
 	    );
@@ -33146,6 +33070,92 @@
 	});
 
 	module.exports = Splash;
+
+	// <div className="splash-row">
+	//   <div className="splash-main small" style={ backgroundImageSmallOne }>
+	//     <span></span>
+	//   </div>
+	//   <div className="splash-main small" style={ backgroundImageSmallTwo }>
+	//     <span></span>
+	//   </div>
+	//   <div className="splash-main small" style={ backgroundImageSmallThree }>
+	//     <span></span>
+	//   </div>
+	// </div>
+	//
+	// <div className="splash-main two">
+	//   <span className="introduction-2">Inspire others with your creativity...</span>
+	// </div>
+	// <div className="splash-main three">
+	//   <span className="introduction-3">...and discover breathtaking sights from around the world</span>
+	// </div>
+
+	// -----
+
+	// componentDidMount: function () {
+	//   this.transitionInterval = setInterval(this.cycleImage, 3000)
+	// },
+	// componentWillUnmount: function () {
+	//   clearInterval(this.transitionInterval);
+	// },
+	// cycleImage: function () {
+	//   if (this.state.transitionImage === 4) {
+	//     this.setState({ transitionImage: 0 })
+	//   } else {
+	//     this.setState({ transitionImage: this.state.transitionImage + 1 })
+	//   }
+	// },
+
+	// var currentTransitionImage;
+
+	// switch(this.state.transitionImage) {
+	//   case 0:
+	//     currentTransitionImage = (
+	//       <div key="a" className="splash-image">
+	//         <img src={url + photo_options + "85.jpg"}></img>
+	//         <span className="introduction">The home for all your photos</span>
+	//       </div>
+	//     );
+	//     break;
+	//   case 1:
+	//     currentTransitionImage = (
+	//       <div key="b" className="splash-image">
+	//         <img src={url + photo_options + "9.jpg"}></img>
+	//         <span className="introduction">The home for all your photos</span>
+	//       </div>
+	//     );
+	//     break;
+	//   case 2:
+	//     currentTransitionImage = (
+	//       <div key="c" className="splash-image">
+	//         <img src={url + photo_options + "5.jpg"}></img>
+	//         <span className="introduction">The home for all your photos</span>
+	//       </div>
+	//     );
+	//     break;
+	//   case 3:
+	//     currentTransitionImage = (
+	//       <div key="d" className="splash-image">
+	//         <img src={url + photo_options + "22.jpg"}></img>
+	//         <span className="introduction">The home for all your photos</span>
+	//       </div>
+	//     );
+	//     break;
+	//   case 4:
+	//     currentTransitionImage = (
+	//       <div key="f" className="splash-image">
+	//         <img src={url + photo_options + "36.jpg"}></img>
+	//         <span className="introduction">The home for all your photos</span>
+	//       </div>
+	//     );
+	//     break;
+	// };
+	//
+	// <div className="transition-container">
+	//   <ReactCSSTransitionGroup transitionName="example" transitionEnterTimeout={0} transitionLeaveTimeout={0}>
+	//     { currentTransitionImage }
+	//   </ReactCSSTransitionGroup>
+	// </div>
 
 /***/ },
 /* 270 */
@@ -33969,7 +33979,10 @@
 	      currentPhoto: {},
 	      comments: [],
 	      favorited: FavoriteStore.isFavorited(this.props.params.photoId),
-	      favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId)
+	      favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId),
+	      photoInfoContainer: "photo-detail-container",
+	      showHideButton: "fa fa-angle-left",
+	      previousButton: "previous-shift-right"
 	    };
 	  },
 	  componentDidMount: function () {
@@ -34027,6 +34040,21 @@
 	  handleNextClick: function () {
 	    var nextPhoto = PhotoStore.fetchNext(this.state.currentPhoto.id);
 	    this.history.pushState(null, "/users/" + nextPhoto.user_id + "/photos/" + nextPhoto.id, {});
+	  },
+	  handleShowHideClick: function () {
+	    if (this.state.photoInfoContainer === "photo-detail-container") {
+	      this.setState({
+	        photoInfoContainer: "photo-detail-container-hidden",
+	        showHideButton: "fa fa-angle-right",
+	        previousButton: "previous"
+	      });
+	    } else {
+	      this.setState({
+	        photoInfoContainer: "photo-detail-container",
+	        showHideButton: "fa fa-angle-left",
+	        previousButton: "previous-shift-right"
+	      });
+	    }
 	  },
 	  decrementFavoriteCount: function () {
 	    this.setState({ favoriteCount: this.state.favoriteCount - 1 });
@@ -34088,131 +34116,113 @@
 	        decrementFavoriteCount: this.decrementFavoriteCount });
 	    } else {
 	      button = React.createElement(FavoriteButton, { photoId: this.props.params.photoId,
-	        incrementFavoriteCount: this.incrementFavoriteCount });
+	        incrementFavoriteCount: this.incrementFavoriteCount,
+	        tooltip: 'details-tooltip' });
 	    };
 
 	    if (Object.keys(currentPhoto).length > 0) {
 	      var currentPhotoUrl = currentPhoto.photo_url;
+	      var w = window.innerWidth;
+	      var h = window.innerHeight;
+	      var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_" + w + ",h_" + h + ",c_fill/" + currentPhotoUrl + "')" };
+
 	      return React.createElement(
 	        'div',
-	        null,
+	        { className: 'photo-detail-photo', style: backgroundImage },
+	        React.createElement(
+	          'span',
+	          { className: 'next', onClick: this.handleNextClick },
+	          React.createElement('i', { className: 'fa fa-angle-right' })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: this.state.previousButton, onClick: this.handlePreviousClick },
+	          React.createElement('i', { className: 'fa fa-angle-left' })
+	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { className: this.state.photoInfoContainer },
 	          React.createElement(
 	            'div',
-	            { className: 'photo-detail-photo' },
-	            React.createElement('img', { src: url + photo_options + currentPhotoUrl }),
+	            { className: 'photo-detail-info' },
 	            React.createElement(
-	              'div',
-	              { className: 'scroller' },
-	              thumbnails.map(function (photo) {
-	                return React.createElement('img', { key: photo.id,
-	                  'data-userid': photo.user_id,
-	                  'data-photoid': photo.id,
-	                  className: photo.id === currentPhoto.id ? "scroller-thumbnail-active" : "scroller-thumbnail",
-	                  onClick: that.handleThumbnailClick,
-	                  src: url + thumbnail_options + photo.photo_url });
+	              'h3',
+	              { className: 'photo-title' },
+	              React.createElement(
+	                'div',
+	                null,
+	                currentPhoto.title
+	              )
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              currentPhoto.description
+	            ),
+	            React.createElement('br', null),
+	            React.createElement(
+	              'h4',
+	              null,
+	              React.createElement(
+	                'div',
+	                null,
+	                'About the photographer'
+	              )
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              React.createElement(
+	                'span',
+	                { onClick: this.handleClick, className: 'comment-author' },
+	                currentPhoto.user.username
+	              ),
+	              ' - ',
+	              currentPhoto.user.full_name
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              currentPhoto.user.summary
+	            ),
+	            React.createElement('br', null),
+	            React.createElement(
+	              'h4',
+	              null,
+	              React.createElement(
+	                'div',
+	                null,
+	                'Comments'
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'photo-comment-list' },
+	              this.state.comments.map(function (comment) {
+	                return React.createElement(PhotoComment, { key: comment.id,
+	                  commentId: comment.id,
+	                  author: comment.username,
+	                  authorId: comment.user_id,
+	                  body: comment.body,
+	                  createdAt: comment.created_at });
 	              })
 	            ),
-	            React.createElement(
-	              'span',
-	              { className: 'previous', onClick: this.handlePreviousClick },
-	              React.createElement('i', { className: 'fa fa-angle-left' })
-	            ),
-	            React.createElement(
-	              'span',
-	              { className: 'next', onClick: this.handleNextClick },
-	              React.createElement('i', { className: 'fa fa-angle-right' })
-	            ),
+	            React.createElement('br', null),
+	            commentForm,
 	            button,
 	            React.createElement(
 	              'span',
 	              { className: 'favorite-count' },
 	              this.state.favoriteCount
-	            )
-	          )
-	        ),
-	        React.createElement('br', null),
-	        React.createElement(
-	          'div',
-	          { className: 'container' },
-	          React.createElement(
-	            'div',
-	            { className: 'row' },
-	            React.createElement('div', { className: 'col-md-1' }),
-	            React.createElement(
-	              'div',
-	              { className: 'col-md-5' },
-	              React.createElement(
-	                'div',
-	                { className: 'photo-detail-info' },
-	                React.createElement(
-	                  'div',
-	                  null,
-	                  React.createElement(
-	                    'h3',
-	                    { className: 'photo-title' },
-	                    currentPhoto.title
-	                  ),
-	                  React.createElement('div', { role: 'separator', className: 'divider-line' }),
-	                  currentPhoto.description
-	                ),
-	                React.createElement('br', null),
-	                React.createElement(
-	                  'div',
-	                  null,
-	                  React.createElement(
-	                    'h4',
-	                    null,
-	                    'Comments'
-	                  ),
-	                  React.createElement('div', { role: 'separator', className: 'divider-line' }),
-	                  React.createElement(
-	                    'ul',
-	                    { className: 'photo-comment-list' },
-	                    this.state.comments.map(function (comment) {
-	                      return React.createElement(PhotoComment, { key: comment.id,
-	                        commentId: comment.id,
-	                        author: comment.username,
-	                        authorId: comment.user_id,
-	                        body: comment.body,
-	                        createdAt: comment.created_at });
-	                    })
-	                  )
-	                ),
-	                React.createElement('br', null),
-	                commentForm,
-	                React.createElement('br', null),
-	                React.createElement('br', null)
-	              )
 	            ),
-	            React.createElement('div', { className: 'col-md-1' }),
 	            React.createElement(
-	              'div',
-	              { className: 'col-md-4' },
-	              React.createElement(
-	                'div',
-	                { className: 'about-the-photographer' },
-	                React.createElement(
-	                  'h4',
-	                  null,
-	                  'About the photographer'
-	                ),
-	                React.createElement('div', { role: 'separator', className: 'divider-line' }),
-	                React.createElement(
-	                  'span',
-	                  { onClick: this.handleClick,
-	                    className: 'comment-author' },
-	                  currentPhoto.user.username
-	                ),
-	                ' - ',
-	                currentPhoto.user.full_name,
-	                React.createElement('br', null),
-	                currentPhoto.user.summary
-	              )
+	              'span',
+	              { className: 'show-hide-button' },
+	              React.createElement('i', { onClick: this.handleShowHideClick, className: this.state.showHideButton })
 	            ),
-	            React.createElement('div', { className: 'col-md-1' })
+	            React.createElement('br', null),
+	            React.createElement('br', null),
+	            React.createElement('br', null)
 	          )
 	        )
 	      );
@@ -34223,6 +34233,17 @@
 	});
 
 	module.exports = PhotoDetail;
+
+	// <div className="scroller">
+	//   {thumbnails.map(function (photo) {
+	//     return <img key={photo.id}
+	//                 data-userid={photo.user_id}
+	//                 data-photoid={photo.id}
+	//                 className={photo.id === currentPhoto.id ? "scroller-thumbnail-active" : "scroller-thumbnail"}
+	//                 onClick={that.handleThumbnailClick}
+	//                 src={url + thumbnail_options + photo.photo_url}></img>
+	//   })}
+	// </div>
 
 /***/ },
 /* 278 */
@@ -34331,7 +34352,7 @@
 	          React.createElement(
 	            'span',
 	            null,
-	            ' '
+	            ' - '
 	          ),
 	          React.createElement(
 	            'span',
@@ -34354,8 +34375,6 @@
 	});
 
 	module.exports = PhotoComment;
-
-	// <EditCommentButton commentId={this.props.commentId} />
 
 /***/ },
 /* 280 */
@@ -34443,49 +34462,28 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'container' },
+	      null,
 	      React.createElement(
 	        'form',
 	        { onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'div',
-	          { className: 'row' },
-	          React.createElement(
-	            'div',
-	            { className: 'col-md-5' },
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement('textarea', { form: 'photo-form',
-	                rows: '3',
-	                valueLink: this.linkState("body"),
-	                placeholder: 'Add a comment',
-	                className: 'form-control input-sm' })
-	            )
-	          )
+	          null,
+	          React.createElement('textarea', { form: 'photo-form',
+	            rows: '2',
+	            valueLink: this.linkState("body"),
+	            placeholder: 'Add a comment',
+	            className: 'form-control input-sm' })
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          { className: 'row' },
+	          null,
 	          React.createElement(
-	            'div',
-	            { className: 'col-md-12' },
-	            React.createElement(
-	              'div',
-	              null,
-	              React.createElement(
-	                'button',
-	                { type: 'submit',
-	                  className: 'btn btn-success btn-sm' },
-	                'Submit'
-	              ),
-	              React.createElement(
-	                'span',
-	                { className: 'flash-error' },
-	                this.state.flash
-	              )
-	            )
+	            'button',
+	            { type: 'submit',
+	              className: 'btn btn-success btn-sm' },
+	            'Add comment'
 	          )
 	        )
 	      )

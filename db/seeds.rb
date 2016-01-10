@@ -422,6 +422,70 @@ PhotoCollection.create(photo_id: 86, collection_id: 13)
 PhotoCollection.create(photo_id: 87, collection_id: 8)
 PhotoCollection.create(photo_id: 87, collection_id: 9)
 
+[100,101,103,118,119].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 9)
+end
+
+[106..111].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 9)
+end
+
+[113..116].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 9)
+end
+
+[100,106,112,114,119].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 5)
+end
+
+[102,110,111,116,113].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 7)
+end
+
+[103,108,105,115,118].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 8)
+end
+
+[121,120,117,112].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 6)
+end
+
+[105].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 2)
+end
+
+[101,104,105,112].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 12)
+end
+
+[107].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 4)
+end
+
+[122,123,128,130,132,141].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 1)
+end
+
+[124..127].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 4)
+end
+
+[129,131,142].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 4)
+end
+
+[133..140].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 4)
+end
+
+[123,125,128,129,133,137,140,141,142].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 11)
+end
+
+[134,135,138,139].each do |i|
+  PhotoCollection.create(photo_id: i, collection_id: 12)
+end
+
 120.times do
   Favorite.create(photo_id: photo_ids.sample, user_id: user_ids.sample)
 end

@@ -55,7 +55,8 @@ var PhotoItem = React.createClass({
     } else {
       button = (
         <FavoriteButton photoId={this.props.photo.id}
-                        incrementFavoriteCount={this.incrementFavoriteCount} />
+                        incrementFavoriteCount={this.incrementFavoriteCount}
+                        tooltip="" />
       )
     };
 

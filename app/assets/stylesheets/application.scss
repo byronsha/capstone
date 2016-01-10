@@ -21,6 +21,7 @@
  @import url("https://fonts.googleapis.com/css?family=Candal");
  @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
  @import url("https://fonts.googleapis.com/css?family=Iceland");
+ @import url("https://fonts.googleapis.com/css?family=Comfortaa:400,700,300");
 
  @import "bootstrap-sprockets";
  @import "bootstrap";
@@ -4298,9 +4299,9 @@
  }
  .navbar-fixed-top,
  .navbar-fixed-bottom {
-   font-family: "Source Sans Pro";
-  //  font-weight: bold;
-   opacity: .85;
+   font-family: "Comfortaa";
+   font-weight: bold;
+  //  opacity: .85;
    background: #080808;
    position: fixed;
    right: 0;
@@ -4404,7 +4405,7 @@
    transition: all .3s ease-out;
  }
  .navbar-nav > li > a:hover {
-   background: #F0F0F0;
+   background: #f3f5f6;
    color: #505050;
    cursor: pointer;
    -webkit-transition: all .3s ease;

@@ -1,0 +1,25 @@
+.splash-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+}
+
+.splash-text-container {
+  font-family: "Comfortaa";
+  display: inline-block;
+  position: relative;
+  font-weight: bold;
+  top: 35%;
+  color: white;
+  background:rgba(0,0,0,0.3);
+  padding: 20px 20px 20px 20px;
+}
+
+.splash-text-major {
+  font-size: 6rem;
+}
+
+.splash-text-minor {
+  font-size: 2rem;
+}

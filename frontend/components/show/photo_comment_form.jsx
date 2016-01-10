@@ -25,36 +25,21 @@ var PhotoCommentForm = React.createClass({
   },
   render: function () {
     return (
-      <div className="container">
-
+      <div>
         <form onSubmit={this.handleSubmit}>
+          <div>
+            <textarea form="photo-form"
+                      rows="2"
+                      valueLink={this.linkState("body")}
+                      placeholder="Add a comment"
+                      className="form-control input-sm" />
+          </div><br/>
 
-          <div className="row">
-            <div className="col-md-5">
-              <div>
-                <textarea form="photo-form"
-                          rows="3"
-                          valueLink={this.linkState("body")}
-                          placeholder="Add a comment"
-                          className="form-control input-sm" />
-              </div>
-            </div>
+          <div>
+            <button type="submit"
+                    className="btn btn-success btn-sm">Add comment</button>
           </div>
-
-          <br/>
-
-          <div className="row">
-            <div className="col-md-12">
-              <div>
-                <button type="submit"
-                        className="btn btn-success btn-sm">Submit</button>
-                <span className="flash-error">{this.state.flash}</span>
-              </div>
-            </div>
-          </div>
-
         </form>
-
       </div>
     );
   }

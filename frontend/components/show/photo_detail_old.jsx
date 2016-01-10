@@ -20,10 +20,7 @@ var PhotoDetail = React.createClass({
       currentPhoto: {},
       comments: [],
       favorited: FavoriteStore.isFavorited(this.props.params.photoId),
-      favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId),
-      photoInfoContainer: "photo-detail-container",
-      showHideButton: "fa fa-angle-left",
-      previousButton: "previous-shift-right"
+      favoriteCount: PhotoStore.fetchFavoriteCount(this.props.params.photoId)
     };
   },
   componentDidMount: function () {
@@ -82,21 +79,6 @@ var PhotoDetail = React.createClass({
     var nextPhoto = PhotoStore.fetchNext(this.state.currentPhoto.id);
     this.history.pushState(null, "/users/" + nextPhoto.user_id + "/photos/" + nextPhoto.id, {});
   },
-  handleShowHideClick: function () {
-    if (this.state.photoInfoContainer === "photo-detail-container") {
-      this.setState({
-        photoInfoContainer: "photo-detail-container-hidden",
-        showHideButton: "fa fa-angle-right",
-        previousButton: "previous"
-      })
-    } else {
-      this.setState({
-        photoInfoContainer: "photo-detail-container",
-        showHideButton: "fa fa-angle-left",
-        previousButton: "previous-shift-right"
-      })
-    }
-  },
   decrementFavoriteCount: function () {
     this.setState({ favoriteCount: this.state.favoriteCount - 1 });
   },
@@ -150,53 +132,84 @@ var PhotoDetail = React.createClass({
     } else {
       button = (
         <FavoriteButton photoId={this.props.params.photoId}
-                        incrementFavoriteCount={this.incrementFavoriteCount}
-                        tooltip="details-tooltip" />
+                        incrementFavoriteCount={this.incrementFavoriteCount} />
       )
     };
 
     if (Object.keys(currentPhoto).length > 0) {
       var currentPhotoUrl = currentPhoto.photo_url;
-      var w = window.innerWidth;
-      var h = window.innerHeight;
-      var backgroundImage = { backgroundImage: "url('http://res.cloudinary.com/dwx2ctajn/image/upload/w_" + w + ",h_" + h + ",c_fill/" + currentPhotoUrl + "')" };
-
       return (
-        <div className="photo-detail-photo" style={backgroundImage}>
-          <span className="next" onClick={this.handleNextClick}><i className="fa fa-angle-right"></i></span>
-          <span className={this.state.previousButton} onClick={this.handlePreviousClick}><i className="fa fa-angle-left"></i></span>
-
-          <div className={this.state.photoInfoContainer}>
-            <div className="photo-detail-info">
-
-              <h3 className="photo-title"><div>{currentPhoto.title}</div></h3>
-              <p>{currentPhoto.description}</p>
-              <br/>
-
-              <h4><div>About the photographer</div></h4>
-              <p><span onClick={this.handleClick} className="comment-author">{currentPhoto.user.username}</span> - {currentPhoto.user.full_name}</p>
-              <p>{currentPhoto.user.summary}</p>
-              <br/>
-
-              <h4><div>Comments</div></h4>
-              <ul className="photo-comment-list">
-                {this.state.comments.map(function (comment) {
-                  return <PhotoComment key={comment.id}
-                    commentId={comment.id}
-                    author={comment.username}
-                    authorId={comment.user_id}
-                    body={comment.body}
-                    createdAt={comment.created_at} />;
+        <div>
+          <div>
+            <div className="photo-detail-photo">
+              <img src={url + photo_options + currentPhotoUrl}></img>
+              <div className="scroller">
+                {thumbnails.map(function (photo) {
+                  return <img key={photo.id}
+                              data-userid={photo.user_id}
+                              data-photoid={photo.id}
+                              className={photo.id === currentPhoto.id ? "scroller-thumbnail-active" : "scroller-thumbnail"}
+                              onClick={that.handleThumbnailClick}
+                              src={url + thumbnail_options + photo.photo_url}></img>
                 })}
-              </ul>
-              <br/>
+              </div>
+              <span className="previous" onClick={this.handlePreviousClick}><i className="fa fa-angle-left"></i></span>
+              <span className="next" onClick={this.handleNextClick}><i className="fa fa-angle-right"></i></span>
+              { button }
+              <span className="favorite-count">{this.state.favoriteCount}</span>
+            </div>
+          </div>
+          <br/>
 
-              { commentForm }
-              { button }<span className="favorite-count">{this.state.favoriteCount}</span>
+          <div className="container">
+            <div className="row">
 
-              <span className="show-hide-button"><i onClick={this.handleShowHideClick} className={this.state.showHideButton}></i></span>
+            <div className="col-md-1" />
 
-              <br/><br/><br/>
+            <div className="col-md-5">
+              <div className="photo-detail-info">
+                <div>
+                  <h3 className="photo-title">{currentPhoto.title}</h3>
+                  <div role="separator" className="divider-line"></div>
+                  {currentPhoto.description}
+                </div>
+                <br/>
+                <div>
+                  <h4>Comments</h4>
+                  <div role="separator" className="divider-line"></div>
+                  <ul className="photo-comment-list">
+                    {this.state.comments.map(function (comment) {
+                      return <PhotoComment key={comment.id}
+                                           commentId={comment.id}
+                                           author={comment.username}
+                                           authorId={comment.user_id}
+                                           body={comment.body}
+                                           createdAt={comment.created_at} />;
+                    })}
+                  </ul>
+                </div>
+                <br/>
+                { commentForm }
+                <br/><br/>
+              </div>
+            </div>
+
+            <div className="col-md-1" />
+
+            <div className="col-md-4">
+              <div className="about-the-photographer">
+                <h4>About the photographer</h4>
+                <div role="separator" className="divider-line"></div>
+                <span onClick={this.handleClick}
+                      className="comment-author">{currentPhoto.user.username}
+                      </span> - {currentPhoto.user.full_name}
+                <br/>
+                {currentPhoto.user.summary}
+              </div>
+            </div>
+
+            <div className="col-md-1" />
+
             </div>
           </div>
         </div>
@@ -208,15 +221,3 @@ var PhotoDetail = React.createClass({
 });
 
 module.exports = PhotoDetail;
-
-
-// <div className="scroller">
-//   {thumbnails.map(function (photo) {
-//     return <img key={photo.id}
-//                 data-userid={photo.user_id}
-//                 data-photoid={photo.id}
-//                 className={photo.id === currentPhoto.id ? "scroller-thumbnail-active" : "scroller-thumbnail"}
-//                 onClick={that.handleThumbnailClick}
-//                 src={url + thumbnail_options + photo.photo_url}></img>
-//   })}
-// </div>

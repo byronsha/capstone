@@ -31,7 +31,12 @@ var FavoriteButton = React.createClass({
       return (
         <span className="favorite"
               onClick={this.preventClick}>
-              <i className="fa fa-heart-o" id="photo-favorite-button-ghost"><span className="favorite-tooltip">Login to favorite</span></i>
+              <i className="fa fa-heart-o"
+                 id="photo-favorite-button-ghost">
+                 <div className={this.props.tooltip}>
+                   <span className="favorite-tooltip">Log in to favorite</span>
+                 </div>
+              </i>
         </span>
       )
     }

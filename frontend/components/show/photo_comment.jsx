@@ -29,7 +29,7 @@ var PhotoComment = React.createClass({
           <li className="photo-comment-item">
             <span onClick={this.handleClick}
                   className="comment-author">{this.props.author}</span>
-            <span> </span>
+            <span> - </span>
             <span className="comment-date">{this.props.createdAt}</span>
             <DeleteCommentButton commentId={this.props.commentId} />
             <br/>
@@ -44,5 +44,3 @@ var PhotoComment = React.createClass({
 });
 
 module.exports = PhotoComment;
-
-// <EditCommentButton commentId={this.props.commentId} />
