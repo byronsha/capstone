@@ -33,7 +33,7 @@
 
 .photo-thumb:hover img {
   z-index: 100;
-  opacity: 0.4;
+  opacity: 0.3;
   transform: scale(.8);
   cursor: pointer;
 
@@ -250,7 +250,7 @@
 // }
 
 .photo-detail-info {
-  margin: 3em 3em 3em 3em;
+  margin: 4em;
   text-align: center;
   color: white;
 }
