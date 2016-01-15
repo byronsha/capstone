@@ -33,8 +33,6 @@ var FeedMain = React.createClass({
   render: function () {
     var currentCollectionPhotos = [];
 
-    console.log(this.state.photos.length)
-
     if (this.state.collection === "All") {
       for (var i = 0; i < this.state.photos.length; i++) {
         currentCollectionPhotos.push(this.state.photos[i]);

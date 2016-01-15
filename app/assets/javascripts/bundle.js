@@ -32636,8 +32636,6 @@
 	  render: function () {
 	    var currentCollectionPhotos = [];
 
-	    console.log(this.state.photos.length);
-
 	    if (this.state.collection === "All") {
 	      for (var i = 0; i < this.state.photos.length; i++) {
 	        currentCollectionPhotos.push(this.state.photos[i]);
@@ -33029,9 +33027,9 @@
 	var Splash = React.createClass({
 	  displayName: 'Splash',
 
-	  getInitialState: function () {
-	    return { transitionImage: 0 };
-	  },
+	  // getInitialState: function () {
+	  //   return { transitionImage: 0 };
+	  // },
 	  componentDidMount: function () {
 	    window.scrollTo(0, 0);
 	  },

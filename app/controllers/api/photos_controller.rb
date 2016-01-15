@@ -1,10 +1,10 @@
 class Api::PhotosController < ApplicationController
 
   def index
-    @photos = Photo.all
+    @photos = Photo.all.includes(:user, :photo_comments, :collections, :favorited_users, :favorites)
 
     if (params[:userId])
-      @photos = @photos.where(user_id: params[:userId])
+      @photos = @photos.where(user_id: params[:userId]).includes(:user, :photo_comments, :collections, :favorited_users, :favorites)
     end
   end
 
@@ -19,7 +19,7 @@ class Api::PhotosController < ApplicationController
   end
 
   def show
-    @photo = Photo.find(params[:id])
+    @photo = Photo.find(params[:id]).includes(:user, :photo_comments, :collections, :favorited_users, :favorites)
   end
 
   def destroy

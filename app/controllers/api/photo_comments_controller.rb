@@ -11,7 +11,7 @@ class Api::PhotoCommentsController < ApplicationController
   end
 
   def show
-    @photo_comments = PhotoComment.where(photo_id: params[:id])
+    @photo_comments = PhotoComment.where(photo_id: params[:id]).includes(:user)
   end
 
   def destroy
@@ -25,5 +25,5 @@ class Api::PhotoCommentsController < ApplicationController
   def photo_comment_params
     params.require(:photo_comment).permit(:photo_id, :user_id, :body)
   end
-  
+
 end

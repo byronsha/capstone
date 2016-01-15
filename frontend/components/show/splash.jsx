@@ -2,9 +2,9 @@ var React = require('react'),
     ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var Splash = React.createClass({
-  getInitialState: function () {
-    return { transitionImage: 0 };
-  },
+  // getInitialState: function () {
+  //   return { transitionImage: 0 };
+  // },
   componentDidMount: function () {
     window.scrollTo(0,0);
   },

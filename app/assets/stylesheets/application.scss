@@ -1115,7 +1115,8 @@
  }
  body {
    font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
-   font-size: 15px;
+  //  font-size: 15px;
+   font-size: 1.4vh;
    line-height: 1.42857143;
    color: #333333;
    background-color: #f3f5f6;
@@ -2742,7 +2743,9 @@
  .input-sm {
    height: 40px;
    padding: 5px 10px;
-   font-size: 14px;
+   //bookmark-input-sm
+   font-size: 1.4vh;
+  //  font-size: 14px;
    line-height: 1.5;
    border-radius: 0;
  }
@@ -3487,7 +3490,9 @@
  .btn-sm,
  .btn-group-sm > .btn {
    padding: 5px 10px;
-   font-size: 14px;
+   //bookmark-btn-sm
+   font-size: 1.4vh;
+  //  font-size: 14px;
    line-height: 1.5;
    border-radius: 3px;
    margin-right: 5px;
@@ -3575,7 +3580,8 @@
    padding: 5px 0;
    margin: 2px 0 0;
    list-style: none;
-   font-size: 15px;
+  //  font-size: 15px;
+   font-size: 1.4vh;
    text-align: left;
    background-color: #ffffff;
    border: 1px solid #cccccc;
