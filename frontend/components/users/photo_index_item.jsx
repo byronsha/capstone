@@ -41,8 +41,7 @@ var PhotoIndexItem = React.createClass({
           <img src={url + photoOptions + this.props.photo.photo_url}></img>
           <span className="delete" onClick={this.deletePhoto}><i className="fa fa-trash-o faa-pulse animated-hover" id="photo-delete-button"></i></span>
             <span className="title">{this.props.photo.title}</span>
-            <span className="author">by </span><span className="author-two"
-                                                     onClick={this.handleAuthorClick}>{this.props.photo.user.username}</span>
+            <span className="author-two" onClick={this.handleAuthorClick}>{this.props.photo.user.username}</span>
         </div>
       );
     } else {

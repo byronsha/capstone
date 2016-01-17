@@ -32753,13 +32753,7 @@
 	      ),
 	      React.createElement(
 	        'span',
-	        { className: 'author' },
-	        'by '
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'author-two',
-	          onClick: this.handleAuthorClick },
+	        { className: 'author-two', onClick: this.handleAuthorClick },
 	        this.props.photo.user.full_name
 	      )
 	    );
@@ -35094,13 +35088,7 @@
 	        ),
 	        React.createElement(
 	          'span',
-	          { className: 'author' },
-	          'by '
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'author-two',
-	            onClick: this.handleAuthorClick },
+	          { className: 'author-two', onClick: this.handleAuthorClick },
 	          this.props.photo.user.username
 	        )
 	      );
